@@ -49,6 +49,12 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
+  '@iconify-json/tabler':
+    specifier: ^1.1.96
+    version: 1.1.96
+  '@iconify/tailwind':
+    specifier: ^0.1.3
+    version: 0.1.3
   '@nuxt/devtools':
     specifier: latest
     version: 1.0.2(nuxt@3.8.1)(vite@4.5.0)
@@ -1138,6 +1144,22 @@ packages:
   /@fastify/busboy@2.1.0:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
+    dev: true
+
+  /@iconify-json/tabler@1.1.96:
+    resolution: {integrity: sha512-BozRq6622JUEOBlZhF/l6UxqwHoWFiaLP6UCH9/mOvuek/tZureuQ2DSEaz5SdpKJamtBQjtJCH6zzsim6YKUQ==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify/tailwind@0.1.3:
+    resolution: {integrity: sha512-uVV49QtR9cZ9VLxrMSeW1E6iXWeBlpQ0z4aWx7B5WvGEE5OvCjloNYYqwZbZ/W+EsTcApzSm6szqcCVeb9pxDw==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify/types@2.0.0:
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
     dev: true
 
   /@ioredis/commands@1.2.0:
