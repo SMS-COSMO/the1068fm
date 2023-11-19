@@ -3,9 +3,18 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@unocss/nuxt',
-    'radix-vue/nuxt'
+    '@nuxtjs/tailwindcss',
   ],
+  hooks: {
+    'components:dirs': (dirs) => {
+      dirs.unshift({
+        path: '~/components/ui',
+        extensions: ['.vue'],
+        prefix: 'Ui',
+        pathPrefix: false
+      })
+    }
+  },
   build: {
     transpile: ['trpc-nuxt'],
   },
