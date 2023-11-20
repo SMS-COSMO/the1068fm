@@ -21,10 +21,10 @@
 
     <UiCard class="mt-6 shadow">
       <UiCardHeader>
-        <UiInput placeholder="搜索歌单" />
+        <UiInput placeholder="搜索歌单" class="text-md" />
       </UiCardHeader>
       <UiCardContent>
-        <MusicCard title="Song A" creator="ahehrbakbrjk" />
+        <MusicCard title="Compact music card" creator="ahehrbakbrjk" compact />
         <MusicCard title="Song B" creator="ahehrbakbrjk" />
       </UiCardContent>
     </UiCard>

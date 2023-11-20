@@ -1,7 +1,7 @@
 <template>
-  <UiCard class="mb-4">
-    <UiCardHeader>
-      <UiCardTitle>
+  <UiCard :class="compact ? 'mb-3' : 'mb-4'">
+    <UiCardHeader :class="compact ? 'p-4' : ''">
+      <UiCardTitle :class="compact ? 'text-lg' : ''">
         {{ title }}
       </UiCardTitle>
       <UiCardDescription>
@@ -12,8 +12,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const props = withDefaults(defineProps<{
   title: string;
   creator: string;
-}>();
+  compact?: boolean;
+}>(), {
+  compact: false,
+});
 </script>
