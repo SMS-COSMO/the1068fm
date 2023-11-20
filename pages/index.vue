@@ -25,6 +25,7 @@
       </UiCardHeader>
       <UiCardContent>
         <MusicCard title="Compact music card" creator="ahehrbakbrjk" compact />
+        <MusicCard title="Compact music card" creator="ahehrbakbrjk" compact editable />
         <MusicCard title="Song B" creator="ahehrbakbrjk" />
       </UiCardContent>
     </UiCard>
