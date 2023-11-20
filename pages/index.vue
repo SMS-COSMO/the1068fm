@@ -1,15 +1,34 @@
 <template>
-    <UiCard class="w-[350px]">
-        <UiCardHeader>
-            <UiCardTitle>Cart Test</UiCardTitle>
+  <div class="mx-9">
+    <div class="font-bold text-4xl mb-10 mt-16">
+      点歌
+    </div>
+
+    <div class="flex flex-row gap-5">
+      <UiCard class="h-30 basis-1/2 shadow">
+        <UiCardHeader class="pb-2 text-lg">
+          目前歌曲队列
         </UiCardHeader>
         <UiCardContent>
-            <UiButton>
-                <span class="icon-[tabler--align-box-bottom-left]"></span>
-                Icon & Button test
-            </UiButton>
+          <span class="font-bold text-3xl">10</span>
         </UiCardContent>
+      </UiCard>
+      <UiButton class="h-30 basis-1/2 shadow text-2xl">
+        <span class="icon-[tabler--music] mr-1"></span>
+        歌曲投稿
+      </UiButton>
+    </div>
+
+    <UiCard class="mt-6 shadow">
+      <UiCardHeader>
+        <UiInput placeholder="搜索歌单" />
+      </UiCardHeader>
+      <UiCardContent>
+        <MusicCard title="Song A" creator="ahehrbakbrjk" />
+        <MusicCard title="Song B" creator="ahehrbakbrjk" />
+      </UiCardContent>
     </UiCard>
+  </div>
 </template>
 
 <script setup lang="ts">
