@@ -26,3 +26,4 @@ logs
 
 # db
 drizzle
+local.sqlite
