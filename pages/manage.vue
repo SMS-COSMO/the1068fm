@@ -24,7 +24,7 @@
           <UiCommand>
             <UiCommandGroup>
               <UiCommandItem value="logout">
-                <span class="icon-[tabler--logout]"></span>登出
+                <span class="icon-[tabler--logout] mr-1"></span>登出
               </UiCommandItem>
             </UiCommandGroup>
           </UiCommand>
