@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@iconify-json/radix-icons": "^1.1.11",
     "@iconify-json/tabler": "^1.1.96",
     "@iconify/tailwind": "^0.1.3",
     "@nuxt/devtools": "latest",

@@ -58,6 +58,9 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
+  '@iconify-json/radix-icons':
+    specifier: ^1.1.11
+    version: 1.1.11
   '@iconify-json/tabler':
     specifier: ^1.1.96
     version: 1.1.96
@@ -1181,6 +1184,12 @@ packages:
       - '@vue/composition-api'
       - vue
     dev: false
+
+  /@iconify-json/radix-icons@1.1.11:
+    resolution: {integrity: sha512-0FkllP6ghJakWHC0oQb+Jwg4W52mCDkV3JvVrXoyCPjG4kxX4wNhl8Ilk1dfT1EM+YvEXxrR2Mv63ySzVeYr9w==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
 
   /@iconify-json/tabler@1.1.96:
     resolution: {integrity: sha512-BozRq6622JUEOBlZhF/l6UxqwHoWFiaLP6UCH9/mOvuek/tZureuQ2DSEaz5SdpKJamtBQjtJCH6zzsim6YKUQ==}
