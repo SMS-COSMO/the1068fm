@@ -1,11 +1,11 @@
 <template>
-  <UiCard :class="compact ? 'mb-3' : 'mb-4'">
+  <UiCard :class="`${compact ? 'mb-3' : 'mb-4'}`">
     <UiCardHeader :class="`${compact ? 'p-4' : ''} grid grid-cols-[1fr_110px] items-start gap-4 space-y-0`">
       <div class="space-y-1">
         <UiCardTitle :class="compact ? 'text-lg' : ''">
           {{ title }}
         </UiCardTitle>
-        <UiCardDescription>
+        <UiCardDescription v-if="creator">
           by {{ creator }}
         </UiCardDescription>
       </div>

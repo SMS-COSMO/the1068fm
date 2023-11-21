@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row gap-5 h-screen p-5">
-    <UiCard class="basis-1/3">
+    <UiCard class="basis-1/3 pt-4">
       <UiCardHeader>
         <UiCardTitle>
           Calendar
@@ -10,10 +10,10 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        aa
+        <UiCalendar class="rounded-lg border"></UiCalendar>
       </UiCardContent>
     </UiCard>
-    <UiCard class="basis-1/3 relative">
+    <UiCard class="basis-1/3 relative pt-4">
       <UiCardHeader>
         <UiCardTitle>
           本周排歌表
@@ -29,7 +29,7 @@
         保存修改
       </UiButton>
     </UiCard>
-    <UiCard class="basis-1/3">
+    <UiCard class="basis-1/3 relative pt-4">
       <UiCardHeader>
         <UiCardTitle>
           总歌单
@@ -52,7 +52,10 @@
             </UiTabsTrigger>
           </UiTabsList>
           <UiTabsContent value="unset">
-            Unset
+            <MusicCard title="dsd" creator="aa" editable></MusicCard>
+            <UiButton variant="destructive" class="absolute right-5 bottom-5">
+              全部拒绝
+            </UiButton>
           </UiTabsContent>
           <UiTabsContent value="rejected">
             Rejected
