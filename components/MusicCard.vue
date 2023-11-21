@@ -10,11 +10,11 @@
         </UiCardDescription>
       </div>
       <div v-if="editable" class="flex items-center space-x-1 rounded-md bg-secondary">
-        <Button variant="secondary" class="px-3 shadow-none whitespace-nowrap">
+        <UiButton variant="secondary" class="px-3 shadow-none whitespace-nowrap">
           <span class="icon-[tabler--edit]"></span>
           操作
-        </Button>
-        <Separator orientation="vertical" class="h-[20px]" />
+        </UiButton>
+        <UiSeparator orientation="vertical" class="h-[20px]" />
         <UiDropdownMenu>
           <UiDropdownMenuTrigger as-child>
             <UiButton variant="secondary" class="px-2 shadow-none">
