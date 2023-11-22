@@ -13,7 +13,7 @@
           <span class="font-bold text-3xl">10</span>
         </UiCardContent>
       </UiCard>
-      <UiButton class="h-30 basis-1/2 shadow text-2xl">
+      <UiButton @click="submit" class="h-30 basis-1/2 shadow text-2xl">
         <span class="icon-[tabler--music] mr-1"></span>
         歌曲投稿
       </UiButton>
@@ -38,6 +38,11 @@ import type { TSongList } from '~/lib/utils';
 const { $api, $toast } = useNuxtApp();
 
 const songList = ref<TSongList>([]);
+
+const submit = () => {
+  const router = useRouter();
+  router.push('/submit');
+};
 
 onMounted(async () => {
   try {
