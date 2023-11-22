@@ -16,6 +16,15 @@ export class SongController {
         }
     }
 
+    async remove(id: string) {
+        try {
+            await db.delete(songs).where(eq(songs.id, id));
+            return { success: true, message: '删除成功' };
+        } catch (err) {
+            return { success: false, message: '歌曲不存在' }
+        }
+    }
+
     async getContent(id: string) {
         try {
             const res = (await db.select().from(songs).where(eq(songs.id, id)))[0];

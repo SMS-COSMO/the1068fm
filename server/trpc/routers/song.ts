@@ -20,6 +20,15 @@ export const songRouter = router({
             else return res;
         }),
 
+    remove: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+            const res = await ctx.songController.remove(input.id);
+            if (!res.success)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else return res;
+        }),
+
     content: publicProcedure
         .input(z.object({ id: z.string() }))
         .query(async ({ ctx, input }) => {
@@ -35,5 +44,5 @@ export const songRouter = router({
             if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else return res.res;
-        })
+        }),
 });
