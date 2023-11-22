@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row gap-5 h-screen p-5">
-    <UiCard class="basis-1/3 pt-4">
+    <UiCard class="basis-1/3 pt-4 relative">
       <UiCardHeader>
         <UiCardTitle>
           Calendar
@@ -12,6 +12,24 @@
       <UiCardContent>
         <UiCalendar class="rounded-lg border"></UiCalendar>
       </UiCardContent>
+      <UiPopover v-model:open="open">
+        <UiPopoverTrigger as-child>
+          <UiButton variant="outline" role="combobox" :aria-expanded="open"
+            class="justify-between absolute bottom-5 left-5">
+            账号
+            <span class="icon-[radix-icons--caret-sort] text-lg"></span>
+          </UiButton>
+        </UiPopoverTrigger>
+        <UiPopoverContent class="w-[200px] p-0">
+          <UiCommand>
+            <UiCommandGroup>
+              <UiCommandItem value="logout">
+                <span class="icon-[tabler--logout] mr-1"></span>登出
+              </UiCommandItem>
+            </UiCommandGroup>
+          </UiCommand>
+        </UiPopoverContent>
+      </UiPopover>
     </UiCard>
     <UiCard class="basis-1/3 relative pt-4">
       <UiCardHeader>
@@ -68,3 +86,20 @@
     </UiCard>
   </div>
 </template>
+
+<script setup lang="ts">
+import { cn } from '@/lib/utils'
+
+const frameworks = [
+  { value: 'next.js', label: 'Next.js' },
+  { value: 'sveltekit', label: 'SvelteKit' },
+  { value: 'nuxt.js', label: 'Nuxt.js' },
+  { value: 'remix', label: 'Remix' },
+  { value: 'astro', label: 'Astro' },
+]
+
+const open = ref(false)
+const value = ref<typeof frameworks[number]>()
+
+const filterFunction = (list: typeof frameworks, search: string) => list.filter(i => i.value.toLowerCase().includes(search.toLowerCase()))
+</script>

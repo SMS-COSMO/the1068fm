@@ -4,7 +4,14 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/tailwindcss',
+    '@vee-validate/nuxt',
   ],
+  veeValidate: {
+    autoImports: true,
+    componentNames: {
+      Field: 'UiFormField',
+    },
+  },
   hooks: {
     'components:dirs': (dirs) => {
       dirs.unshift({
