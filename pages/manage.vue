@@ -42,7 +42,6 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <MusicCard title="dsd" creator="aa" editable></MusicCard>
       </UiCardContent>
       <UiButton class="absolute right-5 bottom-5">
         保存修改
@@ -58,8 +57,8 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiTabs>
-          <UiTabsList default-value="unset" class="grid grid-cols-3">
+        <UiTabs default-value="unset">
+          <UiTabsList class="grid grid-cols-3">
             <UiTabsTrigger value="unset">
               待审核
             </UiTabsTrigger>
@@ -71,16 +70,28 @@
             </UiTabsTrigger>
           </UiTabsList>
           <UiTabsContent value="unset">
-            <MusicCard title="dsd" creator="aa" editable></MusicCard>
+            <UiScrollArea class="h-[calc(100vh-18rem)]">
+              <div v-for="(song, index) in songList.filter(s => (s.status === 'unset'))" :key="index">
+                <MusicCard :song="song" editable></MusicCard>
+              </div>
+            </UiScrollArea>
             <UiButton variant="destructive" class="absolute right-5 bottom-5">
               全部拒绝
             </UiButton>
           </UiTabsContent>
           <UiTabsContent value="rejected">
-            Rejected
+            <UiScrollArea class="h-[calc(100vh-18rem)]">
+              <div v-for="(song, index) in songList.filter(s => (s.status === 'rejected'))" :key="index">
+                <MusicCard :song="song" editable></MusicCard>
+              </div>
+            </UiScrollArea>
           </UiTabsContent>
           <UiTabsContent value="used">
-            Used
+            <UiScrollArea class="h-[calc(100vh-18rem)]">
+              <div v-for="(song, index) in songList.filter(s => (s.status === 'used'))" :key="index">
+                <MusicCard :song="song"></MusicCard>
+              </div>
+            </UiScrollArea>
           </UiTabsContent>
         </UiTabs>
       </UiCardContent>
@@ -89,9 +100,12 @@
 </template>
 
 <script setup lang="ts">
+import type { TSongList } from '~/lib/utils';
 const { $api } = useNuxtApp();
 const open = ref(false);
 const userStore = useUserStore();
+
+const songList = ref<TSongList>([]);
 
 onMounted(async () => {
   try {
@@ -99,6 +113,13 @@ onMounted(async () => {
   } catch (err) {
     const router = useRouter();
     router.push('/login');
+  }
+
+  try {
+    songList.value = await $api.song.list.query();
+    console.log(songList.value);
+  } catch (err) {
+    console.log(err);
   }
 });
 

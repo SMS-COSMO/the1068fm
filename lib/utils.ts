@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { TRPCClientError } from '@trpc/client';
 import type { AppRouter } from '~/server/trpc/routers'
+import type { inferRouterOutputs } from '@trpc/server';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -12,3 +13,7 @@ export function isTRPCClientError(
 ): cause is TRPCClientError<AppRouter> {
   return cause instanceof TRPCClientError;
 }
+
+export type RouterOutput = inferRouterOutputs<AppRouter>;
+export type TSong = RouterOutput['song']['content'];
+export type TSongList = RouterOutput['song']['list'];

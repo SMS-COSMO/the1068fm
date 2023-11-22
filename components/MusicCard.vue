@@ -1,12 +1,22 @@
 <template>
-  <UiCard :class="`${compact ? 'mb-3' : 'mb-4'}`">
+  <UiCard class="mb-2">
     <UiCardHeader :class="`${compact ? 'p-4' : ''} grid grid-cols-[1fr_110px] items-start gap-4 space-y-0`">
       <div class="space-y-1">
         <UiCardTitle :class="compact ? 'text-lg' : ''">
-          {{ title }}
+          {{ song?.name }}
         </UiCardTitle>
-        <UiCardDescription v-if="creator">
-          by {{ creator }}
+        <UiCardDescription v-if="song?.creator">
+          by {{ song?.creator }}
+          <UiTooltipProvider v-if="song?.type === 'withMsg'">
+            <UiTooltip>
+              <UiTooltipTrigger as-child>
+                <UiBadge  class="ml-1 rounded-md">留言</UiBadge>
+              </UiTooltipTrigger>
+              <UiTooltipContent>
+                <p>{{ song?.message }}</p>
+              </UiTooltipContent>
+            </UiTooltip>
+          </UiTooltipProvider>
         </UiCardDescription>
       </div>
       <div v-if="editable" class="flex items-center space-x-1 rounded-md bg-secondary">
@@ -38,9 +48,10 @@
 </template>
 
 <script setup lang="ts">
+import type { TSong } from '~/lib/utils';
+
 const props = withDefaults(defineProps<{
-  title: string;
-  creator: string;
+  song: TSong;
   compact?: boolean;
   editable?: boolean;
 }>(), {
