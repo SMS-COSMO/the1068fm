@@ -88,18 +88,5 @@
 </template>
 
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
-
-const frameworks = [
-  { value: 'next.js', label: 'Next.js' },
-  { value: 'sveltekit', label: 'SvelteKit' },
-  { value: 'nuxt.js', label: 'Nuxt.js' },
-  { value: 'remix', label: 'Remix' },
-  { value: 'astro', label: 'Astro' },
-]
-
-const open = ref(false)
-const value = ref<typeof frameworks[number]>()
-
-const filterFunction = (list: typeof frameworks, search: string) => list.filter(i => i.value.toLowerCase().includes(search.toLowerCase()))
+const open = ref(false);
 </script>

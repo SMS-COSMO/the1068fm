@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { and, eq } from 'drizzle-orm';
-import { TNewUser, db } from '../../db/db';
+import { type TNewUser, db } from '../../db/db';
 import { refreshTokens, users } from '../../db/schema/';
 import { Auth } from '../utils/auth';
 import { LibsqlError } from '@libsql/client';

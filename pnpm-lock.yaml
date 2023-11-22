@@ -71,6 +71,9 @@ dependencies:
   vee-validate:
     specifier: ^4.11.8
     version: 4.11.8(vue@3.3.8)
+  vue-sonner:
+    specifier: ^1.0.2
+    version: 1.0.2
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -8288,6 +8291,10 @@ packages:
       vue: ^3.2.0
     dependencies:
       vue: 3.3.8(typescript@5.2.2)
+    dev: false
+
+  /vue-sonner@1.0.2:
+    resolution: {integrity: sha512-BXIyb9lGSMUjTpOukISp7oV9nrczgbfYz+TnDeoap3io3ayGXiWv+/3eQ9UKnmofwUlC4nh/H5jzBOO89lRItQ==}
     dev: false
 
   /vue@3.3.8(typescript@5.2.2):

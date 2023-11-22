@@ -12,6 +12,9 @@ export default defineNuxtConfig({
       Field: 'UiFormField',
     },
   },
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   hooks: {
     'components:dirs': (dirs) => {
       dirs.unshift({
