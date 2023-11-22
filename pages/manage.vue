@@ -100,8 +100,9 @@
 </template>
 
 <script setup lang="ts">
+import { isTRPCClientError } from '~/lib/utils';
 import type { TSongList } from '~/lib/utils';
-const { $api } = useNuxtApp();
+const { $api, $toast } = useNuxtApp();
 const open = ref(false);
 const userStore = useUserStore();
 
@@ -117,9 +118,12 @@ onMounted(async () => {
 
   try {
     songList.value = await $api.song.list.query();
-    console.log(songList.value);
   } catch (err) {
-    console.log(err);
+    if (isTRPCClientError(err)) {
+      $toast.error(err.message);
+    } else {
+      $toast.error('未知错误');
+    }
   }
 });
 

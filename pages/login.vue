@@ -1,5 +1,4 @@
 <template>
-  <Toaster position="top-center" richColors />
   <div class="flex flex-row items-center gap-5 p-5 h-screen max-w-2xl mx-auto">
     <UiCard class="w-full">
       <UiCardHeader>
@@ -70,6 +69,8 @@ const onSubmit = form.handleSubmit(async values => {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);
       buttonLoading.value = false;
+    } else {
+      $toast.error('未知错误');
     }
   }
 });
