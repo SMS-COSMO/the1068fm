@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import { env } from '../env';
-import { users, refreshTokens } from './schema';
+import { users, refreshTokens, songs } from './schema';
 
 const options = (() => {
     switch (env.DATABASE_CONNECTION_TYPE) {
@@ -17,3 +17,5 @@ export type TRawUser = typeof users.$inferSelect
 export type TNewUser = typeof users.$inferInsert
 export type TRefreshToken = typeof refreshTokens.$inferInsert
 
+export type TRawSong = typeof songs.$inferSelect
+export type TNewSong = typeof songs.$inferInsert

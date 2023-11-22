@@ -1,21 +1,25 @@
 import process from 'node:process';
 import type { inferAsyncReturnType } from '@trpc/server';
-import { type TRawUser, db } from '../db/db';
+import { type TRawUser, db, TRawSong } from '../db/db';
 import { UserController } from './controllers/user';
+import { SongController } from './controllers/song';
 import type { H3Event } from 'h3'
 
 const newGlobal = globalThis as unknown as {
-    userController: UserController | undefined
+    userController: UserController | undefined;
+    songController: SongController | undefined;
 };
 
 const userController = newGlobal.userController ?? new UserController();
+const songController = newGlobal.songController ?? new SongController();
 
 if (process.env.NODE_ENV !== 'production') {
     newGlobal.userController = userController;
 }
 
 interface CreateContextOptions {
-    user?: TRawUser
+    user?: TRawUser;
+    song?: TRawSong;
 }
 
 /**
@@ -28,6 +32,7 @@ export function createInnerContext(opts: CreateContextOptions) {
         user: opts.user,
         db,
         userController,
+        songController,
     };
 }
 
