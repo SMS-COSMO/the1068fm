@@ -12,19 +12,15 @@ export const useUserStore = defineStore('user', () => {
         userId: string;
     }) => {
         loggedIn.value = true;
-
         accessToken.value = data.accessToken;
         refreshToken.value = data.refreshToken;
-
         userId.value = data.userId;
     };
 
     const logout = () => {
         loggedIn.value = false;
-
         accessToken.value = '';
         refreshToken.value = '';
-
         userId.value = '';
     };
 

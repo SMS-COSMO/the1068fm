@@ -15,16 +15,17 @@
       <UiPopover v-model:open="open">
         <UiPopoverTrigger as-child>
           <UiButton variant="outline" role="combobox" :aria-expanded="open"
-            class="justify-between absolute bottom-5 left-5">
-            账号
+            class="justify-between absolute bottom-5 left-5 w-[200px]">
+            {{ userStore.userId }}
             <span class="icon-[radix-icons--caret-sort] text-lg"></span>
           </UiButton>
         </UiPopoverTrigger>
         <UiPopoverContent class="w-[200px] p-0">
           <UiCommand>
             <UiCommandGroup>
-              <UiCommandItem value="logout">
-                <span class="icon-[tabler--logout] mr-1"></span>登出
+              <UiCommandItem value="logout" @select="logout">
+                <span class="icon-[tabler--logout] mr-1"></span>
+                登出
               </UiCommandItem>
             </UiCommandGroup>
           </UiCommand>
@@ -90,6 +91,7 @@
 <script setup lang="ts">
 const { $api } = useNuxtApp();
 const open = ref(false);
+const userStore = useUserStore();
 
 onMounted(async () => {
   try {
@@ -99,4 +101,10 @@ onMounted(async () => {
     router.push('/login');
   }
 });
+
+const logout = () => {
+  const router = useRouter();
+  userStore.logout();
+  router.push('/login');
+};
 </script>

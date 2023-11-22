@@ -39,7 +39,6 @@ export function createInnerContext(opts: CreateContextOptions) {
 export async function createContext(event: H3Event) {
     const authorization = getRequestHeader(event, 'authorization')
     const user = await userController.getUserFromHeader(authorization);
-    console.log('Got user: ',user)
     return createInnerContext({ user });
 }
 
