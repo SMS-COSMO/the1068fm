@@ -12,6 +12,12 @@ export default defineNuxtPlugin(() => {
     links: [
       httpBatchLink({
         url: '/api/trpc',
+        headers() {
+          const userStore = useUserStore();
+          return {
+            Authorization: userStore.accessToken,
+          };
+        },
       }),
     ],
     transformer: superjson

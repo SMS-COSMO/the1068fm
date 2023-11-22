@@ -88,5 +88,15 @@
 </template>
 
 <script setup lang="ts">
+const { $api } = useNuxtApp();
 const open = ref(false);
+
+onMounted(async () => {
+  try {
+    await $api.user.tokenValidity.query();
+  } catch (err) {
+    const router = useRouter();
+    router.push('/login');
+  }
+});
 </script>
