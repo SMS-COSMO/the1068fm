@@ -117,7 +117,7 @@ onMounted(async () => {
   }
 
   try {
-    songList.value = await $api.song.list.query();
+    songList.value = (await $api.song.list.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   } catch (err) {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);

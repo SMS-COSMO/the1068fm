@@ -19,18 +19,35 @@
       </UiButton>
     </div>
 
-    <UiCard class="mt-6 shadow">
+    <UiCard class="my-6 shadow">
       <UiCardHeader>
         <UiInput placeholder="搜索歌单" class="text-md" />
       </UiCardHeader>
       <UiCardContent>
-        <MusicCard title="Compact music card" creator="ahehrbakbrjk" compact />
-        <MusicCard title="Compact music card" creator="ahehrbakbrjk" compact editable />
-        <MusicCard title="Song B" creator="ahehrbakbrjk" />
+        <div v-for="(song, index) in songList.filter(s => (s.status === 'unset'))" :key="index">
+          <MusicCard :song="song"></MusicCard>
+        </div>
       </UiCardContent>
     </UiCard>
   </div>
 </template>
 
 <script setup lang="ts">
+import { isTRPCClientError } from '~/lib/utils';
+import type { TSongList } from '~/lib/utils';
+const { $api, $toast } = useNuxtApp();
+
+const songList = ref<TSongList>([]);
+
+onMounted(async () => {
+  try {
+    songList.value = (await $api.song.list.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  } catch (err) {
+    if (isTRPCClientError(err)) {
+      $toast.error(err.message);
+    } else {
+      $toast.error('未知错误');
+    }
+  }
+});
 </script>
