@@ -13,6 +13,33 @@
         <ClientOnly fallback-tag="span" fallback="Loading Calendar">
           <UiCalendar class="rounded-lg border"></UiCalendar>
         </ClientOnly>
+        <UiPopover v-model:open="arrangementOpen">
+          <UiPopoverTrigger as-child>
+            <UiButton variant="outline" role="combobox" :aria-expanded="arrangementOpen"
+              class="justify-between w-full mt-4">
+              一键排歌
+              <span class="icon-[radix-icons--caret-down] text-lg"></span>
+            </UiButton>
+          </UiPopoverTrigger>
+          <UiPopoverContent class="p-0">
+            <UiCommand>
+              <UiCommandGroup>
+                <UiCommandItem value="oneDay">
+                  一天
+                </UiCommandItem>
+                <UiCommandItem value="oneWeek">
+                  一周
+                </UiCommandItem>
+                <UiCommandItem value="twoWeeks">
+                  两周
+                </UiCommandItem>
+              </UiCommandGroup>
+            </UiCommand>
+          </UiPopoverContent>
+        </UiPopover>
+        <UiButton variant="outline" class="mt-4 w-full">
+          生成微信公众号文章
+        </UiButton>
       </UiCardContent>
       <UiPopover v-model:open="accountOpen">
         <UiPopoverTrigger as-child>
@@ -76,15 +103,34 @@
               <div v-for="(song, index) in songList.filter(s => (s.status === 'unset'))" :key="index">
                 <MusicCard :song="song">
                   <template #action>
-                    <div class="flex flex-row gap-1 w-[100px]">
-                      <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                        variant="outline" size="icon">
-                        <ChevronLeft class="w-4 h-4" />
-                      </UiButton>
-                      <UiButton @click="updateSong(song, 'rejected')"
-                        class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline">
-                        <X class="w-4 h-4" />
-                      </UiButton>
+                    <div class="flex flex-row gap-1">
+                      <UiTooltipProvider>
+                        <UiTooltip>
+                          <UiTooltipTrigger as-child>
+                            <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                              variant="outline" size="icon">
+                              <ChevronLeft class="w-4 h-4" />
+                            </UiButton>
+                          </UiTooltipTrigger>
+                          <UiTooltipContent>
+                            <p>加入今日排歌表</p>
+                          </UiTooltipContent>
+                        </UiTooltip>
+                      </UiTooltipProvider>
+                      <UiTooltipProvider>
+                        <UiTooltip>
+                          <UiTooltipTrigger as-child>
+                            <UiButton @click="updateSong(song, 'rejected')"
+                              class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
+                              size="icon">
+                              <X class="w-4 h-4" />
+                            </UiButton>
+                          </UiTooltipTrigger>
+                          <UiTooltipContent>
+                            <p>拒绝</p>
+                          </UiTooltipContent>
+                        </UiTooltip>
+                      </UiTooltipProvider>
                     </div>
                   </template>
                 </MusicCard>
@@ -125,10 +171,19 @@
               <div v-for="(song, index) in songList.filter(s => (s.status === 'rejected'))" :key="index">
                 <MusicCard :song="song">
                   <template #action>
-                    <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                      variant="outline" size="icon">
-                      <Check @click="updateSong(song, 'unset')" class="w-4 h-4" />
-                    </UiButton>
+                    <UiTooltipProvider>
+                      <UiTooltip>
+                        <UiTooltipTrigger as-child>
+                          <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                            variant="outline" size="icon">
+                            <Check @click="updateSong(song, 'unset')" class="w-4 h-4" />
+                          </UiButton>
+                        </UiTooltipTrigger>
+                        <UiTooltipContent>
+                          <p>重新加入待审核列表</p>
+                        </UiTooltipContent>
+                      </UiTooltip>
+                    </UiTooltipProvider>
                   </template>
                 </MusicCard>
               </div>
@@ -153,9 +208,11 @@ import type { TSong, TSongList } from '~/lib/utils';
 const { $api, $toast } = useNuxtApp();
 import { ChevronLeft, X, Check } from 'lucide-vue-next';
 
+const userStore = useUserStore();
+
 const accountOpen = ref(false);
 const rejectOpen = ref(false);
-const userStore = useUserStore();
+const arrangementOpen = ref(false);
 
 const songList = ref<TSongList>([]);
 
@@ -163,6 +220,13 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });
     await updateSongList();
+
+    if (status === 'unset')
+      $toast.message(`成功将《${song.name}》移入待审核列表`);
+    if (status === 'rejected')
+      $toast.message(`成功拒绝《${song.name}》`);
+    if (status === 'used')
+      $toast.message(`成功将《${song.name}》加入今日排歌单`);
   } catch (err) {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);
