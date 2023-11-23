@@ -21,7 +21,7 @@ export const songRouter = router({
         }),
 
     remove: protectedProcedure
-        .input(z.object({ id: z.string() }))
+        .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
         .mutation(async ({ ctx, input }) => {
             const res = await ctx.songController.remove(input.id);
             if (!res.success)
@@ -30,12 +30,24 @@ export const songRouter = router({
         }),
 
     content: publicProcedure
-        .input(z.object({ id: z.string() }))
+        .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
         .query(async ({ ctx, input }) => {
             const res = await ctx.songController.getContent(input.id);
             if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else return res.res;
+        }),
+
+    modifyStatus: protectedProcedure
+        .input(z.object({
+            id: z.string().min(1, '歌曲不存在'),
+            status: z.enum(['unset', 'rejected', 'used']),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const res = await ctx.songController.modifyStatus(input.id, input.status);
+            if (!res.success)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else return res;
         }),
 
     list: publicProcedure

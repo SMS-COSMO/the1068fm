@@ -19,29 +19,8 @@
           </UiTooltipProvider>
         </UiCardDescription>
       </div>
-      <div v-if="editable" class="flex items-center space-x-1 rounded-md bg-secondary">
-        <UiButton variant="secondary" class="px-3 shadow-none whitespace-nowrap">
-          <span class="icon-[tabler--edit]"></span>
-          操作
-        </UiButton>
-        <UiSeparator orientation="vertical" class="h-[20px]" />
-        <UiDropdownMenu>
-          <UiDropdownMenuTrigger as-child>
-            <UiButton variant="secondary" class="px-2 shadow-none">
-              <span class="icon-[tabler--chevron-down]"></span>
-            </UiButton>
-          </UiDropdownMenuTrigger>
-          <UiDropdownMenuContent align="end" :align-offset="-5" class="w-[200px]">
-            <UiDropdownMenuItem>
-              <span class="icon-[tabler--plus] mr-1"></span>
-              加入今日歌单
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem>
-              <span class="icon-[tabler--x] mr-1"></span>
-              拒绝
-            </UiDropdownMenuItem>
-          </UiDropdownMenuContent>
-        </UiDropdownMenu>
+      <div class="self-center ml-auto">
+        <slot name="action"></slot>
       </div>
     </UiCardHeader>
   </UiCard>
@@ -53,7 +32,6 @@ import type { TSong } from '~/lib/utils';
 const props = withDefaults(defineProps<{
   song: TSong;
   compact?: boolean;
-  editable?: boolean;
 }>(), {
   compact: false,
   editable: false

@@ -34,6 +34,15 @@ export class SongController {
         }
     }
 
+    async modifyStatus(id: string, status: 'unset' | 'rejected' | 'used') {
+        try {
+            await db.update(songs).set({ status }).where(eq(songs.id, id));
+            return { success: true, message: '修改成功' };
+        } catch (err) {
+            return { success: false, message: '歌曲不存在' }
+        }
+    }
+
     async getList() {
         try {
             const res = await db.select().from(songs);
