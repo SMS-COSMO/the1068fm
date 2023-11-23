@@ -10,7 +10,9 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiCalendar class="rounded-lg border"></UiCalendar>
+        <ClientOnly fallback-tag="span" fallback="Loading Calendar">
+          <UiCalendar class="rounded-lg border"></UiCalendar>
+        </ClientOnly>
       </UiCardContent>
       <UiPopover v-model:open="accountOpen">
         <UiPopoverTrigger as-child>
@@ -79,7 +81,7 @@
                         variant="outline" size="icon">
                         <ChevronLeft class="w-4 h-4" />
                       </UiButton>
-                      <UiButton @click="reject(song)"
+                      <UiButton @click="updateSong(song, 'rejected')"
                         class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline">
                         <X class="w-4 h-4" />
                       </UiButton>
@@ -121,7 +123,14 @@
           <UiTabsContent value="rejected">
             <UiScrollArea class="h-[calc(100vh-18rem)]">
               <div v-for="(song, index) in songList.filter(s => (s.status === 'rejected'))" :key="index">
-                <MusicCard :song="song" editable></MusicCard>
+                <MusicCard :song="song">
+                  <template #action>
+                    <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                      variant="outline" size="icon">
+                      <Check @click="updateSong(song, 'unset')" class="w-4 h-4" />
+                    </UiButton>
+                  </template>
+                </MusicCard>
               </div>
             </UiScrollArea>
           </UiTabsContent>
@@ -142,7 +151,7 @@
 import { isTRPCClientError } from '~/lib/utils';
 import type { TSong, TSongList } from '~/lib/utils';
 const { $api, $toast } = useNuxtApp();
-import { ChevronLeft, X } from 'lucide-vue-next';
+import { ChevronLeft, X, Check } from 'lucide-vue-next';
 
 const accountOpen = ref(false);
 const rejectOpen = ref(false);
@@ -150,9 +159,9 @@ const userStore = useUserStore();
 
 const songList = ref<TSongList>([]);
 
-const reject = async (song: TSong) => {
+const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
   try {
-    await $api.song.modifyStatus.mutate({ id: song.id, status: 'rejected' });
+    await $api.song.modifyStatus.mutate({ id: song.id, status });
     await updateSongList();
   } catch (err) {
     if (isTRPCClientError(err)) {
@@ -166,7 +175,7 @@ const reject = async (song: TSong) => {
 const rejectAll = async () => {
   rejectOpen.value = false;
   for (let song of songList.value)
-    await reject(song);
+    await updateSong(song, 'rejected');
 
   await updateSongList();
 };
