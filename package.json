@@ -33,6 +33,7 @@
     "@vee-validate/nuxt": "^4.11.8",
     "@vee-validate/zod": "^4.11.8",
     "@vueuse/core": "^10.6.1",
+    "@vueuse/nuxt": "^10.6.1",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

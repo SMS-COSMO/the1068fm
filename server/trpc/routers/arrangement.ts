@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { protectedProcedure, router } from '../trpc';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 const dateRegExp = /(202[3-9]|20[3-9]\d)-[01]\d-[0-3]\d/
 const dateZod = z.string().min(1, '排歌表日期不能为空').refine((val) => dateRegExp.test(val), '日期格式不正确')

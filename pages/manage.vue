@@ -11,7 +11,7 @@
       </UiCardHeader>
       <UiCardContent>
         <ClientOnly fallback-tag="span" fallback="Loading Calendar">
-          <UiCalendar class="rounded-lg border"></UiCalendar>
+          <UiCalendar v-model="date" mode="date" locale="zh" :masks="{ title: 'YYYY MMM' }" class="rounded-lg border" />
         </ClientOnly>
         <UiPopover v-model:open="arrangementOpen">
           <UiPopoverTrigger as-child>
@@ -71,6 +71,12 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
+        <UiButton @click="createEmptyArrangement" v-if="arrangement === undefined" variant="outline" class="w-full h-24">
+          <Plus class="w-5 h-5" />
+        </UiButton>
+        <div v-else>
+          {{ arrangement }}
+        </div>
       </UiCardContent>
       <UiButton class="absolute right-5 bottom-5">
         保存修改
@@ -203,10 +209,11 @@
 </template>
 
 <script setup lang="ts">
-import { isTRPCClientError } from '~/lib/utils';
+import { isTRPCClientError, getDateString } from '~/lib/utils';
 import type { TSong, TSongList } from '~/lib/utils';
 const { $api, $toast } = useNuxtApp();
-import { ChevronLeft, X, Check } from 'lucide-vue-next';
+import { ChevronLeft, X, Check, Plus } from 'lucide-vue-next';
+import { computedAsync } from '@vueuse/core';
 
 const userStore = useUserStore();
 
@@ -215,6 +222,7 @@ const rejectOpen = ref(false);
 const arrangementOpen = ref(false);
 
 const songList = ref<TSongList>([]);
+const date = ref(new Date());
 
 const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
   try {
@@ -235,6 +243,18 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
     }
   }
 };
+
+const createEmptyArrangement = async () => {
+  await $api.arrangement.create.mutate({ date: getDateString(date.value), songIds: [] });
+};
+
+const arrangement = computedAsync(async () => {
+  try {
+    return (await $api.arrangement.content.query({ date: getDateString(date.value) })).songIds;
+  } catch (err) {
+    return undefined;
+  }
+}, []);
 
 const rejectAll = async () => {
   rejectOpen.value = false;
@@ -273,3 +293,9 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style>
+.calendar .vc-day:has(.vc-highlights) {
+  background: transparent;
+}
+</style>
