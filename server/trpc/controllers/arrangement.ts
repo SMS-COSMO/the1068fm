@@ -35,10 +35,10 @@ export class ArrangementController {
 
     async modifySongList(date: string, newSongList: string[]) {
         try {
-            const res = (await db.select().from(arrangements).where(eq(arrangements.date, date)))[0];
-            return { success: true, res, message: '获取成功' };
+            await db.update(arrangements).set({ songIds: newSongList }).where(eq(arrangements.date, date));
+            return { success: true, message: '修改成功' };
         } catch (err) {
-            return { success: false, message: '排歌表不存在' }
+            return { success: false, message: '服务器内部错误' }
         }
     }
 
