@@ -1,6 +1,9 @@
 <template>
   <UiCard class="mb-2">
-    <UiCardHeader :class="`${compact ? 'p-4' : ''} grid grid-cols-[1fr_110px] items-start gap-4 space-y-0`">
+    <UiCardHeader :class="`${compact ? 'p-4' : ''} items-start gap-4 space-y-0 flex-row`">
+      <div v-if="sorting" class="self-center w-4 mr-3 my-[-10px] flex flex-col gap-1">
+        <slot name="prefix"></slot>
+      </div>
       <div class="space-y-1">
         <UiCardTitle :class="compact ? 'text-lg' : ''">
           {{ song?.name }}
@@ -10,7 +13,7 @@
           <UiTooltipProvider v-if="song?.type === 'withMsg'">
             <UiTooltip>
               <UiTooltipTrigger as-child>
-                <UiBadge  class="ml-1 rounded-md">留言</UiBadge>
+                <UiBadge class="ml-1 rounded-md">留言</UiBadge>
               </UiTooltipTrigger>
               <UiTooltipContent>
                 <p>{{ song?.message }}</p>
@@ -20,7 +23,7 @@
         </UiCardDescription>
       </div>
       <div class="self-center ml-auto">
-        <slot name="action"></slot>
+        <slot name="suffix"></slot>
       </div>
     </UiCardHeader>
   </UiCard>
@@ -32,8 +35,10 @@ import type { TSong } from '~/lib/utils';
 const props = withDefaults(defineProps<{
   song: TSong;
   compact?: boolean;
+  sorting?: boolean;
 }>(), {
   compact: false,
-  editable: false
+  editable: false,
+  sorting: false,
 });
 </script>

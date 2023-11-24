@@ -65,7 +65,7 @@
     <UiCard class="basis-1/3 relative pt-4">
       <UiCardHeader>
         <UiCardTitle>
-          本周排歌表
+          {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
         </UiCardTitle>
         <UiCardDescription>
           placeholder
@@ -87,8 +87,16 @@
         <div v-else>
           <UiScrollArea class="h-[calc(100vh-12rem)]">
             <div v-for="(song, index) in arrangement" :key="index">
-              <MusicCard :song="song">
-                <template #action>
+              <MusicCard :song="song" sorting>
+                <template #prefix>
+                  <UiButton @click="move(song, -1)" variant="outline" size="icon" class="h-7 w-8">
+                    <ChevronUp class="w-3.5 h-3.5" />
+                  </UiButton>
+                  <UiButton @click="move(song, 1)" variant="outline" size="icon" class="h-7 w-8">
+                    <ChevronDown class="w-3.5 h-3.5" />
+                  </UiButton>
+                </template>
+                <template #suffix>
                   <UiTooltipProvider>
                     <UiTooltip>
                       <UiTooltipTrigger as-child>
@@ -107,7 +115,7 @@
               </MusicCard>
             </div>
             <span v-if="arrangement?.length === 0">
-              排歌表中暂无歌曲，从总歌单中添加
+              排歌表中暂无歌曲，请从已审核中添加~
             </span>
           </UiScrollArea>
         </div>
@@ -139,7 +147,7 @@
             <UiScrollArea class="h-[calc(100vh-18rem)]">
               <div v-for="(song, index) in unsetList" :key="index">
                 <MusicCard :song="song">
-                  <template #action>
+                  <template #suffix>
                     <div class="flex flex-row gap-1">
                       <UiTooltipProvider>
                         <UiTooltip>
@@ -208,7 +216,7 @@
             <UiScrollArea class="h-[calc(100vh-18rem)]">
               <div v-for="(song, index) in rejectedList" :key="index">
                 <MusicCard :song="song">
-                  <template #action>
+                  <template #suffix>
                     <UiTooltipProvider>
                       <UiTooltip>
                         <UiTooltipTrigger as-child>
@@ -232,7 +240,7 @@
             <UiScrollArea class="h-[calc(100vh-18rem)]">
               <div v-for="(song, index) in approvedList" :key="index">
                 <MusicCard :song="song">
-                  <template #action>
+                  <template #suffix>
                     <UiTooltipProvider>
                       <UiTooltip>
                         <UiTooltipTrigger as-child>
@@ -261,7 +269,7 @@
 <script setup lang="ts">
 import { isTRPCClientError, getDateString } from '~/lib/utils';
 import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
-import { ChevronLeft, ChevronRight, X, Check, Plus } from 'lucide-vue-next';
+import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, X, Check, Plus } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 const { $api, $toast } = useNuxtApp();
@@ -364,6 +372,28 @@ const removeFromArrangement = async (song: TSong) => {
   } catch (err) {
     trpcErr(err);
     arrangementList.value[i].songs.splice(j, 1, song);
+  }
+};
+
+const move = async (song: TSong, upset: 1 | -1) => {
+  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
+  if (!arrangementList.value[i])
+    return;
+
+  const j = arrangementList.value[i].songs.indexOf(song);
+  if (j + upset >= 0 && j + upset < arrangementList.value[i].songs.length)
+    [arrangementList.value[i].songs[j], arrangementList.value[i].songs[j + upset]] =
+      [arrangementList.value[i].songs[j + upset], arrangementList.value[i].songs[j]]
+
+  try {
+    await $api.arrangement.modifySongList.mutate({
+      date: dateString.value,
+      newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
+    });
+  } catch (err) {
+    trpcErr(err);
+    [arrangementList.value[i].songs[j], arrangementList.value[i].songs[j + upset]] =
+      [arrangementList.value[i].songs[j + upset], arrangementList.value[i].songs[j]]
   }
 }
 
