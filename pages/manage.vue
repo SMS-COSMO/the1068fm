@@ -132,6 +132,10 @@
           </UiScrollArea>
         </div>
       </UiCardContent>
+      <UiButton v-if="arrangement?.length === 0" @click="removeArrangement" variant="destructive"
+        class="absolute right-5 bottom-5">
+        删除排歌表
+      </UiButton>
     </UiCard>
     <UiCard class="basis-1/3 relative pt-4">
       <UiCardHeader>
@@ -384,6 +388,16 @@ const removeFromArrangement = async (song: TSong) => {
   } catch (err) {
     trpcErr(err);
     arrangementList.value[i].songs.splice(j, 1, song);
+  }
+};
+
+const removeArrangement = async () => {
+  try {
+    await $api.arrangement.remove.mutate({ date: dateString.value });
+    const i = arrangementList.value.findIndex(item => item.date === dateString.value);
+    arrangementList.value.splice(i, 1);
+  } catch (err) {
+    trpcErr(err);
   }
 };
 
