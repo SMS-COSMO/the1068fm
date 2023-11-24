@@ -86,34 +86,36 @@
         </UiTooltipProvider>
         <div v-else>
           <UiScrollArea class="h-[calc(100vh-12rem)]">
-            <div v-for="(song, index) in arrangement" :key="index">
-              <MusicCard :song="song" sorting>
-                <template #prefix>
-                  <UiButton @click="move(song, -1)" variant="outline" size="icon" class="h-7 w-8">
-                    <ChevronUp class="w-3.5 h-3.5" />
-                  </UiButton>
-                  <UiButton @click="move(song, 1)" variant="outline" size="icon" class="h-7 w-8">
-                    <ChevronDown class="w-3.5 h-3.5" />
-                  </UiButton>
-                </template>
-                <template #suffix>
-                  <UiTooltipProvider>
-                    <UiTooltip>
-                      <UiTooltipTrigger as-child>
-                        <UiButton @click="removeFromArrangement(song)"
-                          class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
-                          size="icon">
-                          <ChevronRight class="w-4 h-4" />
-                        </UiButton>
-                      </UiTooltipTrigger>
-                      <UiTooltipContent>
-                        <p>从排歌表中移除</p>
-                      </UiTooltipContent>
-                    </UiTooltip>
-                  </UiTooltipProvider>
-                </template>
-              </MusicCard>
-            </div>
+            <TransitionGroup name="list" tag="ul">
+              <li v-for="(song, index) in arrangement" :key="index">
+                <MusicCard :song="song" sorting>
+                  <template #prefix>
+                    <UiButton @click="move(song, -1)" variant="outline" size="icon" class="h-7 w-8">
+                      <ChevronUp class="w-3.5 h-3.5" />
+                    </UiButton>
+                    <UiButton @click="move(song, 1)" variant="outline" size="icon" class="h-7 w-8">
+                      <ChevronDown class="w-3.5 h-3.5" />
+                    </UiButton>
+                  </template>
+                  <template #suffix>
+                    <UiTooltipProvider>
+                      <UiTooltip>
+                        <UiTooltipTrigger as-child>
+                          <UiButton @click="removeFromArrangement(song)"
+                            class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
+                            size="icon">
+                            <ChevronRight class="w-4 h-4" />
+                          </UiButton>
+                        </UiTooltipTrigger>
+                        <UiTooltipContent>
+                          <p>从排歌表中移除</p>
+                        </UiTooltipContent>
+                      </UiTooltip>
+                    </UiTooltipProvider>
+                  </template>
+                </MusicCard>
+              </li>
+            </TransitionGroup>
             <span v-if="arrangement?.length === 0">
               排歌表中暂无歌曲，请从已审核中添加~
             </span>
@@ -449,5 +451,16 @@ onMounted(async () => {
 
 .vc-week {
   height: 48px !important;
+}
+</style>
+
+<style scoped>
+.list-enter-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>
