@@ -71,11 +71,42 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiButton @click="createEmptyArrangement" v-if="arrangement === undefined" variant="outline" class="w-full h-24">
-          <Plus class="w-5 h-5" />
-        </UiButton>
+        <UiTooltipProvider v-if="arrangement === undefined">
+          <UiTooltip>
+            <UiTooltipTrigger as-child>
+              <UiButton @click="createEmptyArrangement" variant="outline" class="w-full h-24">
+                <Plus class="w-5 h-5" />
+              </UiButton>
+            </UiTooltipTrigger>
+            <UiTooltipContent>
+              <p>创建空白排歌表</p>
+            </UiTooltipContent>
+          </UiTooltip>
+        </UiTooltipProvider>
         <div v-else>
-          {{ arrangement }}
+          <div v-for="(song, index) in arrangement" :key="index">
+            <MusicCard :song="song">
+              <template #action>
+                <UiTooltipProvider>
+                  <UiTooltip>
+                    <UiTooltipTrigger as-child>
+                      <UiButton @click="updateSong(song, 'rejected')"
+                        class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
+                        size="icon">
+                        <ChevronRight class="w-4 h-4" />
+                      </UiButton>
+                    </UiTooltipTrigger>
+                    <UiTooltipContent>
+                      <p>从排歌表中移除</p>
+                    </UiTooltipContent>
+                  </UiTooltip>
+                </UiTooltipProvider>
+              </template>
+            </MusicCard>
+          </div>
+          <span v-if="arrangement.length === 0">
+            排歌表中暂无歌曲，从总歌单中添加
+          </span>
         </div>
       </UiCardContent>
       <UiButton class="absolute right-5 bottom-5">
@@ -210,10 +241,10 @@
 
 <script setup lang="ts">
 import { isTRPCClientError, getDateString } from '~/lib/utils';
-import type { TSong, TSongList } from '~/lib/utils';
-const { $api, $toast } = useNuxtApp();
-import { ChevronLeft, X, Check, Plus } from 'lucide-vue-next';
+import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
+import { ChevronLeft, ChevronRight, X, Check, Plus } from 'lucide-vue-next';
 import { computedAsync } from '@vueuse/core';
+const { $api, $toast } = useNuxtApp();
 
 const userStore = useUserStore();
 
@@ -222,6 +253,7 @@ const rejectOpen = ref(false);
 const arrangementOpen = ref(false);
 
 const songList = ref<TSongList>([]);
+const arrangementList = ref<TArrangementList>([]);
 const date = ref(new Date());
 
 const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
@@ -248,13 +280,23 @@ const createEmptyArrangement = async () => {
   await $api.arrangement.create.mutate({ date: getDateString(date.value), songIds: [] });
 };
 
-const arrangement = computedAsync(async () => {
-  try {
-    return (await $api.arrangement.content.query({ date: getDateString(date.value) })).songIds;
-  } catch (err) {
-    return undefined;
-  }
-}, []);
+const arrangement = computedAsync(
+  async () => {
+    try {
+      const { songIds } = await $api.arrangement.content.query({ date: getDateString(date.value) });
+      if (!songIds)
+        return undefined;
+      return await Promise.all(
+        songIds.map(async song => {
+          return await $api.song.content.query({ id: song });
+        })
+      );
+    } catch (err) {
+      return undefined;
+    }
+  },
+  [],
+);
 
 const rejectAll = async () => {
   rejectOpen.value = false;
@@ -284,6 +326,7 @@ onMounted(async () => {
 
   try {
     await updateSongList();
+    arrangementList.value = await $api.arrangement.list.query();
   } catch (err) {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);

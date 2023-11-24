@@ -21,3 +21,4 @@ export function isTRPCClientError(
 export type RouterOutput = inferRouterOutputs<AppRouter>;
 export type TSong = RouterOutput['song']['content'];
 export type TSongList = RouterOutput['song']['list'];
+export type TArrangementList = RouterOutput['arrangement']['list'];
