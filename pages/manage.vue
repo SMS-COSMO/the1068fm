@@ -111,9 +111,6 @@
           </span>
         </div>
       </UiCardContent>
-      <UiButton class="absolute right-5 bottom-5">
-        保存修改
-      </UiButton>
     </UiCard>
     <UiCard class="basis-1/3 relative pt-4">
       <UiCardHeader>
@@ -146,7 +143,8 @@
                       <UiTooltipProvider>
                         <UiTooltip>
                           <UiTooltipTrigger as-child>
-                            <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                            <UiButton @click="addToArrangement(song)"
+                              class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
                               variant="outline" size="icon">
                               <ChevronLeft class="w-4 h-4" />
                             </UiButton>
@@ -293,6 +291,38 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
     }
   }
 };
+
+const addToArrangement = async (song: TSong) => {
+  const d = getDateString(date.value);
+  const i = arrangementList.value.findIndex(e => e.date === d);
+  arrangementList.value[i].songIds?.push(song.id);
+
+  try {
+    // TODO: should check dupe
+    await $api.arrangement.modifySongList.mutate({
+      date: d,
+      newSongList: arrangementList.value[i].songIds ?? []
+    });
+  } catch (err) {
+    if (isTRPCClientError(err)) {
+      $toast.error(err.message);
+    } else {
+      $toast.error('未知错误');
+    }
+    arrangementList.value[i].songIds?.pop();
+  }
+
+  try {
+    await $api.song.modifyStatus.mutate({ id: song.id, status: 'used' });
+    updateSongList();
+  }catch (err) {
+    if (isTRPCClientError(err)) {
+      $toast.error(err.message);
+    } else {
+      $toast.error('未知错误');
+    }
+  }
+}
 
 const createEmptyArrangement = async () => {
   try {
