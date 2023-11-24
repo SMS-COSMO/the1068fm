@@ -72,7 +72,7 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiTooltipProvider v-if="arrangementList.find(e => e.date === getDateString(date)) === undefined">
+        <UiTooltipProvider v-if="arrangement === undefined">
           <UiTooltip>
             <UiTooltipTrigger as-child>
               <UiButton @click="createEmptyArrangement" variant="outline" class="w-full h-24">
@@ -134,7 +134,7 @@
           </UiTabsList>
           <UiTabsContent value="unset">
             <UiScrollArea class="h-[calc(100vh-18rem)]">
-              <div v-for="(song, index) in songList.filter(s => (s.status === 'unset'))" :key="index">
+              <div v-for="(song, index) in unsetList" :key="index">
                 <MusicCard :song="song">
                   <template #action>
                     <div class="flex flex-row gap-1">
@@ -203,15 +203,16 @@
           </UiTabsContent>
           <UiTabsContent value="rejected">
             <UiScrollArea class="h-[calc(100vh-18rem)]">
-              <div v-for="(song, index) in songList.filter(s => (s.status === 'rejected'))" :key="index">
+              <div v-for="(song, index) in rejectedList" :key="index">
                 <MusicCard :song="song">
                   <template #action>
                     <UiTooltipProvider>
                       <UiTooltip>
                         <UiTooltipTrigger as-child>
-                          <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                          <UiButton @click="updateSong(song, 'unset')"
+                            class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
                             variant="outline" size="icon">
-                            <Check @click="updateSong(song, 'unset')" class="w-4 h-4" />
+                            <Check class="w-4 h-4" />
                           </UiButton>
                         </UiTooltipTrigger>
                         <UiTooltipContent>
@@ -245,6 +246,14 @@ import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 const { $api, $toast } = useNuxtApp();
 
+const trpcErr = (err: unknown) => {
+  if (isTRPCClientError(err)) {
+    $toast.error(err.message);
+  } else {
+    $toast.error('未知错误');
+  }
+};
+
 const userStore = useUserStore();
 
 const accountOpen = ref(false);
@@ -252,10 +261,19 @@ const rejectOpen = ref(false);
 const arrangementOpen = ref(false);
 
 const songList = ref<TSongList>([]);
+const unsetList = computed(
+  () => songList.value.filter(s => (s.status === 'unset'))
+    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)) // Oldest first
+);
+const rejectedList = computed(
+  () => songList.value.filter(s => (s.status === 'rejected'))
+    .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)) // Newest first
+);
+
 const arrangementList = ref<TArrangementList>([]);
 const arrangement = computed(
   () => arrangementList.value.find(e => e.date === getDateString(date.value))?.songs
-)
+);
 const date = ref(new Date());
 
 const calendarAttr = computed(() => {
@@ -276,7 +294,8 @@ const calendarAttr = computed(() => {
 const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });
-    await updateSongList();
+    const i = songList.value.findIndex(item => item.id === song.id);
+    songList.value[i].status = status;
 
     if (status === 'unset')
       $toast.message(`成功将《${song.name}》移入待审核列表`);
@@ -285,11 +304,7 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
     if (status === 'used')
       $toast.message(`成功将《${song.name}》加入今日排歌单`);
   } catch (err) {
-    if (isTRPCClientError(err)) {
-      $toast.error(err.message);
-    } else {
-      $toast.error('未知错误');
-    }
+    trpcErr(err);
   }
 };
 
@@ -306,24 +321,11 @@ const addToArrangement = async (song: TSong) => {
       date: d,
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
-  } catch (err) {
-    if (isTRPCClientError(err)) {
-      $toast.error(err.message);
-    } else {
-      $toast.error('未知错误');
-    }
-    arrangementList.value[i].songs.pop();
-  }
 
-  try {
-    await $api.song.modifyStatus.mutate({ id: song.id, status: 'used' });
-    updateSongList();
+    updateSong(song, 'used');
   } catch (err) {
-    if (isTRPCClientError(err)) {
-      $toast.error(err.message);
-    } else {
-      $toast.error('未知错误');
-    }
+    trpcErr(err);
+    arrangementList.value[i].songs.pop();
   }
 };
 
@@ -336,11 +338,7 @@ const createEmptyArrangement = async () => {
       songs: [],
     });
   } catch (err) {
-    if (isTRPCClientError(err)) {
-      $toast.error(err.message);
-    } else {
-      $toast.error('未知错误');
-    }
+    trpcErr(err);
   }
 };
 
@@ -348,18 +346,12 @@ const rejectAll = async () => {
   rejectOpen.value = false;
   for (let song of songList.value)
     await updateSong(song, 'rejected');
-
-  await updateSongList();
 };
 
 const logout = () => {
   const router = useRouter();
   userStore.logout();
   router.push('/login');
-};
-
-const updateSongList = async () => {
-  songList.value = (await $api.song.list.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
 };
 
 onMounted(async () => {
@@ -371,14 +363,10 @@ onMounted(async () => {
   }
 
   try {
-    await updateSongList();
+    songList.value = await $api.song.list.query();
     arrangementList.value = await $api.arrangement.list.query();
   } catch (err) {
-    if (isTRPCClientError(err)) {
-      $toast.error(err.message);
-    } else {
-      $toast.error('未知错误');
-    }
+    trpcErr(err);
   }
 });
 </script>
