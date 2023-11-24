@@ -11,7 +11,8 @@
       </UiCardHeader>
       <UiCardContent>
         <ClientOnly fallback-tag="span" fallback="Loading Calendar">
-          <UiCalendar v-model="date" mode="date" locale="zh" :masks="{ title: 'YYYY MMM' }" class="rounded-lg border" />
+          <DatePicker v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
+            :masks="{ title: 'YYYY MMM' }" class="rounded-lg border" expanded trim-weeks borderless />
         </ClientOnly>
         <UiPopover v-model:open="arrangementOpen">
           <UiPopoverTrigger as-child>
@@ -244,6 +245,8 @@ import { isTRPCClientError, getDateString } from '~/lib/utils';
 import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
 import { ChevronLeft, ChevronRight, X, Check, Plus } from 'lucide-vue-next';
 import { computedAsync } from '@vueuse/core';
+import { DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
 const { $api, $toast } = useNuxtApp();
 
 const userStore = useUserStore();
@@ -255,6 +258,8 @@ const arrangementOpen = ref(false);
 const songList = ref<TSongList>([]);
 const arrangementList = ref<TArrangementList>([]);
 const date = ref(new Date());
+
+const calendarAttr = ref([{}]);
 
 const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
   try {
@@ -327,6 +332,17 @@ onMounted(async () => {
   try {
     await updateSongList();
     arrangementList.value = await $api.arrangement.list.query();
+    for (const arrangement of arrangementList.value) {
+      calendarAttr.value.push({
+        dot: {
+          style: {
+            backgroundColor: (arrangement.songIds?.length ?? 0) <= 8 ? 'orange' : 'green',
+          }
+        },
+        dates: new Date(arrangement.date)
+      })
+    }
+    console.log(calendarAttr.value);
   } catch (err) {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);
@@ -340,5 +356,9 @@ onMounted(async () => {
 <style>
 .calendar .vc-day:has(.vc-highlights) {
   background: transparent;
+}
+
+.vc-day-box-center-bottom {
+  margin: -4px !important;
 }
 </style>
