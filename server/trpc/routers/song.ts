@@ -41,7 +41,7 @@ export const songRouter = router({
     modifyStatus: protectedProcedure
         .input(z.object({
             id: z.string().min(1, '歌曲不存在'),
-            status: z.enum(['unset', 'rejected', 'used']),
+            status: z.enum(['unset', 'approved', 'rejected', 'used']),
         }))
         .mutation(async ({ ctx, input }) => {
             const res = await ctx.songController.modifyStatus(input.id, input.status);

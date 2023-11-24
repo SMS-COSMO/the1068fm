@@ -34,7 +34,7 @@ export class SongController {
         }
     }
 
-    async modifyStatus(id: string, status: 'unset' | 'rejected' | 'used') {
+    async modifyStatus(id: string, status: 'unset' | 'approved' | 'rejected' | 'used') {
         try {
             await db.update(songs).set({ status }).where(eq(songs.id, id));
             return { success: true, message: '修改成功' };

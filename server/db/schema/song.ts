@@ -8,7 +8,7 @@ export const songs = sqliteTable('songs', {
     submitterName: text('submitter_name', { mode: 'text' }).notNull(),
     submitterGrade: integer('submitter_grade', { mode: 'number' }).notNull(), // admission year
     submitterClass: integer('submitter_class', { mode: 'number' }).notNull(),
-    status: text('status', { enum: ['unset', 'rejected', 'used'] }).notNull().default('unset'),
+    status: text('status', { enum: ['unset', 'approved', 'rejected', 'used'] }).notNull().default('unset'),
     type: text('type', { enum: ['normal', 'withMsg'] }).notNull(),
     message: text('message', { mode: 'text' }),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),

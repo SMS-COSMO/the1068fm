@@ -123,16 +123,16 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiTabs default-value="unset">
+        <UiTabs default-value="approved">
           <UiTabsList class="grid grid-cols-3">
+            <UiTabsTrigger value="approved">
+              已审核
+            </UiTabsTrigger>
             <UiTabsTrigger value="unset">
               待审核
             </UiTabsTrigger>
             <UiTabsTrigger value="rejected">
               已拒绝
-            </UiTabsTrigger>
-            <UiTabsTrigger value="used">
-              已使用
             </UiTabsTrigger>
           </UiTabsList>
           <UiTabsContent value="unset">
@@ -144,14 +144,14 @@
                       <UiTooltipProvider>
                         <UiTooltip>
                           <UiTooltipTrigger as-child>
-                            <UiButton @click="addToArrangement(song)"
+                            <UiButton @click="updateSong(song, 'approved')"
                               class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
                               variant="outline" size="icon">
-                              <ChevronLeft class="w-4 h-4" />
+                              <Check class="w-4 h-4" />
                             </UiButton>
                           </UiTooltipTrigger>
                           <UiTooltipContent>
-                            <p>加入今日排歌表</p>
+                            <p>通过</p>
                           </UiTooltipContent>
                         </UiTooltip>
                       </UiTooltipProvider>
@@ -228,10 +228,27 @@
               </div>
             </UiScrollArea>
           </UiTabsContent>
-          <UiTabsContent value="used">
+          <UiTabsContent value="approved">
             <UiScrollArea class="h-[calc(100vh-18rem)]">
-              <div v-for="(song, index) in songList.filter(s => (s.status === 'used'))" :key="index">
-                <MusicCard :song="song"></MusicCard>
+              <div v-for="(song, index) in approvedList" :key="index">
+                <MusicCard :song="song">
+                  <template #action>
+                    <UiTooltipProvider>
+                      <UiTooltip>
+                        <UiTooltipTrigger as-child>
+                          <UiButton @click="addToArrangement(song)"
+                            class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                            variant="outline" size="icon">
+                            <ChevronLeft class="w-4 h-4" />
+                          </UiButton>
+                        </UiTooltipTrigger>
+                        <UiTooltipContent>
+                          <p>加入今日排歌表</p>
+                        </UiTooltipContent>
+                      </UiTooltip>
+                    </UiTooltipProvider>
+                  </template>
+                </MusicCard>
               </div>
             </UiScrollArea>
           </UiTabsContent>
@@ -268,6 +285,10 @@ const unsetList = computed(
   () => songList.value.filter(s => (s.status === 'unset'))
     .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)) // Oldest first
 );
+const approvedList = computed(
+  () => songList.value.filter(s => (s.status === 'approved'))
+    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)) // Oldest first
+);
 const rejectedList = computed(
   () => songList.value.filter(s => (s.status === 'rejected'))
     .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)) // Newest first
@@ -284,7 +305,6 @@ const dateString = computed(() => getDateString(date.value));
 const calendarAttr = computed(() => {
   const res = [];
   for (const arrangement of arrangementList.value) {
-    console.log(arrangement.songs.length);
     res.push({
       dot: {
         style: {
@@ -297,18 +317,11 @@ const calendarAttr = computed(() => {
   return res;
 });
 
-const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
+const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected' | 'used') => {
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });
     const i = songList.value.findIndex(item => item.id === song.id);
     songList.value[i].status = status;
-
-    if (status === 'unset')
-      $toast.message(`成功将《${song.name}》移入待审核列表`);
-    if (status === 'rejected')
-      $toast.message(`成功拒绝《${song.name}》`);
-    if (status === 'used')
-      $toast.message(`成功将《${song.name}》加入今日排歌单`);
   } catch (err) {
     trpcErr(err);
   }
@@ -347,7 +360,7 @@ const removeFromArrangement = async (song: TSong) => {
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
 
-    updateSong(song, 'unset'); // TODO: should be approved
+    updateSong(song, 'approved');
   } catch (err) {
     trpcErr(err);
     arrangementList.value[i].songs.splice(j, 1, song);
