@@ -1,7 +1,8 @@
 import { arrangements } from '~/server/db/schema';
-import { db, TNewArrangement } from '../../db/db';
+import { db, TNewArrangement, TRawSong } from '../../db/db';
 import { LibsqlError } from '@libsql/client';
 import { eq } from 'drizzle-orm';
+import { SongController } from './song';
 
 export class ArrangementController {
     async create(newArrangement: TNewArrangement) {
@@ -44,7 +45,22 @@ export class ArrangementController {
 
     async getList() {
         try {
-            const res = await db.select().from(arrangements);
+            const res = await Promise.all(
+                (await db.select().from(arrangements)).map(async item => {
+                    let songs: TRawSong[] = [];
+                    const songController = new SongController();
+                    for (const songId of item.songIds ?? []) {
+                        const res = await songController.getContent(songId);
+                        if (res.res)
+                            songs.push(res.res);
+                    }
+
+                    return {
+                        date: item.date,
+                        songs,
+                    };
+                })
+            );
             return { success: true, res, message: '获取成功' };
         } catch (err) {
             return { success: false, message: '排歌表不存在' }

@@ -85,16 +85,14 @@
           </UiTooltip>
         </UiTooltipProvider>
         <div v-else>
-          <div v-for="(song, index) in arrangementList.find(e => e.date === getDateString(date))?.songIds" :key="index">
-            {{ song }}
-            <!-- <MusicCard :song="song">
+          <div v-for="(song, index) in arrangement" :key="index">
+            <MusicCard :song="song">
               <template #action>
                 <UiTooltipProvider>
                   <UiTooltip>
                     <UiTooltipTrigger as-child>
-                      <UiButton @click="updateSong(song, 'rejected')"
-                        class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
-                        size="icon">
+                      <UiButton @click="" class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
+                        variant="outline" size="icon">
                         <ChevronRight class="w-4 h-4" />
                       </UiButton>
                     </UiTooltipTrigger>
@@ -104,9 +102,9 @@
                   </UiTooltip>
                 </UiTooltipProvider>
               </template>
-            </MusicCard> -->
+            </MusicCard>
           </div>
-          <span v-if="arrangementList.find(e => e.date === getDateString(date))?.songIds?.length === 0">
+          <span v-if="arrangement?.length === 0">
             排歌表中暂无歌曲，从总歌单中添加
           </span>
         </div>
@@ -255,6 +253,9 @@ const arrangementOpen = ref(false);
 
 const songList = ref<TSongList>([]);
 const arrangementList = ref<TArrangementList>([]);
+const arrangement = computed(
+  () => arrangementList.value.find(e => e.date === getDateString(date.value))?.songs
+)
 const date = ref(new Date());
 
 const calendarAttr = computed(() => {
@@ -263,7 +264,7 @@ const calendarAttr = computed(() => {
     res.push({
       dot: {
         style: {
-          backgroundColor: (arrangement.songIds?.length ?? 0) <= 8 ? 'orange' : 'green',
+          backgroundColor: (arrangement.songs.length ?? 0) <= 8 ? 'orange' : 'green',
         }
       },
       dates: new Date(arrangement.date)
@@ -295,13 +296,15 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
 const addToArrangement = async (song: TSong) => {
   const d = getDateString(date.value);
   const i = arrangementList.value.findIndex(e => e.date === d);
-  arrangementList.value[i].songIds?.push(song.id);
+  if (!arrangementList.value[i])
+    return;
 
+  arrangementList.value[i].songs.push(song);
   try {
     // TODO: should check dupe
     await $api.arrangement.modifySongList.mutate({
       date: d,
-      newSongList: arrangementList.value[i].songIds ?? []
+      newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
   } catch (err) {
     if (isTRPCClientError(err)) {
@@ -309,20 +312,20 @@ const addToArrangement = async (song: TSong) => {
     } else {
       $toast.error('未知错误');
     }
-    arrangementList.value[i].songIds?.pop();
+    arrangementList.value[i].songs.pop();
   }
 
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status: 'used' });
     updateSongList();
-  }catch (err) {
+  } catch (err) {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);
     } else {
       $toast.error('未知错误');
     }
   }
-}
+};
 
 const createEmptyArrangement = async () => {
   try {
@@ -330,7 +333,7 @@ const createEmptyArrangement = async () => {
     await $api.arrangement.create.mutate({ date: d, songIds: [] });
     arrangementList.value.push({
       date: d,
-      songIds: [],
+      songs: [],
     });
   } catch (err) {
     if (isTRPCClientError(err)) {
