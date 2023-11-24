@@ -72,7 +72,7 @@
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
-        <UiTooltipProvider v-if="arrangement === undefined">
+        <UiTooltipProvider v-if="arrangementList.find(e => e.date === getDateString(date)) === undefined">
           <UiTooltip>
             <UiTooltipTrigger as-child>
               <UiButton @click="createEmptyArrangement" variant="outline" class="w-full h-24">
@@ -85,8 +85,9 @@
           </UiTooltip>
         </UiTooltipProvider>
         <div v-else>
-          <div v-for="(song, index) in arrangement" :key="index">
-            <MusicCard :song="song">
+          <div v-for="(song, index) in arrangementList.find(e => e.date === getDateString(date))?.songIds" :key="index">
+            {{ song }}
+            <!-- <MusicCard :song="song">
               <template #action>
                 <UiTooltipProvider>
                   <UiTooltip>
@@ -103,9 +104,9 @@
                   </UiTooltip>
                 </UiTooltipProvider>
               </template>
-            </MusicCard>
+            </MusicCard> -->
           </div>
-          <span v-if="arrangement.length === 0">
+          <span v-if="arrangementList.find(e => e.date === getDateString(date))?.songIds?.length === 0">
             排歌表中暂无歌曲，从总歌单中添加
           </span>
         </div>
@@ -244,7 +245,6 @@
 import { isTRPCClientError, getDateString } from '~/lib/utils';
 import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
 import { ChevronLeft, ChevronRight, X, Check, Plus } from 'lucide-vue-next';
-import { computedAsync } from '@vueuse/core';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 const { $api, $toast } = useNuxtApp();
@@ -259,7 +259,20 @@ const songList = ref<TSongList>([]);
 const arrangementList = ref<TArrangementList>([]);
 const date = ref(new Date());
 
-const calendarAttr = ref([{}]);
+const calendarAttr = computed(() => {
+  const res = [];
+  for (const arrangement of arrangementList.value) {
+    res.push({
+      dot: {
+        style: {
+          backgroundColor: (arrangement.songIds?.length ?? 0) <= 8 ? 'orange' : 'green',
+        }
+      },
+      dates: new Date(arrangement.date)
+    })
+  }
+  return res;
+});
 
 const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') => {
   try {
@@ -282,26 +295,21 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
 };
 
 const createEmptyArrangement = async () => {
-  await $api.arrangement.create.mutate({ date: getDateString(date.value), songIds: [] });
-};
-
-const arrangement = computedAsync(
-  async () => {
-    try {
-      const { songIds } = await $api.arrangement.content.query({ date: getDateString(date.value) });
-      if (!songIds)
-        return undefined;
-      return await Promise.all(
-        songIds.map(async song => {
-          return await $api.song.content.query({ id: song });
-        })
-      );
-    } catch (err) {
-      return undefined;
+  try {
+    const d = getDateString(date.value);
+    await $api.arrangement.create.mutate({ date: d, songIds: [] });
+    arrangementList.value.push({
+      date: d,
+      songIds: [],
+    });
+  } catch (err) {
+    if (isTRPCClientError(err)) {
+      $toast.error(err.message);
+    } else {
+      $toast.error('未知错误');
     }
-  },
-  [],
-);
+  }
+};
 
 const rejectAll = async () => {
   rejectOpen.value = false;
@@ -332,17 +340,6 @@ onMounted(async () => {
   try {
     await updateSongList();
     arrangementList.value = await $api.arrangement.list.query();
-    for (const arrangement of arrangementList.value) {
-      calendarAttr.value.push({
-        dot: {
-          style: {
-            backgroundColor: (arrangement.songIds?.length ?? 0) <= 8 ? 'orange' : 'green',
-          }
-        },
-        dates: new Date(arrangement.date)
-      })
-    }
-    console.log(calendarAttr.value);
   } catch (err) {
     if (isTRPCClientError(err)) {
       $toast.error(err.message);
@@ -359,6 +356,10 @@ onMounted(async () => {
 }
 
 .vc-day-box-center-bottom {
-  margin: -4px !important;
+  margin: 3px !important;
+}
+
+.vc-week {
+  height: 48px !important;
 }
 </style>
