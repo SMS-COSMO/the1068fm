@@ -159,43 +159,87 @@
               已拒绝
             </UiTabsTrigger>
           </UiTabsList>
+          <UiTabsContent value="approved">
+            <UiScrollArea class="h-[calc(100vh-14rem)]">
+              <div v-for="(song, index) in approvedList" :key="index">
+                <UiContextMenu>
+                  <UiContextMenuTrigger>
+                    <MusicCard :song="song">
+                      <template #suffix>
+                        <UiTooltipProvider>
+                          <UiTooltip>
+                            <UiTooltipTrigger as-child>
+                              <UiButton @click="addToArrangement(song)"
+                                class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                                variant="outline" size="icon">
+                                <ChevronLeft class="w-4 h-4" />
+                              </UiButton>
+                            </UiTooltipTrigger>
+                            <UiTooltipContent>
+                              <p>加入排歌表</p>
+                            </UiTooltipContent>
+                          </UiTooltip>
+                        </UiTooltipProvider>
+                      </template>
+                    </MusicCard>
+                  </UiContextMenuTrigger>
+                  <UiContextMenuContent>
+                    <UiContextMenuItem @click="updateSong(song, 'rejected')">拒绝</UiContextMenuItem>
+                    <UiContextMenuItem @click="updateSong(song, 'unset')">移入待审核</UiContextMenuItem>
+                    <UiContextMenuSeparator />
+                    <UiContextMenuItem @click="addToArrangement(song)">加入排歌表</UiContextMenuItem>
+                  </UiContextMenuContent>
+                </UiContextMenu>
+              </div>
+            </UiScrollArea>
+          </UiTabsContent>
           <UiTabsContent value="unset">
             <UiScrollArea class="h-[calc(100vh-18rem)]">
               <div v-for="(song, index) in unsetList" :key="index">
-                <MusicCard :song="song">
-                  <template #suffix>
-                    <div class="flex flex-row gap-1">
-                      <UiTooltipProvider>
-                        <UiTooltip>
-                          <UiTooltipTrigger as-child>
-                            <UiButton @click="updateSong(song, 'approved')"
-                              class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                              variant="outline" size="icon">
-                              <Check class="w-4 h-4" />
-                            </UiButton>
-                          </UiTooltipTrigger>
-                          <UiTooltipContent>
-                            <p>通过</p>
-                          </UiTooltipContent>
-                        </UiTooltip>
-                      </UiTooltipProvider>
-                      <UiTooltipProvider>
-                        <UiTooltip>
-                          <UiTooltipTrigger as-child>
-                            <UiButton @click="updateSong(song, 'rejected')"
-                              class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
-                              size="icon">
-                              <X class="w-4 h-4" />
-                            </UiButton>
-                          </UiTooltipTrigger>
-                          <UiTooltipContent>
-                            <p>拒绝</p>
-                          </UiTooltipContent>
-                        </UiTooltip>
-                      </UiTooltipProvider>
-                    </div>
-                  </template>
-                </MusicCard>
+                <UiContextMenu>
+                  <UiContextMenuTrigger>
+                    <MusicCard :song="song">
+                      <template #suffix>
+                        <div class="flex flex-row gap-1">
+                          <UiTooltipProvider>
+                            <UiTooltip>
+                              <UiTooltipTrigger as-child>
+                                <UiButton @click="updateSong(song, 'approved')"
+                                  class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                                  variant="outline" size="icon">
+                                  <Check class="w-4 h-4" />
+                                </UiButton>
+                              </UiTooltipTrigger>
+                              <UiTooltipContent>
+                                <p>通过</p>
+                              </UiTooltipContent>
+                            </UiTooltip>
+                          </UiTooltipProvider>
+                          <UiTooltipProvider>
+                            <UiTooltip>
+                              <UiTooltipTrigger as-child>
+                                <UiButton @click="updateSong(song, 'rejected')"
+                                  class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
+                                  variant="outline" size="icon">
+                                  <X class="w-4 h-4" />
+                                </UiButton>
+                              </UiTooltipTrigger>
+                              <UiTooltipContent>
+                                <p>拒绝</p>
+                              </UiTooltipContent>
+                            </UiTooltip>
+                          </UiTooltipProvider>
+                        </div>
+                      </template>
+                    </MusicCard>
+                  </UiContextMenuTrigger>
+                  <UiContextMenuContent>
+                    <UiContextMenuItem @click="updateSong(song, 'approved')">通过</UiContextMenuItem>
+                    <UiContextMenuItem @click="updateSong(song, 'rejected')">拒绝</UiContextMenuItem>
+                    <UiContextMenuSeparator />
+                    <UiContextMenuItem @click="addToArrangement(song)">直接加入排歌表</UiContextMenuItem>
+                  </UiContextMenuContent>
+                </UiContextMenu>
               </div>
             </UiScrollArea>
             <UiPopover v-model:open="rejectOpen">
@@ -231,48 +275,34 @@
           <UiTabsContent value="rejected">
             <UiScrollArea class="h-[calc(100vh-18rem)]">
               <div v-for="(song, index) in rejectedList" :key="index">
-                <MusicCard :song="song">
-                  <template #suffix>
-                    <UiTooltipProvider>
-                      <UiTooltip>
-                        <UiTooltipTrigger as-child>
-                          <UiButton @click="updateSong(song, 'unset')"
-                            class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                            variant="outline" size="icon">
-                            <Check class="w-4 h-4" />
-                          </UiButton>
-                        </UiTooltipTrigger>
-                        <UiTooltipContent>
-                          <p>重新加入待审核列表</p>
-                        </UiTooltipContent>
-                      </UiTooltip>
-                    </UiTooltipProvider>
-                  </template>
-                </MusicCard>
-              </div>
-            </UiScrollArea>
-          </UiTabsContent>
-          <UiTabsContent value="approved">
-            <UiScrollArea class="h-[calc(100vh-18rem)]">
-              <div v-for="(song, index) in approvedList" :key="index">
-                <MusicCard :song="song">
-                  <template #suffix>
-                    <UiTooltipProvider>
-                      <UiTooltip>
-                        <UiTooltipTrigger as-child>
-                          <UiButton @click="addToArrangement(song)"
-                            class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                            variant="outline" size="icon">
-                            <ChevronLeft class="w-4 h-4" />
-                          </UiButton>
-                        </UiTooltipTrigger>
-                        <UiTooltipContent>
-                          <p>加入今日排歌表</p>
-                        </UiTooltipContent>
-                      </UiTooltip>
-                    </UiTooltipProvider>
-                  </template>
-                </MusicCard>
+                <UiContextMenu>
+                  <UiContextMenuTrigger>
+                    <MusicCard :song="song">
+                      <template #suffix>
+                        <UiTooltipProvider>
+                          <UiTooltip>
+                            <UiTooltipTrigger as-child>
+                              <UiButton @click="updateSong(song, 'approved')"
+                                class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                                variant="outline" size="icon">
+                                <Check class="w-4 h-4" />
+                              </UiButton>
+                            </UiTooltipTrigger>
+                            <UiTooltipContent>
+                              <p>通过</p>
+                            </UiTooltipContent>
+                          </UiTooltip>
+                        </UiTooltipProvider>
+                      </template>
+                    </MusicCard>
+                  </UiContextMenuTrigger>
+                  <UiContextMenuContent>
+                    <UiContextMenuItem @click="updateSong(song, 'approved')">通过</UiContextMenuItem>
+                    <UiContextMenuItem @click="updateSong(song, 'unset')">移入待审核</UiContextMenuItem>
+                    <UiContextMenuSeparator />
+                    <UiContextMenuItem @click="addToArrangement(song)">直接加入排歌表</UiContextMenuItem>
+                  </UiContextMenuContent>
+                </UiContextMenu>
               </div>
             </UiScrollArea>
           </UiTabsContent>
@@ -329,10 +359,18 @@ const dateString = computed(() => getDateString(date.value));
 const calendarAttr = computed(() => {
   const res = [];
   for (const arrangement of arrangementList.value) {
+    let dotColor = 'orange';
+    if (arrangement.songs.length === 0)
+      dotColor = 'gray';
+    else if (arrangement.songs.length < 8)
+      dotColor = 'orange';
+    else
+      dotColor = 'green';
+
     res.push({
       dot: {
         style: {
-          backgroundColor: arrangement.songs.length < 8 ? 'orange' : 'green',
+          backgroundColor: dotColor,
         }
       },
       dates: new Date(arrangement.date),
