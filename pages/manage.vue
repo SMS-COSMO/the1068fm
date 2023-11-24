@@ -85,28 +85,31 @@
           </UiTooltip>
         </UiTooltipProvider>
         <div v-else>
-          <div v-for="(song, index) in arrangement" :key="index">
-            <MusicCard :song="song">
-              <template #action>
-                <UiTooltipProvider>
-                  <UiTooltip>
-                    <UiTooltipTrigger as-child>
-                      <UiButton @click="" class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
-                        variant="outline" size="icon">
-                        <ChevronRight class="w-4 h-4" />
-                      </UiButton>
-                    </UiTooltipTrigger>
-                    <UiTooltipContent>
-                      <p>从排歌表中移除</p>
-                    </UiTooltipContent>
-                  </UiTooltip>
-                </UiTooltipProvider>
-              </template>
-            </MusicCard>
-          </div>
-          <span v-if="arrangement?.length === 0">
-            排歌表中暂无歌曲，从总歌单中添加
-          </span>
+          <UiScrollArea class="h-[calc(100vh-12rem)]">
+            <div v-for="(song, index) in arrangement" :key="index">
+              <MusicCard :song="song">
+                <template #action>
+                  <UiTooltipProvider>
+                    <UiTooltip>
+                      <UiTooltipTrigger as-child>
+                        <UiButton @click="removeFromArrangement(song)"
+                          class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700" variant="outline"
+                          size="icon">
+                          <ChevronRight class="w-4 h-4" />
+                        </UiButton>
+                      </UiTooltipTrigger>
+                      <UiTooltipContent>
+                        <p>从排歌表中移除</p>
+                      </UiTooltipContent>
+                    </UiTooltip>
+                  </UiTooltipProvider>
+                </template>
+              </MusicCard>
+            </div>
+            <span v-if="arrangement?.length === 0">
+              排歌表中暂无歌曲，从总歌单中添加
+            </span>
+          </UiScrollArea>
         </div>
       </UiCardContent>
     </UiCard>
@@ -272,20 +275,23 @@ const rejectedList = computed(
 
 const arrangementList = ref<TArrangementList>([]);
 const arrangement = computed(
-  () => arrangementList.value.find(e => e.date === getDateString(date.value))?.songs
+  () => arrangementList.value.find(e => e.date === dateString.value)?.songs
 );
+
 const date = ref(new Date());
+const dateString = computed(() => getDateString(date.value));
 
 const calendarAttr = computed(() => {
   const res = [];
   for (const arrangement of arrangementList.value) {
+    console.log(arrangement.songs.length);
     res.push({
       dot: {
         style: {
-          backgroundColor: (arrangement.songs.length ?? 0) <= 8 ? 'orange' : 'green',
+          backgroundColor: arrangement.songs.length < 8 ? 'orange' : 'green',
         }
       },
-      dates: new Date(arrangement.date)
+      dates: new Date(arrangement.date),
     })
   }
   return res;
@@ -309,8 +315,7 @@ const updateSong = async (song: TSong, status: 'unset' | 'rejected' | 'used') =>
 };
 
 const addToArrangement = async (song: TSong) => {
-  const d = getDateString(date.value);
-  const i = arrangementList.value.findIndex(e => e.date === d);
+  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
   if (!arrangementList.value[i])
     return;
 
@@ -318,7 +323,7 @@ const addToArrangement = async (song: TSong) => {
   try {
     // TODO: should check dupe
     await $api.arrangement.modifySongList.mutate({
-      date: d,
+      date: dateString.value,
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
 
@@ -329,12 +334,31 @@ const addToArrangement = async (song: TSong) => {
   }
 };
 
+const removeFromArrangement = async (song: TSong) => {
+  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
+  if (!arrangementList.value[i])
+    return;
+
+  const j = arrangementList.value[i].songs.indexOf(song);
+  arrangementList.value[i].songs.splice(j, 1);
+  try {
+    await $api.arrangement.modifySongList.mutate({
+      date: dateString.value,
+      newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
+    });
+
+    updateSong(song, 'unset'); // TODO: should be approved
+  } catch (err) {
+    trpcErr(err);
+    arrangementList.value[i].songs.splice(j, 1, song);
+  }
+}
+
 const createEmptyArrangement = async () => {
   try {
-    const d = getDateString(date.value);
-    await $api.arrangement.create.mutate({ date: d, songIds: [] });
+    await $api.arrangement.create.mutate({ date: dateString.value, songIds: [] });
     arrangementList.value.push({
-      date: d,
+      date: dateString.value,
       songs: [],
     });
   } catch (err) {
