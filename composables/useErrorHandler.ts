@@ -1,7 +1,5 @@
-
-const { $toast } = useNuxtApp()
-
 export const useErrorHandler = async (err: unknown) => {
+  const { $toast } = useNuxtApp()
   if (useIsTRPCClientError(err)) {
     if (err.data?.zodError) {
       for (const issue of err.data.zodError)
