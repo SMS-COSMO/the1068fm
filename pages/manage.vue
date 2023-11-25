@@ -469,16 +469,15 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
   }
 };
 
-const addToArrangement = async (song: TSong, date?: dayjs.Dayjs) => {
-  const d = date ? getDateString(date.toDate()) : dateString.value;
-  const i = arrangementList.value.findIndex(e => e.date === d);
+const addToArrangement = async (song: TSong) => {
+  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
   if (!arrangementList.value[i])
     return;
 
   arrangementList.value[i].songs.push(song);
   try {
     await $api.arrangement.modifySongList.mutate({
-      date: d,
+      date: dateString.value,
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
 
@@ -541,12 +540,11 @@ const move = async (song: TSong, upset: 1 | -1) => {
   }
 }
 
-const createEmptyArrangement = async (date?: dayjs.Dayjs) => {
-  const d = date ? getDateString(date.toDate()) : dateString.value;
+const createEmptyArrangement = async () => {
   try {
-    await $api.arrangement.create.mutate({ date: d, songIds: [] });
+    await $api.arrangement.create.mutate({ date: dateString.value, songIds: [] });
     arrangementList.value.push({
-      date: d,
+      date: dateString.value,
       songs: [],
     });
   } catch (err) {
