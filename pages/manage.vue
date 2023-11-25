@@ -5,9 +5,6 @@
         <UiCardTitle>
           Calendar
         </UiCardTitle>
-        <UiCardDescription>
-          placeholder
-        </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
         <ClientOnly fallback-tag="span" fallback="Loading Calendar">
@@ -67,9 +64,6 @@
         <UiCardTitle>
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
         </UiCardTitle>
-        <UiCardDescription>
-          placeholder
-        </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
         <UiTooltipProvider v-if="arrangement === undefined">
@@ -143,11 +137,8 @@
           <UiCardTitle>
             总歌单
           </UiCardTitle>
-          <UiCardDescription>
-            placeholder
-          </UiCardDescription>
         </div>
-        <UiButton @click="enterReview" variant="secondary" class="ml-auto">
+        <UiButton @click="enterReview" variant="secondary" class="self-center my-[-10px] ml-auto">
           进入审歌模式
         </UiButton>
       </UiCardHeader>
@@ -156,12 +147,21 @@
           <UiTabsList class="grid grid-cols-3">
             <UiTabsTrigger value="approved">
               已审核
+              <UiBadge variant="secondary" class="ml-2 self-center">
+                {{ approvedList.length }}
+              </UiBadge>
             </UiTabsTrigger>
             <UiTabsTrigger value="unset">
               待审核
+              <UiBadge variant="secondary" class="ml-2 self-center">
+                {{ unsetList.length }}
+              </UiBadge>
             </UiTabsTrigger>
             <UiTabsTrigger value="rejected">
               已拒绝
+              <UiBadge variant="secondary" class="ml-2 self-center">
+                {{ rejectedList.length }}
+              </UiBadge>
             </UiTabsTrigger>
           </UiTabsList>
           <UiTabsContent value="approved">
@@ -249,7 +249,7 @@
             </UiScrollArea>
             <UiPopover v-model:open="rejectOpen">
               <UiPopoverTrigger as-child>
-                <UiButton @click="rejectOpen = true" variant="destructive" class="absolute right-5 bottom-5">
+                <UiButton @click="rejectOpen = true" variant="outline" class="absolute right-5 bottom-5">
                   全部拒绝
                 </UiButton>
               </UiPopoverTrigger>
@@ -265,7 +265,7 @@
                   </UiCardHeader>
                   <UiCardContent class="p-2">
                     <div class="ml-auto">
-                      <UiButton @click="rejectAll">
+                      <UiButton @click="rejectAll" variant="destructive">
                         是
                       </UiButton>
                       <UiButton @click="rejectOpen = false" variant="outline" class="ml-2">

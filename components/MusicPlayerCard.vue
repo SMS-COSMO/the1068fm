@@ -5,12 +5,36 @@
         <div class="w-18 mr-3 flex flex-col gap-1">
           <UiAvatar class="rounded-sm h-20 w-20">
             <UiAvatarImage :src="song.pic" :alt="song.title" />
+            <UiAvatarFallback>
+              <span class="icon-[tabler--help-square] text-3xl text-slate-400"></span>
+            </UiAvatarFallback>
           </UiAvatar>
         </div>
         <div class="space-y-1 w-full">
           <UiCardTitle>
             {{ song.title }}
-            <a :href="song.link" class="icon-[tabler--link] text-lg cursor-pointer float-right"></a>
+            <div class="float-right">
+              <UiTooltipProvider v-if="isError">
+                <UiTooltip>
+                  <UiTooltipTrigger as-child>
+                    <span class="icon-[tabler--alert-triangle-filled] text-lg text-yellow-500 self-center"></span>
+                  </UiTooltipTrigger>
+                  <UiTooltipContent>
+                    <p>无法加载歌曲</p>
+                  </UiTooltipContent>
+                </UiTooltip>
+              </UiTooltipProvider>
+              <UiTooltipProvider>
+                <UiTooltip>
+                  <UiTooltipTrigger as-child>
+                    <a :href="song.link" class="icon-[tabler--link] text-lg cursor-pointer ml-2"></a>
+                  </UiTooltipTrigger>
+                  <UiTooltipContent>
+                    <p>跳转到原链接</p>
+                  </UiTooltipContent>
+                </UiTooltip>
+              </UiTooltipProvider>
+            </div>
           </UiCardTitle>
           <UiCardDescription>
             {{ song.author }}
@@ -62,8 +86,14 @@ const getTime = (seconds: number) => {
   return m + ':' + s;
 };
 
+const isError = ref(false);
+const { start } = useTimeoutFn(() => {
+  isError.value = duration.value === 0;
+}, 5000);
+
 onMounted(() => {
   volume.value = 0.5;
   currentTime.value = 0;
+  start();
 });
 </script>
