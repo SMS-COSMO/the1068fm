@@ -329,8 +329,7 @@ import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, X, Check, Plus, Load
 import { DatePicker } from 'v-calendar';
 import dayjs from 'dayjs';
 import 'v-calendar/style.css';
-const { $api } = useNuxtApp();
-
+const { $api, $toast } = useNuxtApp();
 
 const userStore = useUserStore();
 

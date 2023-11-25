@@ -40,11 +40,10 @@ export default defineNuxtConfig({
         target: 'esnext'
       }
     },
-    devProxy: {
+    routeRules: {
       '/liuzhijin': {
-        target: 'https://music.liuzhijin.cn',
-        changeOrigin: true,
+        proxy: 'https://music.liuzhijin.cn',
       },
-    }
+    },
   },
 })
