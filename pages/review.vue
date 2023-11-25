@@ -223,7 +223,7 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
 };
 
 const reviewSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected' | 'used') => {
-  updateSong(song, status);
+  await updateSong(song, status);
   selectedSong.value = unsetList.value[unsetList.value.indexOf(song) + 1];
 };
 

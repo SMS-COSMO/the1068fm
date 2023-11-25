@@ -11,30 +11,35 @@
           <DatePicker v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
             :masks="{ title: 'YYYY MMM' }" class="rounded-lg border" expanded trim-weeks borderless />
         </ClientOnly>
-        <UiPopover v-model:open="arrangementOpen">
-          <UiPopoverTrigger as-child>
-            <UiButton variant="outline" role="combobox" :aria-expanded="arrangementOpen"
-              class="justify-between w-full mt-4">
-              一键排歌
-              <span class="icon-[radix-icons--caret-down] text-lg"></span>
-            </UiButton>
-          </UiPopoverTrigger>
-          <UiPopoverContent class="p-0">
-            <UiCommand>
-              <UiCommandGroup>
-                <UiCommandItem value="oneDay">
-                  一天
-                </UiCommandItem>
-                <UiCommandItem value="oneWeek">
-                  一周
-                </UiCommandItem>
-                <UiCommandItem value="twoWeeks">
-                  两周
-                </UiCommandItem>
-              </UiCommandGroup>
-            </UiCommand>
-          </UiPopoverContent>
-        </UiPopover>
+        <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-4">
+          <UiButton @click="arrange" :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none">
+            <Loader2 v-if="arrangeLoading" class="w-4 h-4 mr-2 animate-spin" />
+            一键排歌
+          </UiButton>
+          <UiDropdownMenu>
+            <UiDropdownMenuTrigger as-child>
+              <UiButton variant="outline" class="basis-1/3 px-2 shadow-none">
+                <span class="w-16">
+                  {{ autoArrangeScopeText[autoArrangeScopeLength] }}
+                </span>
+                <ChevronDown class="h-4 w-4 ml-1 text-secondary-foreground" />
+              </UiButton>
+            </UiDropdownMenuTrigger>
+            <UiDropdownMenuContent align="end" :align-offset="-5" class="w-[200px]">
+              <UiDropdownMenuLabel>排歌时长</UiDropdownMenuLabel>
+              <UiDropdownMenuSeparator />
+              <UiDropdownMenuCheckboxItem @click="setAutoArrangeScopeLength('day')" :checked="autoArrangeScopeLength === 'day'">
+                一天
+              </UiDropdownMenuCheckboxItem>
+              <UiDropdownMenuCheckboxItem @click="setAutoArrangeScopeLength('week')" :checked="autoArrangeScopeLength === 'week'">
+                一周
+              </UiDropdownMenuCheckboxItem>
+            </UiDropdownMenuContent>
+          </UiDropdownMenu>
+          <UiToggle @click="showAutoArrangePreview = !showAutoArrangePreview" class="basis-1/6 shadow-none">
+            预览
+          </UiToggle>
+        </div>
         <UiButton variant="outline" class="mt-4 w-full">
           生成微信公众号文章
         </UiButton>
@@ -320,8 +325,9 @@
 <script setup lang="ts">
 import { isTRPCClientError, getDateString } from '~/lib/utils';
 import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
-import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, X, Check, Plus } from 'lucide-vue-next';
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, X, Check, Plus, Loader2 } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
+import dayjs from 'dayjs';
 import 'v-calendar/style.css';
 const { $api, $toast } = useNuxtApp();
 
@@ -337,7 +343,65 @@ const userStore = useUserStore();
 
 const accountOpen = ref(false);
 const rejectOpen = ref(false);
-const arrangementOpen = ref(false);
+
+type TArrange = 'day' | 'week';
+const autoArrangeScopeText = {
+  'day': '一天',
+  'week': '一周',
+};
+const autoArrangeScopeLength = ref<TArrange>(userStore.autoArrange);
+const setAutoArrangeScopeLength = (newVal: TArrange) => {
+  autoArrangeScopeLength.value = newVal;
+  userStore.changeAutoArrange(newVal);
+};
+
+const showAutoArrangePreview = ref(false);
+const arrangeScope = computed(() => {
+  let maxDate = dayjs('2000-01-01');
+  for (const arrangement of arrangementList.value) {
+    const d = dayjs(arrangement.date);
+    maxDate = maxDate > d ? maxDate : d;
+  }
+
+  let startDate = maxDate;
+  if (autoArrangeScopeLength.value === 'week')
+    startDate = maxDate.add(maxDate.day() === 0 ? 0 : 1, 'w').startOf('w').add(1, 'd');
+  else
+    startDate = maxDate.add(1, 'd');
+  const endDate = autoArrangeScopeLength.value === 'week' ? startDate.endOf('w').subtract(1, 'd') : startDate;
+
+  return {
+    start: startDate,
+    end: endDate,
+  }
+});
+
+const arrangeLoading = ref(false);
+const arrange = async () => {
+  arrangeLoading.value = true;
+  const { start, end } = arrangeScope.value;
+  const neededSongCount = (end.diff(start, 'd') + 1) * 10;
+  if (neededSongCount > approvedList.value.length) {
+    $toast.error(`审核通过的歌曲不足，至少需要${neededSongCount}首歌，还差${neededSongCount - approvedList.value.length}首`);
+    arrangeLoading.value = false;
+    return;
+  }
+
+  let i = start;
+  while (i <= end) {
+    const songs = approvedList.value.splice(0, 10);
+    await $api.arrangement.create.mutate({ date: getDateString(i.toDate()), songIds: songs.map(item => item.id) });
+    arrangementList.value.push({
+      date: getDateString(i.toDate()),
+      songs: songs,
+    });
+    for (const song of songs)
+      await updateSong(song, 'used');
+    i = i.add(1, 'd');
+  }
+  arrangeLoading.value = false;
+  $toast.success('排歌成功');
+};
 
 const enterReview = () => {
   const router = useRouter();
@@ -372,7 +436,7 @@ const calendarAttr = computed(() => {
     let dotColor = 'orange';
     if (arrangement.songs.length === 0)
       dotColor = 'gray';
-    else if (arrangement.songs.length < 8)
+    else if (arrangement.songs.length < 10)
       dotColor = 'orange';
     else
       dotColor = 'green';
@@ -384,7 +448,21 @@ const calendarAttr = computed(() => {
         }
       },
       dates: new Date(arrangement.date),
-    })
+    });
+  }
+
+  if (showAutoArrangePreview.value) {
+    res.push({
+      highlight: {
+        start: { fillMode: 'outline', color: 'blue' },
+        base: { fillMode: 'light', color: 'blue' },
+        end: { fillMode: 'outline', color: 'blue' },
+      },
+      dates: {
+        start: arrangeScope.value.start.toDate(),
+        end: arrangeScope.value.end.toDate(),
+      },
+    });
   }
   return res;
 });
@@ -399,20 +477,20 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
   }
 };
 
-const addToArrangement = async (song: TSong) => {
-  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
+const addToArrangement = async (song: TSong, date?: dayjs.Dayjs) => {
+  const d = date ? getDateString(date.toDate()) : dateString.value;
+  const i = arrangementList.value.findIndex(e => e.date === d);
   if (!arrangementList.value[i])
     return;
 
   arrangementList.value[i].songs.push(song);
   try {
-    // TODO: should check dupe
     await $api.arrangement.modifySongList.mutate({
-      date: dateString.value,
+      date: d,
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
 
-    updateSong(song, 'used');
+    await updateSong(song, 'used');
   } catch (err) {
     trpcErr(err);
     arrangementList.value[i].songs.pop();
@@ -432,7 +510,7 @@ const removeFromArrangement = async (song: TSong) => {
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
 
-    updateSong(song, 'approved');
+    await updateSong(song, 'approved');
   } catch (err) {
     trpcErr(err);
     arrangementList.value[i].songs.splice(j, 1, song);
@@ -471,11 +549,12 @@ const move = async (song: TSong, upset: 1 | -1) => {
   }
 }
 
-const createEmptyArrangement = async () => {
+const createEmptyArrangement = async (date?: dayjs.Dayjs) => {
+  const d = date ? getDateString(date.toDate()) : dateString.value;
   try {
-    await $api.arrangement.create.mutate({ date: dateString.value, songIds: [] });
+    await $api.arrangement.create.mutate({ date: d, songIds: [] });
     arrangementList.value.push({
-      date: dateString.value,
+      date: d,
       songs: [],
     });
   } catch (err) {
