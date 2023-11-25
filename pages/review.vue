@@ -55,17 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import { isTRPCClientError } from '~/lib/utils';
 import type { TSong, TSongList } from '~/lib/utils';
 const { $api, $toast } = useNuxtApp();
-
-const trpcErr = (err: unknown) => {
-  if (isTRPCClientError(err)) {
-    $toast.error(err.message);
-  } else {
-    $toast.error('未知错误');
-  }
-};
 
 const songList = ref<TSongList>([]);
 const unsetList = computed(
@@ -110,7 +101,7 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
     const i = songList.value.findIndex(item => item.id === song.id);
     songList.value[i].status = status;
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
   }
 };
 
@@ -125,7 +116,7 @@ onMounted(async () => {
   try {
     songList.value = await $api.song.list.query();
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
   }
 });
 </script>

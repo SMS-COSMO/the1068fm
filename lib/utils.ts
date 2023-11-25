@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { TRPCClientError } from '@trpc/client';
 import type { AppRouter } from '~/server/trpc/routers'
 import type { inferRouterOutputs } from '@trpc/server';
 
@@ -10,12 +9,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getDateString(date: Date) {
   return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-}
-
-export function isTRPCClientError(
-  cause: unknown,
-): cause is TRPCClientError<AppRouter> {
-  return cause instanceof TRPCClientError;
 }
 
 export type RouterOutput = inferRouterOutputs<AppRouter>;

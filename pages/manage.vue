@@ -318,20 +318,13 @@
 </template>
 
 <script setup lang="ts">
-import { isTRPCClientError, getDateString } from '~/lib/utils';
+import { getDateString } from '~/lib/utils';
 import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, X, Check, Plus } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
-const { $api, $toast } = useNuxtApp();
+const { $api } = useNuxtApp();
 
-const trpcErr = (err: unknown) => {
-  if (isTRPCClientError(err)) {
-    $toast.error(err.message);
-  } else {
-    $toast.error('未知错误');
-  }
-};
 
 const userStore = useUserStore();
 
@@ -395,7 +388,7 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
     const i = songList.value.findIndex(item => item.id === song.id);
     songList.value[i].status = status;
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
   }
 };
 
@@ -414,7 +407,7 @@ const addToArrangement = async (song: TSong) => {
 
     updateSong(song, 'used');
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
     arrangementList.value[i].songs.pop();
   }
 };
@@ -434,7 +427,7 @@ const removeFromArrangement = async (song: TSong) => {
 
     updateSong(song, 'approved');
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
     arrangementList.value[i].songs.splice(j, 1, song);
   }
 };
@@ -445,7 +438,7 @@ const removeArrangement = async () => {
     const i = arrangementList.value.findIndex(item => item.date === dateString.value);
     arrangementList.value.splice(i, 1);
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
   }
 };
 
@@ -465,7 +458,7 @@ const move = async (song: TSong, upset: 1 | -1) => {
       newSongList: arrangementList.value[i].songs.map(item => item.id) ?? []
     });
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
     [arrangementList.value[i].songs[j], arrangementList.value[i].songs[j + upset]] =
       [arrangementList.value[i].songs[j + upset], arrangementList.value[i].songs[j]]
   }
@@ -479,7 +472,7 @@ const createEmptyArrangement = async () => {
       songs: [],
     });
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
   }
 };
 
@@ -507,7 +500,7 @@ onMounted(async () => {
     songList.value = await $api.song.list.query();
     arrangementList.value = await $api.arrangement.list.query();
   } catch (err) {
-    trpcErr(err);
+    useErrorHandler(err)
   }
 });
 </script>
