@@ -11,7 +11,7 @@ export const songRouter = router({
             submitterGrade: z.number().min(1000).max(5000), // problem for people in 5000s
             submitterClass: z.number().min(0, '班级号应大于0').max(100, '班级号应小于100'),
             type: z.enum(['normal', 'withMsg'], { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) }),
-            message: z.string(),
+            message: z.string().nullish(),
         }))
         .mutation(async ({ ctx, input }) => {
             const res = await ctx.songController.create(input);
@@ -57,4 +57,9 @@ export const songRouter = router({
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else return res.res;
         }),
+
+    info: publicProcedure
+        .query(async ({ ctx }) => {
+            // const res = await ctx.songController.
+    })
 });
