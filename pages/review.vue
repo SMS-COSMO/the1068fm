@@ -87,7 +87,7 @@ const searchList = computedAsync(
   async () => {
     searchLoading.value = true;
     const formData = new FormData();
-    formData.append('input', selectedSong.value?.name ?? '');
+    formData.append('input', `${selectedSong.value?.name ?? ''} ${selectedSong.value?.creator ?? ''}`);
     formData.append('filter', 'name');
     formData.append('type', 'qq');
 
