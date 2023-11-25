@@ -1,5 +1,6 @@
 import animate from 'tailwindcss-animate'
 import { addDynamicIconSelectors } from '@iconify/tailwind'
+import typography from '@tailwindcss/typography'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -73,5 +74,6 @@ export default {
   plugins: [
     animate,
     addDynamicIconSelectors(),
+    typography(),
   ],
 }

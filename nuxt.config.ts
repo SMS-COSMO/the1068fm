@@ -1,17 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  devtools: { enabled: true },
   modules: [
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/tailwindcss',
     '@vee-validate/nuxt',
     '@vueuse/nuxt',
+    '@nuxt/image',
   ],
   veeValidate: {
     autoImports: true,
     componentNames: {
       Field: 'UiFormField',
     },
+  },
+  tailwindcss: {
+    cssPath: '~/styles/tailwind.css',
   },
   pinia: {
     storesDirs: ['./stores/**'],
@@ -42,5 +47,4 @@ export default defineNuxtConfig({
       },
     }
   },
-  devtools: { enabled: true }
 })
