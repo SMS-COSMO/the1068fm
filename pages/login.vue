@@ -42,7 +42,6 @@
 
 <script setup lang="ts">
 import { useForm } from 'vee-validate';
-import { isTRPCClientError } from '~/lib/utils';
 import { Loader2 } from 'lucide-vue-next';
 const { $api, $toast } = useNuxtApp();
 
@@ -66,7 +65,7 @@ const onSubmit = form.handleSubmit(async values => {
     router.push('/manage');
     buttonLoading.value = false;
   } catch (err) {
-    if (isTRPCClientError(err)) {
+    if (useIsTRPCClientError(err)) {
       $toast.error(err.message);
       buttonLoading.value = false;
     } else {
