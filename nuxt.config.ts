@@ -40,6 +40,7 @@ export default defineNuxtConfig({
         target: 'esnext'
       }
     },
+    preset: 'vercel',
     routeRules: {
       '/liuzhijin': {
         proxy: 'https://music.liuzhijin.cn',
