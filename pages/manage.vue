@@ -138,13 +138,18 @@
       </UiButton>
     </UiCard>
     <UiCard class="basis-1/3 relative pt-4">
-      <UiCardHeader>
-        <UiCardTitle>
-          总歌单
-        </UiCardTitle>
-        <UiCardDescription>
-          placeholder
-        </UiCardDescription>
+      <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
+        <div class="space-y-1">
+          <UiCardTitle>
+            总歌单
+          </UiCardTitle>
+          <UiCardDescription>
+            placeholder
+          </UiCardDescription>
+        </div>
+        <UiButton @click="enterReview" variant="secondary" class="ml-auto">
+          进入审歌模式
+        </UiButton>
       </UiCardHeader>
       <UiCardContent>
         <UiTabs default-value="approved">
@@ -333,6 +338,11 @@ const userStore = useUserStore();
 const accountOpen = ref(false);
 const rejectOpen = ref(false);
 const arrangementOpen = ref(false);
+
+const enterReview = () => {
+  const router = useRouter();
+  router.push('/review');
+};
 
 const songList = ref<TSongList>([]);
 const unsetList = computed(

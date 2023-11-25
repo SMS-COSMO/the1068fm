@@ -34,6 +34,12 @@ export default defineNuxtConfig({
       options: {
         target: 'esnext'
       }
+    },
+    devProxy: {
+      '/liuzhijin': {
+        target: 'https://music.liuzhijin.cn',
+        changeOrigin: true,
+      },
     }
   },
   devtools: { enabled: true }
