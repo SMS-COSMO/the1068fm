@@ -65,10 +65,10 @@
 
 <script setup lang="ts">
 import { Music4 } from 'lucide-vue-next';
-import type { TSongList } from '~/lib/utils';
+import type { TSafeSongList } from '~/types';
 const { $api } = useNuxtApp();
 
-const songList = ref<TSongList>([]);
+const songList = ref<TSafeSongList>([]);
 
 definePageMeta({
   pageTransition: {
@@ -89,7 +89,7 @@ useHead({
 
 onMounted(async () => {
   try {
-    songList.value = (await $api.song.list.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+    songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   } catch (err) {
     useErrorHandler(err)
   }

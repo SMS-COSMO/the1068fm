@@ -155,7 +155,7 @@
 
 <script setup lang="ts">
 import { X, Check } from 'lucide-vue-next';
-import type { TSong, TSongList } from '~/lib/utils';
+import type { TSong, TSongList } from '~/types';
 const { $api } = useNuxtApp();
 
 definePageMeta({

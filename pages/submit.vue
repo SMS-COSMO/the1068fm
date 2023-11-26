@@ -66,23 +66,23 @@
             </UiFormItem>
           </UiFormField>
 
-          <div class="flex flex-row gap-2">
+          <div class="flex gap-2">
             <UiFormField v-slot="{ componentField }" name="submitterGrade">
-              <UiFormItem>
+              <UiFormItem class="grow">
                 <UiFormLabel>年级</UiFormLabel>
                 <UiFormControl>
                   <UiSelect v-bind="componentField">
                     <UiFormControl>
                       <UiSelectTrigger>
-                        <UiSelectValue placeholder="选择" />
+                        <UiSelectValue placeholder="选择" class="" />
                       </UiSelectTrigger>
                     </UiFormControl>
                     <UiSelectContent>
                       <UiSelectGroup>
-                        <UiSelectItem value="1">
+                        <UiSelectItem value="1" class="text-sm">
                           高一
                         </UiSelectItem>
-                        <UiSelectItem value="2">
+                        <UiSelectItem value="2" class="text-sm">
                           高二
                         </UiSelectItem>
                       </UiSelectGroup>
@@ -93,8 +93,8 @@
               </UiFormItem>
             </UiFormField>
 
-            <UiFormField v-slot="{ componentField }" name="submitterClass">
-              <UiFormItem class="flex flex-col flex-grow">
+            <UiFormField v-slot="{ componentField }" name="submitterClass" class="">
+              <UiFormItem class="flex flex-col flex-1 basis-2/3">
                 <UiFormLabel>班级（请填数字）</UiFormLabel>
                 <UiFormControl>
                   <UiInput type="number" v-bind="componentField" />
@@ -158,7 +158,7 @@ const formSchema = toTypedSchema(z.object({
   message: z.string().nullish(),
 }));
 
-const { handleSubmit, values } = useForm({
+const { handleSubmit, values, resetForm } = useForm({
   validationSchema: formSchema,
 });
 
@@ -168,6 +168,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     await $api.song.create.mutate(values)
     $toast.success('提交成功！')
+    resetForm();
   } catch (err) {
     useErrorHandler(err)
   }
@@ -177,5 +178,6 @@ const onSubmit = handleSubmit(async (values) => {
 const back = () => {
   const router = useRouter();
   router.push('/');
+  // navigateTo('/')
 };
 </script>

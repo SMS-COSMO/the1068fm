@@ -10,7 +10,7 @@
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
           by {{ song?.creator }}
-          <UiTooltipProvider v-if="song?.type === 'withMsg'">
+          <UiTooltipProvider v-if="(typeof song.message) === 'string' && song?.type === 'withMsg'">
             <UiTooltip>
               <UiTooltipTrigger as-child>
                 <UiBadge class="ml-1 rounded-md">留言</UiBadge>
@@ -30,10 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import type { TSong } from '~/lib/utils';
+import type { TSafeSong, TSong } from '~/types';
 
 const props = withDefaults(defineProps<{
-  song: TSong;
+  song: TSong | TSafeSong;
   compact?: boolean;
   sorting?: boolean;
   selected?: boolean;

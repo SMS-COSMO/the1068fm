@@ -324,7 +324,7 @@
 
 <script setup lang="ts">
 import { getDateString } from '~/lib/utils';
-import type { TSong, TSongList, TArrangementList } from '~/lib/utils';
+import type { TSong, TSongList, TArrangementList } from '~/types';
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, X, Check, Plus, Loader2 } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
 import dayjs from 'dayjs';
