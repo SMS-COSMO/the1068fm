@@ -1,6 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { serializeSong } from '../utils/serializer';
+import { type TSong } from '~/server/trpc/utils/serializer';
 
 export const songRouter = router({
     create: publicProcedure
@@ -29,7 +31,16 @@ export const songRouter = router({
             else return res;
         }),
 
-    content: publicProcedure
+    contentSafe: publicProcedure
+        .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
+        .query(async ({ ctx, input }) => {
+            const res = await ctx.songController.getContent(input.id);
+            if (!res.success || !res.res)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else return serializeSong(res.res);
+        }),
+
+    content: protectedProcedure
         .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
         .query(async ({ ctx, input }) => {
             const res = await ctx.songController.getContent(input.id);
@@ -50,12 +61,25 @@ export const songRouter = router({
             else return res;
         }),
 
-    list: publicProcedure
+    listSafe: publicProcedure
+        .query(async ({ ctx }) => {
+            const res = await ctx.songController.getList();
+            if (!res.success || !res.res)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else {
+                const safeList: TSong[] = []
+                for (const song of res.res) {
+                    safeList.push(serializeSong(song))
+                }
+                return safeList
+            }
+        }),
+
+    list: protectedProcedure
         .query(async ({ ctx }) => {
             const res = await ctx.songController.getList();
             if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else return res.res;
         }),
-
 });

@@ -1,10 +1,20 @@
 import { songs } from '~/server/db/schema';
 import { type TNewSong, db } from '../../db/db';
 import { LibsqlError } from '@libsql/client';
-import { eq } from 'drizzle-orm';
+import { eq, gt, and } from 'drizzle-orm';
 
 export class SongController {
     async create(newSong: TNewSong) {
+        const lastSong = await db.select().from(songs).where(
+            and(
+                eq(songs.submitterName, newSong.submitterName),
+                eq(songs.submitterClass, newSong.submitterClass),
+                eq(songs.submitterGrade, newSong.submitterGrade),
+                gt(songs.createdAt, new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)),
+            )
+        )
+        if (lastSong.length)
+            return { success: false, message: '每周每人只能投一首歌哦' };
         try {
             await db.insert(songs).values(newSong);
             return { success: true, message: '创建成功！' };
@@ -45,7 +55,7 @@ export class SongController {
 
     async getList() {
         try {
-            const res = await db.select().from(songs);
+            const res = await db.select().from(songs).where(gt(songs.createdAt, new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)));
             return { success: true, res, message: '获取成功' };
         } catch (err) {
             return { success: false, message: '歌曲不存在' }
