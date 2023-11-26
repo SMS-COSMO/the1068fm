@@ -1,8 +1,16 @@
 import { type TRawSong } from "~/server/db/db";
 
-export type TSong = Omit<TRawSong, 'submitterName' | 'submitterGrade' | 'submitterClass' | 'message'> & { message: boolean }
+// this type should be ONLY used in server
+export type TSerializedSong = Omit<TRawSong,
+    'submitterName'
+    | 'submitterGrade'
+    | 'submitterClass'
+    | 'message'
+    | 'status'
+    | 'type'>
+    & { message: boolean }
 
-export function serializeSong(song: TRawSong): TSong {
-    const { submitterClass, submitterName, submitterGrade, message, ...safePartWithoutMsg } = song
+export function serializeSong(song: TRawSong): TSerializedSong {
+    const { submitterClass, submitterName, submitterGrade, message, status, type, ...safePartWithoutMsg } = song
     return { message: message ? true : false, ...safePartWithoutMsg }
 }

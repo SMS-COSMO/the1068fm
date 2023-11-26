@@ -8,7 +8,7 @@
         <div class="grid grid-cols-2 gap-2">
           <UiCard class="shadow p-0 pt-1 pb-2">
             <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-              {{ songList.length }}
+              {{ songListInfo?.allSongs }}
             </UiCardHeader>
             <UiCardContent class="pt-0 pb-0">
               <span class="text-md">已收集歌曲</span>
@@ -16,7 +16,7 @@
           </UiCard>
           <UiCard class="shadow p-0 pt-1 pb-2">
             <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-              {{ songList.filter((song) => song.status !== 'unset').length }}
+              {{ songListInfo?.reviewedSongs }}
             </UiCardHeader>
             <UiCardContent class="pt-0 pb-0">
               <span class="text-md">已审核歌曲</span>
@@ -54,7 +54,7 @@
           <UiInput placeholder="搜索歌单" class="text-md" />
         </UiCardHeader>
         <UiCardContent>
-          <div v-for="(song, index) in songList.filter(s => (s.status === 'unset'))" :key="index">
+          <div v-for="(song, index) in songList" :key="index">
             <MusicCard :song="song"></MusicCard>
           </div>
         </UiCardContent>
@@ -65,10 +65,11 @@
 
 <script setup lang="ts">
 import { Music4 } from 'lucide-vue-next';
-import type { TSafeSongList } from '~/types';
+import type { TSafeSongList, TSongListInfo } from '~/types';
 const { $api } = useNuxtApp();
 
 const songList = ref<TSafeSongList>([]);
+const songListInfo = ref<TSongListInfo>();
 
 definePageMeta({
   pageTransition: {
@@ -90,6 +91,11 @@ useHead({
 onMounted(async () => {
   try {
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  } catch (err) {
+    useErrorHandler(err)
+  }
+  try {
+    songListInfo.value = await $api.song.info.query();
   } catch (err) {
     useErrorHandler(err)
   }

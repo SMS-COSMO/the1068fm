@@ -10,9 +10,9 @@
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
           by {{ song?.creator }}
-          <UiTooltipProvider v-if="(typeof song.message) === 'string' && song?.type === 'withMsg'">
+          <UiTooltipProvider v-if="(typeof song.message) === 'string' && song.type === 'withMsg'">
             <UiTooltip>
-              <UiTooltipTrigger as-child>
+              <UiTooltipTrigger as-child>   
                 <UiBadge class="ml-1 rounded-md">留言</UiBadge>
               </UiTooltipTrigger>
               <UiTooltipContent>

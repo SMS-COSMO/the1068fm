@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, publicProcedure, router } from '../trpc';
 import { serializeSong } from '../utils/serializer';
-import { type TSong } from '~/server/trpc/utils/serializer';
+import { type TSerializedSong } from '~/server/trpc/utils/serializer';
 
 export const songRouter = router({
     create: publicProcedure
@@ -67,7 +67,7 @@ export const songRouter = router({
             if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else {
-                const safeList: TSong[] = []
+                const safeList: TSerializedSong[] = []
                 for (const song of res.res) {
                     safeList.push(serializeSong(song))
                 }
@@ -82,4 +82,16 @@ export const songRouter = router({
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else return res.res;
         }),
+
+    info: publicProcedure
+        .query(async ({ ctx }) => {
+            const res = await ctx.songController.getList();
+            if (!res.success || !res.res)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else {
+                const allSongs = res.res.length
+                const reviewedSongs = res.res.filter((song) => song.status !== 'unset').length
+                return { allSongs, reviewedSongs }
+            }
+        })
 });
