@@ -51,11 +51,11 @@
 
       <UiCard class="my-6 shadow">
         <UiCardHeader>
-          <UiInput placeholder="搜索歌单" class="text-md" />
+          <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md" />
         </UiCardHeader>
         <UiCardContent>
-          <div v-for="(song, index) in songList" :key="index">
-            <MusicCard :song="song"></MusicCard>
+          <div v-for="(song, index) in processedListData" :key="index">
+            <MusicCard :song="song" />
           </div>
         </UiCardContent>
       </UiCard>
@@ -66,6 +66,7 @@
 <script setup lang="ts">
 import { Music4 } from 'lucide-vue-next';
 import type { TSafeSongList, TSongListInfo } from '~/types';
+import { useFuse } from '@vueuse/integrations/useFuse';
 const { $api } = useNuxtApp();
 
 const songList = ref<TSafeSongList>([]);
@@ -76,7 +77,7 @@ definePageMeta({
     name: 'slide-right',
     mode: 'out-in'
   }
-})
+});
 
 useHead({
   title: 'the1068fm 点歌系统',
@@ -86,7 +87,21 @@ useHead({
   bodyAttrs: {
     class: 'm-0 min-w-screen'
   },
-})
+});
+
+const searchContent = ref('');
+const fuseOptions = {
+  fuseOptions: {
+    keys: ['title', 'creator'],
+    shouldSort: true,
+    threshold: 0.6,
+    useExtendedSearch: true,
+  },
+  matchAllWhenSearchEmpty: true,
+};
+const fuse = useFuse(searchContent, songList, fuseOptions);
+
+const processedListData = computed(() => fuse.results.value);
 
 onMounted(async () => {
   try {
