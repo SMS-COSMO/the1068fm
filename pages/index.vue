@@ -92,7 +92,7 @@ useHead({
 const searchContent = ref('');
 const fuseOptions = {
   fuseOptions: {
-    keys: ['title', 'creator'],
+    keys: ['name', 'creator'],
     shouldSort: true,
     threshold: 0.6,
     useExtendedSearch: true,
@@ -101,7 +101,7 @@ const fuseOptions = {
 };
 const fuse = useFuse(searchContent, songList, fuseOptions);
 
-const processedListData = computed(() => fuse.results.value);
+const processedListData = computed(() => fuse.results.value.map(s => s.item));
 
 onMounted(async () => {
   try {
