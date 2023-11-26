@@ -156,7 +156,14 @@
 <script setup lang="ts">
 import { X, Check } from 'lucide-vue-next';
 import type { TSong, TSongList } from '~/lib/utils';
-const { $api, $toast } = useNuxtApp();
+const { $api } = useNuxtApp();
+
+definePageMeta({
+  pageTransition: {
+    name: 'slide-down',
+    mode: 'out-in'
+  }
+});
 
 const rejectOpen = ref(false);
 

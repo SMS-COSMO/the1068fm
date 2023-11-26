@@ -331,6 +331,13 @@ import dayjs from 'dayjs';
 import 'v-calendar/style.css';
 const { $api, $toast } = useNuxtApp();
 
+definePageMeta({
+  pageTransition: {
+    name: 'slide-up',
+    mode: 'out-in'
+  }
+});
+
 const userStore = useUserStore();
 
 const accountOpen = ref(false);

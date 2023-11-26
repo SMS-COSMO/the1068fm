@@ -1,6 +1,6 @@
 <template>
   <div class="mx-8">
-    <UiCard class="mt-16">
+    <UiCard class="my-16">
       <UiCardHeader>
         <UiCardTitle>
           <UiButton variant="outline" size="icon" @click="back" class="mr-2">
@@ -66,31 +66,49 @@
             </UiFormItem>
           </UiFormField>
 
-          <UiFormField v-slot="{ componentField }" name="submitterGrade">
-            <UiFormItem>
-              <UiFormLabel>年级（请填1或2）</UiFormLabel>
-              <UiFormControl>
-                <UiInput type="number" v-bind="componentField" />
-              </UiFormControl>
-              <UiFormMessage />
-            </UiFormItem>
-          </UiFormField>
+          <div class="flex flex-row gap-2">
+            <UiFormField v-slot="{ componentField }" name="submitterGrade">
+              <UiFormItem>
+                <UiFormLabel>年级</UiFormLabel>
+                <UiFormControl>
+                  <UiSelect v-bind="componentField">
+                    <UiFormControl>
+                      <UiSelectTrigger>
+                        <UiSelectValue placeholder="选择" />
+                      </UiSelectTrigger>
+                    </UiFormControl>
+                    <UiSelectContent>
+                      <UiSelectGroup>
+                        <UiSelectItem value="1">
+                          高一
+                        </UiSelectItem>
+                        <UiSelectItem value="2">
+                          高二
+                        </UiSelectItem>
+                      </UiSelectGroup>
+                    </UiSelectContent>
+                  </UiSelect>
+                </UiFormControl>
+                <UiFormMessage />
+              </UiFormItem>
+            </UiFormField>
 
-          <UiFormField v-slot="{ componentField }" name="submitterClass">
-            <UiFormItem>
-              <UiFormLabel>班级（请填数字）</UiFormLabel>
-              <UiFormControl>
-                <UiInput type="number" v-bind="componentField" />
-              </UiFormControl>
-              <UiFormMessage />
-            </UiFormItem>
-          </UiFormField>
+            <UiFormField v-slot="{ componentField }" name="submitterClass">
+              <UiFormItem class="flex flex-col flex-grow">
+                <UiFormLabel>班级（请填数字）</UiFormLabel>
+                <UiFormControl>
+                  <UiInput type="number" v-bind="componentField" />
+                </UiFormControl>
+                <UiFormMessage />
+              </UiFormItem>
+            </UiFormField>
+          </div>
 
           <UiFormField v-slot="{ componentField }" name="message" v-if="values.type === 'withMsg'">
             <UiFormItem>
               <UiFormLabel>投稿留言</UiFormLabel>
               <UiFormControl>
-                <UiInput type="text" v-bind="componentField" />
+                <UiTextarea v-bind="componentField" />
               </UiFormControl>
               <UiFormMessage />
             </UiFormItem>
@@ -118,17 +136,25 @@ definePageMeta({
     name: 'slide-left',
     mode: 'out-in'
   }
-})
+});
 
 const { $toast, $api } = useNuxtApp()
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string({ required_error: '歌名长度至少为1' }).min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
-  creator: z.string({ required_error: '歌手名长度至少为1' }).min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
-  submitterName: z.string({ required_error: '提交者名字长度至少为2' }).min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
-  submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' }).int('请填一个整数').min(1, '年级为1或2').max(2, '年级为1或2'), // problem for people in 5000s
-  submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' }).min(0, '班级号应大于0').max(100, '班级号应小于100'),
-  type: z.enum(['normal', 'withMsg'], { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) }),
+  name: z.string({ required_error: '歌名长度至少为1' })
+    .min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
+  creator: z.string({ required_error: '歌手名长度至少为1' })
+    .min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
+  submitterName: z.string({ required_error: '提交者名字长度至少为2' })
+    .min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
+  submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' })
+    .int('请填一个整数').min(1, '年级为1或2').max(2, '年级为1或2'),
+  submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' })
+    .min(0, '班级号应大于0').max(100, '班级号应小于100'),
+  type: z.enum(
+    ['normal', 'withMsg'],
+    { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) }
+  ),
   message: z.string().nullish(),
 }));
 
@@ -150,6 +176,6 @@ const onSubmit = handleSubmit(async (values) => {
 
 const back = () => {
   const router = useRouter();
-  router.back();
+  router.push('/');
 };
 </script>

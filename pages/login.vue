@@ -45,6 +45,13 @@ import { useForm } from 'vee-validate';
 import { Loader2 } from 'lucide-vue-next';
 const { $api, $toast } = useNuxtApp();
 
+definePageMeta({
+  pageTransition: {
+    name: 'fade',
+    mode: 'out-in'
+  }
+});
+
 const form = useForm();
 const buttonLoading = ref(false);
 
