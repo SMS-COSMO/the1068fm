@@ -72,6 +72,9 @@
               <div v-for="song in arrangement" :key="song.id">
                 <MusicCard :song="song" />
               </div>
+              <p v-if="!arrangement" class="text-sm text-center">
+                今日无排歌哦~
+              </p>
             </UiTabsContent>
           </UiTabs>
         </UiCardContent>
@@ -144,7 +147,6 @@ onMounted(async () => {
   try {
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
     arrangementList.value = await $api.arrangement.list.query();
-    console.log(arrangementList.value);
   } catch (err) {
     useErrorHandler(err)
   }
