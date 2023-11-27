@@ -61,14 +61,16 @@
               </UiTabsTrigger>
             </UiTabsList>
             <UiTabsContent value="songList" ref="dragLeft" v-drag="dragLeftHandler"
-              :style="`transform: translate(${tabShift}px, 0);`" class="duration-150">
+              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
+              class="duration-100">
               <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
               <div v-for="(song, index) in processedListData" :key="index">
                 <MusicCard :song="song" />
               </div>
             </UiTabsContent>
             <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
-              :style="`transform: translate(${tabShift}px, 0);`" class="duration-150">
+              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
+              class="duration-100">
               <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
                 borderless :attributes="calendarAttr" class="mb-2" />
               <div v-for="song in arrangement" :key="song.id">
@@ -106,8 +108,10 @@ const tabShift = ref(0);
 const dragLeft = ref();
 const dragRight = ref();
 const dragLeftHandler = (state: any) => {
-  if (Math.abs(state.movement[0]) > 80)
-    tabShift.value = state.movement[0];
+  if (state.axis === 'y')
+    return;
+  if (state.movement[0] < -30)
+    tabShift.value = state.movement[0] * state.movement[0] / -150;
   if (state.dragging === false)
     tabShift.value = 0;
   if (state.movement[0] < -150) {
@@ -116,8 +120,10 @@ const dragLeftHandler = (state: any) => {
   }
 };
 const dragRightHandler = (state: any) => {
-  if (Math.abs(state.movement[0]) > 80)
-    tabShift.value = state.movement[0];
+  if (state.axis === 'y')
+    return;
+  if (state.movement[0] > 30)
+    tabShift.value = state.movement[0] * state.movement[0] / 150;
   if (state.dragging === false)
     tabShift.value = 0;
   if (state.movement[0] > 150) {
