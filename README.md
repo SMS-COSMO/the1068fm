@@ -1,75 +1,70 @@
-# Nuxt 3 Minimal Starter
+<p align="center">
+  <a href="https://fm.the1068.pictures" target="_blank" rel="noopener noreferrer">
+    <img width="324" height="89" src="https://oss.the1068.pictures/logo.svg" alt="the1068fm logo">
+  </a>
+</p>
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+<h1 align="center"/>the1068fm<sup><em>alpha</em></sup></h1>
 
-## Setup
+<p align="center">
+A simple yet powerful song request system
+</p>
 
-Make sure to install the dependencies:
+<br/>
+<p align="center">
+  <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website"></a>
+  <img src="https://img.shields.io/badge/PRs-welcome-blue.svg" alt="PRs Welcome">
+</p>
+<br/>
 
-```bash
-# npm
-npm install
+## 🚧 the1068fm is in Alpha 🚧
 
-# pnpm
-pnpm install
+It is already quite usable, but some bugs still may appear. We appreciate your feedback and contributions. Check out the [Open Issues](https://github.com/sms-cosmo/the1068fm/issues) and jump in the action.
 
-# yarn
-yarn install
+## Features
+- ✨ Effortlessly gather song requests from audience with our user-friendly interface.
+- 🕓 Real-time updates, stay up-to-date with the latest requests and changes in the playlist.
+- 💪 Hassle-free song management made easy with our automatic arrange system.
 
-# bun
-bun install
+## Usage
+
+### As an end user
+✅ Just visit [the website](https://fm.the1068.pictures) to use!
+
+### As an admin
+1. 🔐 Login to [the dashboard](https://fm.the1068.pictures/login)
+2. 🎶 Check the songs and arrange them
+
+## Stack
+
+- [Vite](https://vitejs.dev/) - Next Generation Frontend Tooling
+- [Nuxt](https://nuxt.com/) - The Intuitive Web Framework
+- [Vue](https://vuejs.org/) - The Progressive JavaScript Framework
+- [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
+- [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
+- [TailwindCSS](https://uno.antfu.me/) - Rapidly build modern websites without ever leaving your HTML
+- [Iconify](https://github.com/iconify/icon-sets#iconify-icon-sets-in-json-format) - Iconify icon sets in JSON format
+- [Drizzle ORM](https://orm.drizzle.team/) - Next Generation TypeScript ORM
+- [tRPC.io](https://trpc.io/) - End-to-end typesafe APIs made easy.
+- [Zod](https://zod.dev) - TypeScript-first schema validation with static type inference
+
+## Contributing
+
+### Local Setup
+
+Clone the repository and run on the root folder:
+
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
+pnpm i
 pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+## Contributors
 
-Build the application for production:
+<a href="https://github.com/sms-cosmo/the1068fm/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sms-cosmo/the1068fm" />   
+</a> 
 
-```bash
-# npm
-npm run build
+## License
 
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+[GPL v3](./LICENSE) &copy; 2023 the1068fm contributors
