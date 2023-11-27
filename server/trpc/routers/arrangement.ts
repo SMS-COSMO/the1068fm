@@ -48,7 +48,7 @@ export const arrangementRouter = router({
             else return res;
         }),
 
-    list: protectedProcedure
+    list: publicProcedure
         .query(async ({ ctx }) => {
             const res = await ctx.arrangementController.getList();
             if (!res.success || !res.res)

@@ -49,14 +49,31 @@
         </div>
       </section>
 
-      <UiCard class="my-6 shadow">
-        <UiCardHeader>
-          <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md" />
-        </UiCardHeader>
-        <UiCardContent>
-          <div v-for="(song, index) in processedListData" :key="index">
-            <MusicCard :song="song" />
-          </div>
+      <UiCard class="my-4 shadow">
+        <UiCardContent class="p-4">
+          <UiTabs default-value="songList">
+            <UiTabsList class="grid grid-cols-2">
+              <UiTabsTrigger value="songList">
+                歌单
+              </UiTabsTrigger>
+              <UiTabsTrigger value="arrangement">
+                排歌表
+              </UiTabsTrigger>
+            </UiTabsList>
+            <UiTabsContent value="songList">
+              <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
+              <div v-for="(song, index) in processedListData" :key="index">
+                <MusicCard :song="song" />
+              </div>
+            </UiTabsContent>
+            <UiTabsContent value="arrangement">
+              <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                borderless :attributes="calendarAttr" class="mb-2" />
+              <div v-for="song in arrangement" :key="song.id">
+                <MusicCard :song="song" />
+              </div>
+            </UiTabsContent>
+          </UiTabs>
         </UiCardContent>
       </UiCard>
     </div>
@@ -65,8 +82,11 @@
 
 <script setup lang="ts">
 import { Music4 } from 'lucide-vue-next';
-import type { TSafeSongList, TSongListInfo } from '~/types';
+import type { TSafeSongList, TSongListInfo, TArrangementList } from '~/types';
 import { useFuse } from '@vueuse/integrations/useFuse';
+import { DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
+import { getDateString } from '~/lib/utils';
 const { $api } = useNuxtApp();
 
 const songList = ref<TSafeSongList>([]);
@@ -103,9 +123,28 @@ const fuse = useFuse(searchContent, songList, fuseOptions);
 
 const processedListData = computed(() => fuse.results.value.map(s => s.item));
 
+const selectedDate = ref(new Date());
+const arrangementList = ref<TArrangementList>([]);
+const arrangement = computed(
+  () => arrangementList.value.find(e => e.date === getDateString(selectedDate.value))?.songs
+);
+const calendarAttr = computed(() => {
+  const res = [];
+  for (const arrangement of arrangementList.value) {
+    res.push({
+      dot: true,
+      dates: new Date(arrangement.date),
+    });
+  }
+
+  return res;
+});
+
 onMounted(async () => {
   try {
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+    arrangementList.value = await $api.arrangement.list.query();
+    console.log(arrangementList.value);
   } catch (err) {
     useErrorHandler(err)
   }
@@ -116,3 +155,17 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style>
+.calendar .vc-day:has(.vc-highlights) {
+  background: transparent;
+}
+
+.vc-day-box-center-bottom {
+  margin: 3px !important;
+}
+
+.vc-week {
+  height: 48px !important;
+}
+</style>
