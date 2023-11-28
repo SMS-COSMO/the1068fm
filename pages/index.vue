@@ -53,7 +53,7 @@
 
       <UiCard class="my-4 shadow">
         <UiCardContent class="p-4">
-          <UiTabs default-value="songList">
+          <UiTabs v-model="selectedTab" class="overflow-x-hidden">
             <UiTabsList class="grid grid-cols-2">
               <UiTabsTrigger value="songList">
                 歌单
@@ -62,13 +62,17 @@
                 排歌表
               </UiTabsTrigger>
             </UiTabsList>
-            <UiTabsContent value="songList">
+            <UiTabsContent value="songList" ref="dragLeft" v-drag="dragLeftHandler"
+              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
+              class="duration-100">
               <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
               <div v-for="(song, index) in processedListData" :key="index">
                 <MusicCard :song="song" />
               </div>
             </UiTabsContent>
-            <UiTabsContent value="arrangement">
+            <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
+              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
+              class="duration-100">
               <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
                 borderless :attributes="calendarAttr" class="mb-2" />
               <div v-for="song in arrangement" :key="song.id">
@@ -83,6 +87,9 @@
       </UiCard>
     </div>
   </div>
+  <!-- dummy dom item to make sure that dragRight is never undefined -->
+  <div ref="dragLeft"></div>
+  <div ref="dragRight"></div>
 </template>
 
 <script setup lang="ts">
@@ -92,10 +99,42 @@ import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import { getDateString } from '~/lib/utils';
+import { useDrag } from '@vueuse/gesture';
 const { $api } = useNuxtApp();
 
 const songList = ref<TSafeSongList>([]);
 const songListInfo = ref<TSongListInfo>();
+const selectedTab = ref('songList');
+
+const tabShift = ref(0);
+const dragLeft = ref();
+const dragRight = ref();
+const dragLeftHandler = (state: any) => {
+  if (state.axis === 'y')
+    return;
+  if (state.movement[0] < -30)
+    tabShift.value = state.movement[0] * state.movement[0] / -150;
+  if (state.dragging === false)
+    tabShift.value = 0;
+  if (state.movement[0] < -150) {
+    selectedTab.value = 'arrangement';
+    tabShift.value = 0;
+  }
+};
+const dragRightHandler = (state: any) => {
+  if (state.axis === 'y')
+    return;
+  if (state.movement[0] > 30)
+    tabShift.value = state.movement[0] * state.movement[0] / 150;
+  if (state.dragging === false)
+    tabShift.value = 0;
+  if (state.movement[0] > 150) {
+    selectedTab.value = 'songList';
+    tabShift.value = 0;
+  }
+};
+useDrag(dragLeftHandler, { domTarget: dragLeft });
+useDrag(dragRightHandler, { domTarget: dragRight });
 
 definePageMeta({
   pageTransition: {
