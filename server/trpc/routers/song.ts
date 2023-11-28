@@ -17,9 +17,9 @@ export const songRouter = router({
         }))
         .mutation(async ({ ctx, input }) => {
             const res = await ctx.songController.create(input);
-            if (!res.success)
+            if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-            else return res;
+            else return res.res;
         }),
 
     remove: protectedProcedure

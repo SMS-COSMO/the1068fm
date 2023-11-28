@@ -67,7 +67,7 @@
               class="duration-100">
               <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
               <div v-for="(song, index) in processedListData" :key="index">
-                <MusicCard :song="song" />
+                <MusicCard :song="song" showMine />
               </div>
             </UiTabsContent>
             <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
@@ -76,7 +76,7 @@
               <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
                 borderless :attributes="calendarAttr" class="mb-2" />
               <div v-for="song in arrangement" :key="song.id">
-                <MusicCard :song="song" />
+                <MusicCard :song="song" showMine />
               </div>
               <p v-if="!arrangement" class="text-sm text-center">
                 今日无排歌哦~

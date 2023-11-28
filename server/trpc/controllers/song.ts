@@ -16,8 +16,8 @@ export class SongController {
         if (lastSong.length)
             return { success: false, message: '每周每人只能投一首歌哦' };
         try {
-            await db.insert(songs).values(newSong);
-            return { success: true, message: '创建成功！' };
+            const id = (await db.insert(songs).values(newSong).returning({ id: songs.id }))[0].id;
+            return { success: true, res: id, message: '创建成功！' };
         }
         catch (err) {
             if (err instanceof LibsqlError && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY')

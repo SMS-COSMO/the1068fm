@@ -130,6 +130,7 @@ import { ChevronLeft, Loader2 } from 'lucide-vue-next';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
+import { useSongStore } from '~/stores/song';
 
 definePageMeta({
   pageTransition: {
@@ -166,7 +167,11 @@ const [buttonLoading, toggleLoading] = useToggle(false);
 const onSubmit = handleSubmit(async (values) => {
   toggleLoading()
   try {
-    await $api.song.create.mutate(values)
+    const id = await $api.song.create.mutate(values);
+
+    const songStore = useSongStore();
+    songStore.submitSong(id);
+
     $toast.success('提交成功！')
     resetForm();
   } catch (err) {

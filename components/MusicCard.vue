@@ -5,14 +5,15 @@
         <slot name="prefix"></slot>
       </div>
       <div class="space-y-1">
-        <UiCardTitle :class="compact ? 'text-lg' : ''">
+        <UiCardTitle :class="`${compact ? 'text-lg' : ''} flex flex-row`">
           {{ song?.name }}
+          <UiBadge class="rounded-md ml-2" v-if="isMine()" variant="secondary">我申请的</UiBadge>
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
           by {{ song?.creator }}
           <UiTooltipProvider v-if="(typeof song.message) === 'string' && 'type' in song && song.type === 'withMsg'">
             <UiTooltip>
-              <UiTooltipTrigger as-child>   
+              <UiTooltipTrigger as-child>
                 <UiBadge class="ml-1 rounded-md">留言</UiBadge>
               </UiTooltipTrigger>
               <UiTooltipContent>
@@ -30,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import { useSongStore } from '~/stores/song';
 import type { TSafeSong, TSong } from '~/types';
 
 const props = withDefaults(defineProps<{
@@ -37,10 +39,17 @@ const props = withDefaults(defineProps<{
   compact?: boolean;
   sorting?: boolean;
   selected?: boolean;
+  showMine?: boolean;
 }>(), {
   compact: false,
   editable: false,
   sorting: false,
   selected: false,
+  showMine: false,
 });
+
+const isMine = () => {
+  const songStore = useSongStore();
+  return songStore.isMySong(props.song.id);
+};
 </script>
