@@ -32,11 +32,13 @@
               </span>
             </UiButton>
           </SubmissionRulesDialog>
-          <UiButton @click="navigateTo('/submit')" class="w-auto shadow text-md p-0">
-            <Music4 class="w-5 h-5 mr-1" />
-            <span class="align-bottom">
-              歌曲投稿
-            </span>
+          <UiButton class="w-auto shadow text-md p-0">
+            <NuxtLink class="w-auto text-md p-0 flex items-center"  to="/submit">
+              <Music4 class="w-5 h-5 mr-1" />
+              <span class="align-bottom">
+                歌曲投稿
+              </span>
+            </NuxtLink>
           </UiButton>
           <AboutUsDialog>
             <UiButton type="button" class="w-auto shadow text-md p-0" variant="outline">
@@ -112,6 +114,8 @@ useHead({
   },
 });
 
+prerenderRoutes('/submit')
+
 const searchContent = ref('');
 const fuseOptions = {
   fuseOptions: {
@@ -143,19 +147,17 @@ const calendarAttr = computed(() => {
   return res;
 });
 
-onMounted(async () => {
-  try {
-    songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-    arrangementList.value = await $api.arrangement.list.query();
-  } catch (err) {
-    useErrorHandler(err)
-  }
-  try {
-    songListInfo.value = await $api.song.info.query();
-  } catch (err) {
-    useErrorHandler(err)
-  }
-});
+try {
+  songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  arrangementList.value = await $api.arrangement.list.query();
+} catch (err) {
+  useErrorHandler(err)
+}
+try {
+  songListInfo.value = await $api.song.info.query();
+} catch (err) {
+  useErrorHandler(err)
+}
 </script>
 
 <style>
