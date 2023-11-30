@@ -53,47 +53,53 @@
 
       <UiCard class="my-4 shadow">
         <UiCardContent class="p-4">
-          <UiTabs v-model="selectedTab" class="overflow-x-hidden">
-            <UiTabsList class="grid grid-cols-2">
-              <UiTabsTrigger value="songList">
-                歌单
-              </UiTabsTrigger>
-              <UiTabsTrigger value="arrangement">
-                排歌表
-              </UiTabsTrigger>
-            </UiTabsList>
-            <UiTabsContent value="songList" ref="dragLeft" v-drag="dragLeftHandler"
-              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
-              class="duration-100">
-              <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
-              <div v-for="(song, index) in processedListData" :key="index">
-                <MusicCard :song="song" showMine />
-              </div>
-            </UiTabsContent>
-            <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
-              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
-              class="duration-100">
-              <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-                borderless :attributes="calendarAttr" class="mb-2" />
-              <div v-for="song in arrangement" :key="song.id">
-                <MusicCard :song="song" showMine />
-              </div>
-              <p v-if="!arrangement" class="text-sm text-center">
-                今日无排歌哦~
-              </p>
-            </UiTabsContent>
-          </UiTabs>
+          <template v-if="!isDataLoading">
+            <UiTabs v-model="selectedTab" class="overflow-x-hidden">
+              <UiTabsList class="grid grid-cols-2">
+                <UiTabsTrigger value="songList">
+                  歌单
+                </UiTabsTrigger>
+                <UiTabsTrigger value="arrangement">
+                  排歌表
+                </UiTabsTrigger>
+              </UiTabsList>
+              <UiTabsContent value="songList" ref="dragLeft" v-drag="dragLeftHandler"
+                :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
+                class="duration-100">
+                <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
+                <div v-for="(song, index) in processedListData" :key="index">
+                  <MusicCard :song="song" showMine />
+                </div>
+              </UiTabsContent>
+              <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
+                :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
+                class="duration-100">
+                <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                  borderless :attributes="calendarAttr" class="mb-2" />
+                <div v-for="song in arrangement" :key="song.id">
+                  <MusicCard :song="song" showMine />
+                </div>
+                <p v-if="!arrangement" class="text-sm text-center">
+                  今日无排歌哦~
+                </p>
+              </UiTabsContent>
+            </UiTabs>
+          </template>
+          <div v-else class="flex mx-auto justify-center items-center py-2">
+            <Loader2 class="w-4 h-4 mr-2 animate-spin"></Loader2>
+            <span class="text-md">数据加载中</span>
+          </div>
         </UiCardContent>
       </UiCard>
     </div>
+    <!-- dummy dom item to make sure that dragRight is never undefined -->
+    <div ref="dragLeft"></div>
+    <div ref="dragRight"></div>
   </div>
-  <!-- dummy dom item to make sure that dragRight is never undefined -->
-  <div ref="dragLeft"></div>
-  <div ref="dragRight"></div>
 </template>
 
 <script setup lang="ts">
-import { Music4 } from 'lucide-vue-next';
+import { Music4, Loader2 } from 'lucide-vue-next';
 import type { TSafeSongList, TSongListInfo, TArrangementList } from '~/types';
 import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from 'v-calendar';
@@ -105,6 +111,7 @@ const { $api } = useNuxtApp();
 const songList = ref<TSafeSongList>([]);
 const songListInfo = ref<TSongListInfo>();
 const selectedTab = ref('songList');
+const isDataLoading = ref(true)
 
 const tabShift = ref(0);
 const dragLeft = ref();
@@ -187,16 +194,21 @@ const calendarAttr = computed(() => {
 });
 
 try {
-  songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  arrangementList.value = await $api.arrangement.list.query();
-} catch (err) {
-  useErrorHandler(err)
-}
-try {
   songListInfo.value = await $api.song.info.query();
 } catch (err) {
   useErrorHandler(err)
 }
+
+onMounted(async () => {
+  try {
+    songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+    arrangementList.value = await $api.arrangement.list.query();
+    isDataLoading.value = false
+  } catch (err) {
+    useErrorHandler(err)
+  }
+})
+
 </script>
 
 <style>
