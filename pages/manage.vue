@@ -1,16 +1,14 @@
 <template>
   <div class="flex flex-row gap-5 h-screen p-5">
-    <UiCard class="basis-1/3 pt-4 relative">
+    <UiCard class="w-[600px] relative">
       <UiCardHeader>
-        <UiCardTitle>
-          Calendar
+        <UiCardTitle class="my-[-0.5rem]">
+          <NuxtImg src="/logo.svg" class="h-14 mx-auto"></NuxtImg>
         </UiCardTitle>
       </UiCardHeader>
       <UiCardContent>
-        <ClientOnly fallback-tag="span" fallback="Loading Calendar">
-          <DatePicker v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
-            :masks="{ title: 'YYYY MMM' }" class="rounded-lg border" expanded trim-weeks borderless />
-        </ClientOnly>
+        <DatePicker v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
+          :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless />
         <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-4">
           <UiButton @click="arrange" :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none">
             <Loader2 v-if="arrangeLoading" class="w-4 h-4 mr-2 animate-spin" />
@@ -66,7 +64,7 @@
         </UiPopoverContent>
       </UiPopover>
     </UiCard>
-    <UiCard class="basis-1/3 relative pt-4">
+    <UiCard class="basis-1/2 relative pt-4">
       <UiCardHeader>
         <UiCardTitle>
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
@@ -138,7 +136,7 @@
         删除排歌表
       </UiButton>
     </UiCard>
-    <UiCard class="basis-1/3 relative pt-4">
+    <UiCard class="basis-1/2 relative pt-4">
       <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
         <div class="space-y-1">
           <UiCardTitle>

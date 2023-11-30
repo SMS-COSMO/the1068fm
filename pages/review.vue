@@ -11,8 +11,8 @@
         </UiCardTitle>
       </UiCardHeader>
       <UiCardContent>
-        <UiScrollArea class="h-[calc(100vh-10rem)]">
-          <div v-for="(song, index) in unsetList" :key="index">
+        <UiScrollArea class="h-[calc(100vh-13rem)]">
+          <div v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
             <UiContextMenu>
               <UiContextMenuTrigger>
                 <MusicCard @click="selectedSong = song" :song="song" :selected="selectedSong === song"
@@ -24,6 +24,16 @@
               </UiContextMenuContent>
             </UiContextMenu>
           </div>
+          <UiAlert v-if="showLength.unset < unsetList.length">
+            <UiAlertDescription class="flex flex-row">
+              <span class="self-center">
+                出于性能考虑，仅加载前 {{ showLength.unset }} 首歌
+              </span>
+              <UiButton variant="secondary" @click="showLength.unset += 10" class="float-right ml-auto">
+                加载更多
+              </UiButton>
+            </UiAlertDescription>
+          </UiAlert>
         </UiScrollArea>
       </UiCardContent>
       <UiPopover v-model:open="rejectOpen">
@@ -119,7 +129,7 @@
           </UiTabsList>
           <UiTabsContent value="approved">
             <UiScrollArea class="h-[calc(100vh-14rem)]">
-              <div v-for="(song, index) in approvedList" :key="index">
+              <div v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
                 <UiContextMenu>
                   <UiContextMenuTrigger>
                     <MusicCard :song="song" />
@@ -130,11 +140,21 @@
                   </UiContextMenuContent>
                 </UiContextMenu>
               </div>
+              <UiAlert v-if="showLength.approved < approvedList.length">
+                <UiAlertDescription class="flex flex-row">
+                  <span class="self-center">
+                    出于性能考虑，仅加载前 {{ showLength.approved }} 首歌
+                  </span>
+                  <UiButton variant="secondary" @click="showLength.approved += 10" class="float-right ml-auto">
+                    加载更多
+                  </UiButton>
+                </UiAlertDescription>
+              </UiAlert>
             </UiScrollArea>
           </UiTabsContent>
           <UiTabsContent value="rejected">
             <UiScrollArea class="h-[calc(100vh-14rem)]">
-              <div v-for="(song, index) in rejectedList" :key="index">
+              <div v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                 <UiContextMenu>
                   <UiContextMenuTrigger>
                     <MusicCard :song="song" />
@@ -145,6 +165,16 @@
                   </UiContextMenuContent>
                 </UiContextMenu>
               </div>
+              <UiAlert v-if="showLength.rejected < rejectedList.length">
+                <UiAlertDescription class="flex flex-row">
+                  <span class="self-center">
+                    出于性能考虑，仅加载前 {{ showLength.rejected }} 首歌
+                  </span>
+                  <UiButton variant="secondary" @click="showLength.rejected += 10" class="float-right ml-auto">
+                    加载更多
+                  </UiButton>
+                </UiAlertDescription>
+              </UiAlert>
             </UiScrollArea>
           </UiTabsContent>
         </UiTabs>
@@ -180,6 +210,12 @@ const rejectedList = computed(
   () => songList.value.filter(s => (s.status === 'rejected'))
     .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)) // Newest first
 );
+
+const showLength = reactive({
+  unset: 100,
+  approved: 100,
+  rejected: 100,
+});
 
 const selectedSong = ref<TSong>();
 const searchLoading = ref(false);
