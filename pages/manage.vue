@@ -214,7 +214,7 @@
             </UiScrollArea>
           </UiTabsContent>
           <UiTabsContent value="unset">
-            <UiScrollArea class="h-[calc(100vh-18rem)]">
+            <UiScrollArea class="h-[calc(100vh-17rem)]">
               <div v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
                 <UiContextMenu>
                   <UiContextMenuTrigger>
@@ -303,7 +303,7 @@
             </UiPopover>
           </UiTabsContent>
           <UiTabsContent value="rejected">
-            <UiScrollArea class="h-[calc(100vh-18rem)]">
+            <UiScrollArea class="h-[calc(100vh-14rem)]">
               <div v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                 <UiContextMenu>
                   <UiContextMenuTrigger>
@@ -616,8 +616,12 @@ onMounted(async () => {
   }
 
   try {
-    songList.value = await $api.song.list.query();
-    arrangementList.value = await $api.arrangement.list.query();
+    const res = await Promise.all([
+      $api.song.list.query(),
+      $api.arrangement.list.query(),
+    ]);
+    songList.value = res[0];
+    arrangementList.value = res[1];
   } catch (err) {
     useErrorHandler(err)
   }
