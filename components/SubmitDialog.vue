@@ -1,5 +1,5 @@
 <template>
-  <UiDialog v-model="dialogOpen">
+  <UiDialog>
     <UiDialogTrigger as-child>
       <slot></slot>
     </UiDialogTrigger>
@@ -131,7 +131,6 @@ import { z } from 'zod';
 import { useSongStore } from '~/stores/song';
 
 const { $toast, $api } = useNuxtApp();
-const dialogOpen = ref(false);
 
 const formSchema = toTypedSchema(z.object({
   name: z.string({ required_error: '歌名长度至少为1' })
@@ -166,7 +165,6 @@ const onSubmit = handleSubmit(async (values) => {
 
     $toast.success('提交成功！')
     resetForm();
-    dialogOpen.value = false;
   } catch (err) {
     useErrorHandler(err);
   }
