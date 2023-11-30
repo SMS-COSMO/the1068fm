@@ -160,7 +160,7 @@ useHead({
   },
 });
 
-prerenderRoutes('/submit')
+await preloadComponents(['SubmitDialog','SubmissionRulesDialog','AboutUsDialog'])
 
 const searchContent = ref('');
 const fuseOptions = {
