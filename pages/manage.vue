@@ -616,12 +616,8 @@ onMounted(async () => {
   }
 
   try {
-    const res = await Promise.all([
-      $api.song.list.query(),
-      $api.arrangement.list.query(),
-    ]);
-    songList.value = res[0];
-    arrangementList.value = res[1];
+    songList.value = await $api.song.list.query();
+    arrangementList.value = await $api.arrangement.list.query();
   } catch (err) {
     useErrorHandler(err)
   }
