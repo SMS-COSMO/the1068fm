@@ -3,10 +3,10 @@
     <UiCard class="w-full">
       <UiCardHeader>
         <UiCardTitle>
-          (登录)
+          登录
         </UiCardTitle>
         <UiCardDescription>
-          placeholder
+          欢迎来到 <span class="font-mono">the1068.fm</span> 后台
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent>
