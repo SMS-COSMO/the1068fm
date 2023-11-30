@@ -1,17 +1,14 @@
 <template>
-  <div class="mx-8">
-    <UiCard class="my-16">
-      <UiCardHeader>
-        <UiCardTitle>
-          <UiButton variant="outline" size="icon" @click="back" class="mr-2">
-            <ChevronLeft class="w-4 h-4" />
-          </UiButton>
-          投稿
-        </UiCardTitle>
-      </UiCardHeader>
-      <UiCardContent>
+  <UiDialog v-model="dialogOpen">
+    <UiDialogTrigger as-child>
+      <slot></slot>
+    </UiDialogTrigger>
+    <UiDialogContent class="w-[92vw] rounded-md">
+      <UiDialogHeader>
+        <UiDialogTitle class="text-xl font-bold text-start">歌曲投稿</UiDialogTitle>
+      </UiDialogHeader>
+      <UiScrollArea class="max-h-[calc(100svh-10rem)]">
         <form @submit="onSubmit" class="grid grid-cols-1 gap-4">
-
           <UiFormField v-slot="{ componentField }" name="type">
             <UiFormItem>
               <UiFormLabel>投稿类型</UiFormLabel>
@@ -113,33 +110,28 @@
               <UiFormMessage />
             </UiFormItem>
           </UiFormField>
-
-          <UiButton type="submit" class="mt-3 ml-auto px-6 font-bold text-md flex items-center justify-center"
-            :disabled="buttonLoading">
-            <Loader2 class="w-4 h-4 mr-2 animate-spin" v-show="buttonLoading" />
-            提交
-          </UiButton>
+          <UiDialogFooter>
+            <UiButton type="submit" class="mt-3 ml-auto px-6 font-bold text-md flex items-center justify-center"
+              :disabled="buttonLoading">
+              <Loader2 class="w-4 h-4 mr-2 animate-spin" v-show="buttonLoading" />
+              提交
+            </UiButton>
+          </UiDialogFooter>
         </form>
-      </UiCardContent>
-    </UiCard>
-  </div>
+      </UiScrollArea>
+    </UiDialogContent>
+  </UiDialog>
 </template>
 
 <script setup lang="ts">
-import { ChevronLeft, Loader2 } from 'lucide-vue-next';
+import { Loader2 } from 'lucide-vue-next';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
 import { useSongStore } from '~/stores/song';
 
-definePageMeta({
-  pageTransition: {
-    name: 'slide-left',
-    mode: 'out-in'
-  }
-});
-
-const { $toast, $api } = useNuxtApp()
+const { $toast, $api } = useNuxtApp();
+const dialogOpen = ref(false);
 
 const formSchema = toTypedSchema(z.object({
   name: z.string({ required_error: '歌名长度至少为1' })
@@ -174,15 +166,10 @@ const onSubmit = handleSubmit(async (values) => {
 
     $toast.success('提交成功！')
     resetForm();
+    dialogOpen.value = false;
   } catch (err) {
-    useErrorHandler(err)
+    useErrorHandler(err);
   }
-  toggleLoading()
-})
-
-const back = () => {
-  const router = useRouter();
-  router.push('/');
-  // navigateTo('/')
-};
+  toggleLoading();
+});
 </script>

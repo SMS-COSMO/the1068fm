@@ -32,14 +32,14 @@
               </span>
             </UiButton>
           </SubmissionRulesDialog>
-          <UiButton class="w-auto shadow text-md p-0">
-            <NuxtLink class="w-auto text-md p-0 flex items-center"  to="/submit">
+          <SubmitDialog>
+            <UiButton type="button" class="w-auto shadow text-md p-0">
               <Music4 class="w-5 h-5 mr-1" />
               <span class="align-bottom">
                 歌曲投稿
               </span>
-            </NuxtLink>
-          </UiButton>
+            </UiButton>
+          </SubmitDialog>
           <AboutUsDialog>
             <UiButton type="button" class="w-auto shadow text-md p-0" variant="outline">
               <span class="icon-[radix-icons--info-circled] w-5 h-5 mr-1" />
