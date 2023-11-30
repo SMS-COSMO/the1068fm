@@ -42,6 +42,7 @@ It is already quite usable, but some bugs still may appear. We appreciate your f
 - [Vue](https://vuejs.org/) - The Progressive JavaScript Framework
 - [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
 - [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
+- [shadcn-vue](https://www.shadcn-vue.com/) - Re-usable components built with Radix Vue, and Tailwind CSS. An unofficial, community-led Vue port of shadcn/ui.
 - [TailwindCSS](https://uno.antfu.me/) - Rapidly build modern websites without ever leaving your HTML
 - [Iconify](https://github.com/iconify/icon-sets#iconify-icon-sets-in-json-format) - Iconify icon sets in JSON format
 - [Drizzle ORM](https://orm.drizzle.team/) - Next Generation TypeScript ORM
