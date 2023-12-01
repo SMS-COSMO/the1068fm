@@ -7,7 +7,7 @@
       <div class="space-y-1">
         <UiCardTitle :class="`${compact ? 'text-lg' : ''} flex flex-row`">
           {{ song?.name }}
-          <UiBadge class="rounded-md ml-2" v-if="isMine()" variant="secondary">我申请的</UiBadge>
+          <UiBadge class="rounded-md ml-2" v-if="isMine()" variant="secondary">我投稿的</UiBadge>
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
           by {{ song?.creator }}

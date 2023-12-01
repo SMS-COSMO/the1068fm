@@ -57,16 +57,16 @@
             <UiTabs v-model="selectedTab" class="overflow-x-hidden">
               <UiTabsList class="grid grid-cols-2">
                 <UiTabsTrigger value="songList">
-                  歌单
+                  已收集投稿
                 </UiTabsTrigger>
                 <UiTabsTrigger value="arrangement">
-                  排歌表
+                  歌单
                 </UiTabsTrigger>
               </UiTabsList>
               <UiTabsContent value="songList" ref="dragLeft" v-drag="dragLeftHandler"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
                 class="duration-100">
-                <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
+                <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
                 <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
                   <MusicCard :song="song" showMine />
                 </div>
