@@ -75,6 +75,15 @@ export const songRouter = router({
             }
         }),
 
+    listUnused: protectedProcedure
+        .query(async ({ ctx }) => {
+            const res = await ctx.songController.getList();
+            if (!res.success || !res.res)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else
+                return res.res.filter(item => item.status !== 'used');
+        }),
+
     list: protectedProcedure
         .query(async ({ ctx }) => {
             const res = await ctx.songController.getList();

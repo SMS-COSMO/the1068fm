@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { Music4, Loader2 } from 'lucide-vue-next';
+import { Music4 } from 'lucide-vue-next';
 import type { TSafeSongList, TSongListInfo, TArrangementList } from '~/types';
 import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from 'v-calendar';

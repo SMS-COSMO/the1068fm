@@ -626,7 +626,7 @@ onMounted(async () => {
       router.push('/login');
     }
 
-    songList.value = await $api.song.list.query();
+    songList.value = await $api.song.listUnused.query();
     listLoading.value = false;
     arrangementList.value = await $api.arrangement.list.query();
     arrangementLoading.value = false;

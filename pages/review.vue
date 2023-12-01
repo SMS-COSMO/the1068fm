@@ -281,7 +281,7 @@ onMounted(async () => {
   }
 
   try {
-    songList.value = await $api.song.list.query();
+    songList.value = await $api.song.listUnused.query();
   } catch (err) {
     useErrorHandler(err)
   }
