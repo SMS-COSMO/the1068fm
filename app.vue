@@ -57,4 +57,22 @@
 .fade-enter-from {
   opacity: 0;
 }
+
+/* List animation */
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
+}
 </style>

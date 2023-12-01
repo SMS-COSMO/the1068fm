@@ -1,5 +1,5 @@
 <template>
-  <UiCard :class="`mb-2 ${selected ? 'bg-slate-50' : ''} transition-all`">
+  <UiCard :class="`mb-2 ${selected ? 'bg-slate-100' : ''} transition-all ease-in-out`">
     <UiCardHeader :class="`${compact ? 'p-4' : ''} items-start gap-4 space-y-0 flex-row`">
       <div v-if="sorting" class="self-center w-4 mr-3 my-[-10px] flex flex-col gap-1">
         <slot name="prefix"></slot>

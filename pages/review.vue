@@ -12,18 +12,20 @@
       </UiCardHeader>
       <UiCardContent>
         <UiScrollArea class="h-[calc(100vh-13rem)]">
-          <div v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
-            <UiContextMenu>
-              <UiContextMenuTrigger>
-                <MusicCard @click="selectedSong = song" :song="song" :selected="selectedSong === song"
-                  class="cursor-pointer" />
-              </UiContextMenuTrigger>
-              <UiContextMenuContent>
-                <UiContextMenuItem @click="updateSong(song, 'approved')">通过</UiContextMenuItem>
-                <UiContextMenuItem @click="updateSong(song, 'unset')">拒绝</UiContextMenuItem>
-              </UiContextMenuContent>
-            </UiContextMenu>
-          </div>
+          <TransitionGroup name="list" tag="ul">
+            <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
+              <UiContextMenu>
+                <UiContextMenuTrigger>
+                  <MusicCard @click="selectedSong = song" :song="song" :selected="selectedSong === song"
+                    class="cursor-pointer" />
+                </UiContextMenuTrigger>
+                <UiContextMenuContent>
+                  <UiContextMenuItem @click="updateSong(song, 'approved')">通过</UiContextMenuItem>
+                  <UiContextMenuItem @click="updateSong(song, 'unset')">拒绝</UiContextMenuItem>
+                </UiContextMenuContent>
+              </UiContextMenu>
+            </li>
+          </TransitionGroup>
           <UiAlert v-if="showLength.unset < unsetList.length">
             <UiAlertDescription class="flex flex-row">
               <span class="self-center">
@@ -129,17 +131,19 @@
           </UiTabsList>
           <UiTabsContent value="approved">
             <UiScrollArea class="h-[calc(100vh-14rem)]">
-              <div v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
-                <UiContextMenu>
-                  <UiContextMenuTrigger>
-                    <MusicCard :song="song" />
-                  </UiContextMenuTrigger>
-                  <UiContextMenuContent>
-                    <UiContextMenuItem @click="updateSong(song, 'rejected')">拒绝</UiContextMenuItem>
-                    <UiContextMenuItem @click="updateSong(song, 'unset')">移入待审核</UiContextMenuItem>
-                  </UiContextMenuContent>
-                </UiContextMenu>
-              </div>
+              <TransitionGroup name="list" tag="ul">
+                <li v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
+                  <UiContextMenu>
+                    <UiContextMenuTrigger>
+                      <MusicCard :song="song" />
+                    </UiContextMenuTrigger>
+                    <UiContextMenuContent>
+                      <UiContextMenuItem @click="updateSong(song, 'rejected')">拒绝</UiContextMenuItem>
+                      <UiContextMenuItem @click="updateSong(song, 'unset')">移入待审核</UiContextMenuItem>
+                    </UiContextMenuContent>
+                  </UiContextMenu>
+                </li>
+              </TransitionGroup>
               <UiAlert v-if="showLength.approved < approvedList.length">
                 <UiAlertDescription class="flex flex-row">
                   <span class="self-center">
@@ -154,17 +158,19 @@
           </UiTabsContent>
           <UiTabsContent value="rejected">
             <UiScrollArea class="h-[calc(100vh-14rem)]">
-              <div v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
-                <UiContextMenu>
-                  <UiContextMenuTrigger>
-                    <MusicCard :song="song" />
-                  </UiContextMenuTrigger>
-                  <UiContextMenuContent>
-                    <UiContextMenuItem @click="updateSong(song, 'approved')">通过</UiContextMenuItem>
-                    <UiContextMenuItem @click="updateSong(song, 'unset')">移入待审核</UiContextMenuItem>
-                  </UiContextMenuContent>
-                </UiContextMenu>
-              </div>
+              <TransitionGroup name="list" tag="ul">
+                <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
+                  <UiContextMenu>
+                    <UiContextMenuTrigger>
+                      <MusicCard :song="song" />
+                    </UiContextMenuTrigger>
+                    <UiContextMenuContent>
+                      <UiContextMenuItem @click="updateSong(song, 'approved')">通过</UiContextMenuItem>
+                      <UiContextMenuItem @click="updateSong(song, 'unset')">移入待审核</UiContextMenuItem>
+                    </UiContextMenuContent>
+                  </UiContextMenu>
+                </li>
+              </TransitionGroup>
               <UiAlert v-if="showLength.rejected < rejectedList.length">
                 <UiAlertDescription class="flex flex-row">
                   <span class="self-center">
