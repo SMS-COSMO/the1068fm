@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-[600px] mx-auto">
-    <div class="mx-8">
+    <div class="mx-5">
       <div class="mb-4 mt-8 flex justify-start">
         <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]"></NuxtImg>
       </div>
@@ -67,9 +67,19 @@
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
                 class="duration-100">
                 <UiInput v-model="searchContent" placeholder="搜索歌单" class="text-md mb-2" />
-                <div v-for="(song, index) in processedListData" :key="index">
+                <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
                   <MusicCard :song="song" showMine />
                 </div>
+                <UiAlert v-if="showLength < processedListData.length">
+                  <UiAlertDescription class="flex flex-row">
+                    <span class="self-center">
+                      出于性能考虑，仅加载前 {{ showLength }} 首歌
+                    </span>
+                    <UiButton variant="secondary" @click="showLength += 50" class="ml-auto w-[100px]">
+                      加载更多
+                    </UiButton>
+                  </UiAlertDescription>
+                </UiAlert>
               </UiTabsContent>
               <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
@@ -172,6 +182,7 @@ const fuseOptions = {
 const fuse = useFuse(searchContent, songList, fuseOptions);
 
 const processedListData = computed(() => fuse.results.value.map(s => s.item));
+const showLength = ref(100);
 
 const selectedDate = ref(new Date());
 const arrangementList = ref<TArrangementList>([]);

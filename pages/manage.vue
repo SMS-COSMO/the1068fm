@@ -210,7 +210,7 @@
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.approved }} 首歌
                   </span>
-                  <UiButton variant="secondary" @click="showLength.approved += 10" class="float-right ml-auto">
+                  <UiButton variant="secondary" @click="showLength.approved += 50" class="float-right ml-auto">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -272,7 +272,7 @@
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.unset }} 首歌
                   </span>
-                  <UiButton variant="secondary" @click="showLength.unset += 10" class="float-right ml-auto">
+                  <UiButton variant="secondary" @click="showLength.unset += 50" class="float-right ml-auto">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -347,7 +347,7 @@
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.rejected }} 首歌
                   </span>
-                  <UiButton variant="secondary" @click="showLength.rejected += 10" class="float-right ml-auto">
+                  <UiButton variant="secondary" @click="showLength.rejected += 50" class="float-right ml-auto">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
