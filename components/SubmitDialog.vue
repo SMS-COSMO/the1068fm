@@ -129,6 +129,9 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
 import { useSongStore } from '~/stores/song';
+import { type TSafeSong } from '~/types';
+
+const emit = defineEmits<{ (event: 'submitSuccess', song: TSafeSong): void }>()
 
 const { $toast, $api } = useNuxtApp();
 
@@ -159,12 +162,19 @@ const onSubmit = handleSubmit(async (values) => {
   toggleLoading()
   try {
     const id = await $api.song.create.mutate(values);
-
+    const song = {
+      id,
+      name: values.name,
+      creator: values.creator,
+      message: values.type === 'withMsg' ? true : false,
+      createdAt: new Date() // fake createdAt because it is assigned on server
+    }
     const songStore = useSongStore();
     songStore.submitSong(id);
 
     $toast.success('提交成功！')
     resetForm();
+    emit('submitSuccess', song)
   } catch (err) {
     useErrorHandler(err);
   }

@@ -32,7 +32,7 @@
               </span>
             </UiButton>
           </SubmissionRulesDialog>
-          <SubmitDialog>
+          <SubmitDialog @submit-success="(song) => songList.unshift(song)">
             <UiButton type="button" class="w-auto shadow text-md p-0">
               <Music4 class="w-5 h-5 mr-1" />
               <span class="align-bottom">
@@ -157,7 +157,7 @@ useHead({
   },
 });
 
-await preloadComponents(['SubmitDialog','SubmissionRulesDialog','AboutUsDialog'])
+await preloadComponents(['SubmitDialog', 'SubmissionRulesDialog', 'AboutUsDialog'])
 
 const searchContent = ref('');
 const fuseOptions = {
