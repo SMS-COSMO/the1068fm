@@ -8,20 +8,13 @@
         <div class="grid grid-cols-2 gap-2">
           <UiCard class="shadow p-0 pt-1 pb-2">
             <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-              <AnimatedNumber :value="songListInfo?.allSongs" />
+              {{ songListInfo?.allSongs }}
             </UiCardHeader>
             <UiCardContent class="pt-0 pb-0">
               <span class="text-md">已收集歌曲</span>
             </UiCardContent>
           </UiCard>
-          <UiCard class="shadow p-0 pt-1 pb-2">
-            <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-              <AnimatedNumber :value="songListInfo?.reviewedSongs" />
-            </UiCardHeader>
-            <UiCardContent class="pt-0 pb-0">
-              <span class="text-md">已审核歌曲</span>
-            </UiCardContent>
-          </UiCard>
+          <TimeAvailability isCard></TimeAvailability>
         </div>
         <div class="grid grid-cols-3 gap-2">
           <SubmissionRulesDialog>
@@ -33,7 +26,7 @@
             </UiButton>
           </SubmissionRulesDialog>
           <SubmitDialog @submit-success="(song) => songList.unshift(song)">
-            <UiButton type="button" class="w-auto shadow text-md p-0">
+            <UiButton type="button" class="w-auto shadow text-md p-0" :disabled="!canSubmit">
               <Music4 class="w-5 h-5 mr-1" />
               <span class="align-bottom">
                 歌曲投稿
@@ -118,7 +111,8 @@ const { $api } = useNuxtApp();
 const songList = ref<TSafeSongList>([]);
 const songListInfo = ref<TSongListInfo>();
 const selectedTab = ref('songList');
-const isDataLoading = ref(true)
+const isDataLoading = ref(true);
+const canSubmit = ref(true);
 
 const tabShift = ref(0);
 const dragLeft = ref();
@@ -203,6 +197,7 @@ const calendarAttr = computed(() => {
 
 try {
   songListInfo.value = await $api.song.info.query();
+  canSubmit.value = await $api.time.currently.query();
 } catch (err) {
   useErrorHandler(err)
 }
