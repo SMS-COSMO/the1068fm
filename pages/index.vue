@@ -85,7 +85,7 @@
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
                 class="duration-100">
                 <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-                  borderless :attributes="calendarAttr" class="mb-2" />
+                  borderless :attributes="calendarAttr" class="mb-2" is-required />
                 <div v-for="song in arrangement" :key="song.id">
                   <MusicCard :song="song" showMine />
                 </div>

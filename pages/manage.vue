@@ -8,7 +8,7 @@
       </UiCardHeader>
       <UiCardContent>
         <DatePicker v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
-          :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless />
+          :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required />
         <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-4">
           <UiButton @click="arrange" :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none">
             <Loader2 v-if="arrangeLoading" class="w-4 h-4 mr-2 animate-spin" />
