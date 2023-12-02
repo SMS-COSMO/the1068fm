@@ -56,6 +56,16 @@ export class TimeController {
         }
     }
 
+
+    async modifyActive(id: string, newIsActive: boolean) {
+        try {
+            await db.update(times).set({ isActive: newIsActive }).where(eq(times.id, id));
+            return { success: true, message: '修改成功' };
+        } catch (err) {
+            return { success: false, message: '时间段不存在' }
+        }
+    }
+
     async getList() {
         try {
             const res = await db.select().from(times);
@@ -63,5 +73,43 @@ export class TimeController {
         } catch (err) {
             return { success: false, message: '时间段不存在' }
         }
+    }
+
+    async fitsInTime(t: Date) {
+        const listRes = await this.getList();
+        if (!listRes.success || !listRes.res)
+            return true; // This is to prevent a total shutdown when getList breaks
+        const list = listRes.res;
+
+        let fits = 0;
+        for (let time of list) {
+            if (!time.isActive)
+                continue;
+            if (!time.repeats) {
+                if (t < time.startAt || time.endAt < t)
+                    continue;
+            } else {
+                const dhms = (d: Date) => ({
+                    d: d.getDay() === 0 ? 7 : d.getDay(),
+                    h: d.getHours(),
+                    m: d.getMinutes(),
+                    s: d.getSeconds(),
+                });
+                const date2num = (d: ReturnType<typeof dhms>) => d.h * 10000 + d.m * 100 + d.s;
+
+                const start = dhms(time.startAt);
+                const end = dhms(time.endAt);
+                const current = dhms(t);
+
+                if (start.d < end.d && (current.d < start.d || end.d < current.d) || start.d > end.d && current.d < start.d)
+                    continue;
+                if (current.d === start.d && date2num(current) < date2num(start))
+                    continue;
+                if (current.d === end.d && date2num(current) > date2num(end))
+                    continue;
+            }
+            fits++;
+        }
+        return fits > 0;
     }
 }

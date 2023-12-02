@@ -16,6 +16,8 @@ export const songRouter = router({
             message: z.string().nullish(),
         }))
         .mutation(async ({ ctx, input }) => {
+            if (!await ctx.timeController.fitsInTime(new Date()))
+                throw new TRPCError({ code: 'BAD_REQUEST', message: '不在投稿时段内' });
             const res = await ctx.songController.create(input);
             if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });

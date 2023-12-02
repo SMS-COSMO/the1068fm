@@ -1,12 +1,14 @@
 import { userRouter } from './user';
 import { publicProcedure, router } from '../trpc';
 import { songRouter } from './song';
+import { timeRouter } from './time';
 import { arrangementRouter } from './arrangement';
 
 export const appRouter = router({
   status: publicProcedure.query(() => 'Hola! This is working'),
   user: userRouter,
   song: songRouter,
+  time: timeRouter,
   arrangement: arrangementRouter,
 });
 

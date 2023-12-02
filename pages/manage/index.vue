@@ -43,26 +43,27 @@
         <UiButton variant="outline" class="mt-4 w-full">
           生成微信公众号文章
         </UiButton>
+        <TimeAvailability showButton class="mt-4" />
+        <UiPopover v-model:open="accountOpen">
+          <UiPopoverTrigger as-child>
+            <UiButton variant="outline" role="combobox" :aria-expanded="accountOpen"
+              class="justify-between absolute bottom-5 left-5 w-[200px]">
+              {{ userStore.userId }}
+              <span class="icon-[radix-icons--caret-sort] text-lg"></span>
+            </UiButton>
+          </UiPopoverTrigger>
+          <UiPopoverContent class="w-[200px] p-0">
+            <UiCommand>
+              <UiCommandGroup>
+                <UiCommandItem value="logout" @select="logout">
+                  <span class="icon-[tabler--logout] mr-1"></span>
+                  登出
+                </UiCommandItem>
+              </UiCommandGroup>
+            </UiCommand>
+          </UiPopoverContent>
+        </UiPopover>
       </UiCardContent>
-      <UiPopover v-model:open="accountOpen">
-        <UiPopoverTrigger as-child>
-          <UiButton variant="outline" role="combobox" :aria-expanded="accountOpen"
-            class="justify-between absolute bottom-5 left-5 w-[200px]">
-            {{ userStore.userId }}
-            <span class="icon-[radix-icons--caret-sort] text-lg"></span>
-          </UiButton>
-        </UiPopoverTrigger>
-        <UiPopoverContent class="w-[200px] p-0">
-          <UiCommand>
-            <UiCommandGroup>
-              <UiCommandItem value="logout" @select="logout">
-                <span class="icon-[tabler--logout] mr-1"></span>
-                登出
-              </UiCommandItem>
-            </UiCommandGroup>
-          </UiCommand>
-        </UiPopoverContent>
-      </UiPopover>
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4">
       <UiCardHeader>
@@ -144,7 +145,7 @@
             总歌单
           </UiCardTitle>
         </div>
-        <UiButton @click="enterReview" variant="secondary" class="self-center my-[-10px] ml-auto">
+        <UiButton @click="navigateTo('/manage/review')" variant="secondary" class="self-center my-[-10px] ml-auto">
           进入审歌模式
         </UiButton>
       </UiCardHeader>
@@ -438,11 +439,6 @@ const arrange = async () => {
   }
   arrangeLoading.value = false;
   $toast.success('排歌成功');
-};
-
-const enterReview = () => {
-  const router = useRouter();
-  router.push('/review');
 };
 
 const songList = ref<TSongList>([]);
