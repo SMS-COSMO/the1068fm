@@ -514,7 +514,12 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });
     const i = songList.value.findIndex(item => item.id === song.id);
-    songList.value[i].status = status;
+    if (i === -1) {
+      song.status = status;
+      songList.value.push(song);
+    } else {
+      songList.value[i].status = status;
+    }
   } catch (err) {
     useErrorHandler(err)
   }
