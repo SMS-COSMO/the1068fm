@@ -8,3 +8,4 @@ export type TSongList = RouterOutput['song']['list'];
 export type TSafeSongList = RouterOutput['song']['listSafe'];
 export type TSongListInfo = RouterOutput['song']['info'];
 export type TArrangementList = RouterOutput['arrangement']['list'];
+export type TSafeArrangementList = RouterOutput['arrangement']['listSafe'];

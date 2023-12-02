@@ -107,7 +107,7 @@
 
 <script setup lang="ts">
 import { Music4 } from 'lucide-vue-next';
-import type { TSafeSongList, TSongListInfo, TArrangementList } from '~/types';
+import type { TSafeSongList, TSongListInfo, TSafeArrangementList } from '~/types';
 import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
@@ -185,7 +185,7 @@ const processedListData = computed(() => fuse.results.value.map(s => s.item));
 const showLength = ref(100);
 
 const selectedDate = ref(new Date());
-const arrangementList = ref<TArrangementList>([]);
+const arrangementList = ref<TSafeArrangementList>([]);
 const arrangement = computed(
   () => arrangementList.value.find(e => e.date === getDateString(selectedDate.value))?.songs
 );
@@ -210,7 +210,7 @@ try {
 onMounted(async () => {
   try {
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-    arrangementList.value = await $api.arrangement.list.query();
+    arrangementList.value = await $api.arrangement.listSafe.query();
     isDataLoading.value = false
   } catch (err) {
     useErrorHandler(err)

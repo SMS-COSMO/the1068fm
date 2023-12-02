@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { TSerializedSong, serializeSong } from '../utils/serializer';
 
 const dateRegExp = /(202[3-9]|20[3-9]\d)-[01]\d-[0-3]\d/
 const dateZod = z.string().min(1, '排歌表日期不能为空').refine((val) => dateRegExp.test(val), '日期格式不正确')
@@ -48,11 +49,26 @@ export const arrangementRouter = router({
             else return res;
         }),
 
-    list: publicProcedure
+    list: protectedProcedure
         .query(async ({ ctx }) => {
             const res = await ctx.arrangementController.getList();
             if (!res.success || !res.res)
                 throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
             else return res.res;
         }),
+    listSafe: publicProcedure.
+        query(async ({ ctx }) => {
+            const res = await ctx.arrangementController.getList();
+            if (!res.success || !res.res)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            const safeList: { date: string, songs: TSerializedSong[] }[] = []
+            for (const rawList of res.res) {
+                const safeSongs: TSerializedSong[] = []
+                for (const song of rawList.songs) {
+                    safeSongs.push(serializeSong(song))
+                }
+                safeList.push({ date: rawList.date, songs: safeSongs })
+            }
+            return safeList
+        })
 });
