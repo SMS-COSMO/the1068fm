@@ -377,6 +377,13 @@ definePageMeta({
   }
 });
 
+useHead({
+  title: '后台 | the1068fm 点歌系统',
+  meta: [
+    { name: 'description', content: 'the1068fm 点歌系统 Made by COSMO.' }
+  ]
+});
+
 const userStore = useUserStore();
 
 const accountOpen = ref(false);

@@ -52,6 +52,13 @@ definePageMeta({
   }
 });
 
+useHead({
+  title: '登录 | the1068fm 点歌系统',
+  meta: [
+    { name: 'description', content: 'the1068fm 点歌系统 Made by COSMO.' }
+  ]
+});
+
 const form = useForm();
 const buttonLoading = ref(false);
 

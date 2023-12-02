@@ -201,6 +201,13 @@ definePageMeta({
   }
 });
 
+useHead({
+  title: '审核歌曲 | the1068fm 点歌系统',
+  meta: [
+    { name: 'description', content: 'the1068fm 点歌系统 Made by COSMO.' }
+  ]
+});
+
 const rejectOpen = ref(false);
 
 const songList = ref<TSongList>([]);

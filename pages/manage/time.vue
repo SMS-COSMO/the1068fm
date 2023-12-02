@@ -57,6 +57,13 @@ definePageMeta({
   }
 });
 
+useHead({
+  title: '投稿时间管理 | the1068fm 点歌系统',
+  meta: [
+    { name: 'description', content: 'the1068fm 点歌系统 Made by COSMO.' }
+  ]
+});
+
 const updateKey = ref(0);
 const timeList = ref<TTimeList>([]);
 const selectedTime = ref<TTime>(timeList.value[0]);
