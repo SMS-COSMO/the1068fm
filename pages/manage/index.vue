@@ -40,8 +40,8 @@
             预览
           </UiToggle>
         </div>
-        <UiButton variant="outline" class="mt-4 w-full">
-          生成微信公众号文章
+        <UiButton variant="outline" class="mt-4 w-full" @click="copySongInfo" :disabled="!arrangement">
+          复制歌单内容
         </UiButton>
         <TimeAvailability showButton class="mt-4" />
         <UiPopover v-model:open="accountOpen">
@@ -618,6 +618,22 @@ const logout = () => {
 
 const listLoading = ref(true);
 const arrangementLoading = ref(true);
+
+const { copy: useCopy } = useClipboard({})
+
+function copySongInfo() {
+  let info = ''
+  if (!arrangement.value) {
+    $toast.error('排歌表为空')
+    return
+  }
+  for (const song of arrangement.value) {
+    info += `《${song.name}》 ${song.creator}\r`
+  }
+  useCopy(info)
+  $toast.success('复制成功')
+}
+
 onMounted(async () => {
   try {
     try {
