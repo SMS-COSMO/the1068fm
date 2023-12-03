@@ -363,7 +363,7 @@
 
 <script setup lang="ts">
 import { getDateString } from '~/lib/utils';
-import type { TSong, TSongList, TArrangementList } from '~/types';
+import type { TSong, TSongList, TArrangementList, TStatus } from '~/types';
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, X, Check, Plus, Loader2 } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
@@ -512,7 +512,6 @@ const calendarAttr = computed(() => {
   return res;
 });
 
-type TStatus = 'unset' | 'approved' | 'rejected' | 'used';
 const updateSong = async (song: TSong, status: TStatus) => {
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });

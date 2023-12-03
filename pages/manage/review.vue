@@ -191,7 +191,7 @@
 
 <script setup lang="ts">
 import { X, Check } from 'lucide-vue-next';
-import type { TSong, TSongList } from '~/types';
+import type { TSong, TSongList, TStatus } from '~/types';
 const { $api } = useNuxtApp();
 
 definePageMeta({
@@ -254,16 +254,32 @@ const searchList = computedAsync(
 );
 
 const rejectAll = async () => {
+  await batchUpdateSong(unsetList.value, 'rejected');
   rejectOpen.value = false;
-  for (let song of songList.value)
-    await updateSong(song, 'rejected');
 };
 
-const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected' | 'used') => {
+const updateSong = async (song: TSong, status: TStatus) => {
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });
     const i = songList.value.findIndex(item => item.id === song.id);
     songList.value[i].status = status;
+  } catch (err) {
+    useErrorHandler(err)
+  }
+};
+
+const batchUpdateSong = async (songs: TSong[], status: TStatus) => {
+  try {
+    await $api.song.batchModifyStatus.mutate({ ids: songs.map(item => item.id), status });
+    for (const song of songs) {
+      const i = songList.value.findIndex(item => item.id === song.id);
+      if (i === -1) {
+        song.status = status;
+        songList.value.push(song);
+      } else {
+        songList.value[i].status = status;
+      }
+    }
   } catch (err) {
     useErrorHandler(err)
   }

@@ -11,3 +11,5 @@ export type TArrangementList = RouterOutput['arrangement']['list'];
 export type TSafeArrangementList = RouterOutput['arrangement']['listSafe'];
 export type TTime = RouterOutput['time']['content'];
 export type TTimeList = RouterOutput['time']['list'];
+
+export type TStatus = 'unset' | 'approved' | 'rejected' | 'used';
