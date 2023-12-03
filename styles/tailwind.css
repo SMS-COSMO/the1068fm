@@ -1,9 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+
 @layer base {
+  @font-face {
+    font-family: AlimamaShuHeiTi;
+    src: url('/ShuHeiTi.woff2') format("woff2");
+  }
+  
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;

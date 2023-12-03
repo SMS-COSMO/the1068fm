@@ -4,7 +4,7 @@
       <div class="mb-4 mt-8 flex justify-start">
         <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]"></NuxtImg>
       </div>
-      <section class="my-4 grid grid-cols-1 gap-4">
+      <section class="my-4 grid grid-cols-1 gap-4 font-shuhei">
         <div class="grid grid-cols-2 gap-2">
           <UiCard class="shadow p-0 pt-1 pb-2">
             <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
@@ -48,10 +48,10 @@
         <UiCardContent class="p-4">
             <UiTabs v-model="selectedTab" class="overflow-x-hidden">
               <UiTabsList class="grid grid-cols-2">
-                <UiTabsTrigger value="songList">
+                <UiTabsTrigger value="songList" class="font-shuhei">
                   已收集投稿
                 </UiTabsTrigger>
-                <UiTabsTrigger value="arrangement">
+                <UiTabsTrigger value="arrangement" class="font-shuhei">
                   歌单
                 </UiTabsTrigger>
               </UiTabsList>

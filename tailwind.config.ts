@@ -15,6 +15,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'shuhei': ['AlimamaShuHeiTi', 'sans-serif']
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
