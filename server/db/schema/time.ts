@@ -1,8 +1,8 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { nanoid } from 'nanoid';
+import { useNanoID } from '~/composables/useNanoID';
 
 export const times = sqliteTable('times', {
-    id: text('id', { mode: 'text' }).primaryKey().$defaultFn(() => nanoid(12)),
+    id: text('id', { mode: 'text' }).primaryKey().$defaultFn(() => useNanoID()),
     name: text('name', { mode: 'text' }).notNull(),
     startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
     endAt: integer('end_at', { mode: 'timestamp' }).notNull(),

@@ -1,8 +1,8 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { nanoid } from 'nanoid';
+import { useNanoID } from '~/composables/useNanoID';
 
 export const songs = sqliteTable('songs', {
-    id: text('id', { mode: 'text' }).primaryKey().$defaultFn(() => nanoid(12)),
+    id: text('id', { mode: 'text' }).primaryKey().$defaultFn(() => useNanoID()),
     name: text('name', { mode: 'text' }).notNull(),
     creator: text('creator', { mode: 'text' }).notNull(),
     submitterName: text('submitter_name', { mode: 'text' }).notNull(),
