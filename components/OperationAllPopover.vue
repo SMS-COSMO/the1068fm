@@ -17,7 +17,7 @@
         </UiCardHeader>
         <UiCardContent class="p-2">
           <div class="ml-auto">
-            <UiButton @click="action" :variant="isDestructive ? 'destructive' : 'default'">
+            <UiButton @click="action(); open = false" :variant="isDestructive ? 'destructive' : 'default'">
               是
             </UiButton>
             <UiButton @click="open = false" variant="outline" class="ml-2">

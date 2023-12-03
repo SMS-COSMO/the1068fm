@@ -360,10 +360,7 @@ useHead({
 });
 
 const userStore = useUserStore();
-
 const accountOpen = ref(false);
-const rejectOpen = ref(false);
-const approveOpen = ref(false);
 
 type TArrange = 'day' | 'week';
 const autoArrangeScopeText = {
@@ -608,12 +605,10 @@ const createEmptyArrangement = async () => {
 
 const rejectAll = async () => {
   await batchUpdateSong(unsetList.value, 'rejected');
-  rejectOpen.value = false;
 };
 
 const approveAll = async () => {
   await batchUpdateSong(unsetList.value, 'approved');
-  rejectOpen.value = false;
 };
 
 const logout = () => {

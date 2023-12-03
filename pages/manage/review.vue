@@ -183,8 +183,6 @@ useHead({
   ]
 });
 
-const rejectOpen = ref(false);
-
 const songList = ref<TSongList>([]);
 const unsetList = computed(
   () => songList.value.filter(s => (s.status === 'unset'))
@@ -230,12 +228,10 @@ const searchList = computedAsync(
 
 const rejectAll = async () => {
   await batchUpdateSong(unsetList.value, 'rejected');
-  rejectOpen.value = false;
 };
 
 const approveAll = async () => {
   await batchUpdateSong(unsetList.value, 'approved');
-  rejectOpen.value = false;
 };
 
 const updateSong = async (song: TSong, status: TStatus) => {
