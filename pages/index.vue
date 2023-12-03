@@ -111,6 +111,8 @@ import { getDateString } from '~/lib/utils';
 import { useDrag } from '@vueuse/gesture';
 const { $api } = useNuxtApp();
 
+const isDesktop = ref(false);
+
 const songList = ref<TSafeSongList>([]);
 const songListInfo = ref<TSongListInfo>();
 const selectedTab = ref('songList');
@@ -122,6 +124,8 @@ const tabShift = ref(0);
 const dragLeft = ref();
 const dragRight = ref();
 const dragLeftHandler = (state: any) => {
+  if (isDesktop.value)
+    return;
   if (state.axis === 'y')
     return;
   if (state.movement[0] < -30)
@@ -134,6 +138,8 @@ const dragLeftHandler = (state: any) => {
   }
 };
 const dragRightHandler = (state: any) => {
+  if (isDesktop.value)
+    return;
   if (state.axis === 'y')
     return;
   if (state.movement[0] > 30)
@@ -208,10 +214,11 @@ try {
 
 onMounted(async () => {
   try {
+    isDesktop.value = window.innerWidth > 700;
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-    isSongListLoading.value = false
+    isSongListLoading.value = false;
     arrangementList.value = await $api.arrangement.listSafe.query();
-    isArrangementLoading.value = false
+    isArrangementLoading.value = false;
   } catch (err) {
     useErrorHandler(err)
   }
