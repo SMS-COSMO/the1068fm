@@ -37,36 +37,11 @@
             </UiAlertDescription>
           </UiAlert>
         </UiScrollArea>
+        <div class="float-right mt-4 flex flex-row gap-2">
+          <OperationAllPopover :action="() => { approveAll() }" name="通过" />
+          <OperationAllPopover :action="() => { rejectAll() }" name="拒绝" isDestructive />
+        </div>
       </UiCardContent>
-      <UiPopover v-model:open="rejectOpen">
-        <UiPopoverTrigger as-child>
-          <UiButton @click="rejectOpen = true" variant="outline" class="absolute right-5 bottom-5">
-            全部拒绝
-          </UiButton>
-        </UiPopoverTrigger>
-        <UiPopoverContent class="w-60 mr-2 mb-2">
-          <UiCard class="border-0 shadow-transparent">
-            <UiCardHeader class="p-2">
-              <UiCardTitle class="text-xl">
-                确定要全部拒绝吗？
-              </UiCardTitle>
-              <UiCardDescription>
-                此操作不可撤销
-              </UiCardDescription>
-            </UiCardHeader>
-            <UiCardContent class="p-2">
-              <div class="ml-auto">
-                <UiButton @click="rejectAll" variant="destructive">
-                  是
-                </UiButton>
-                <UiButton @click="rejectOpen = false" variant="outline" class="ml-2">
-                  取消
-                </UiButton>
-              </div>
-            </UiCardContent>
-          </UiCard>
-        </UiPopoverContent>
-      </UiPopover>
     </UiCard>
     <UiCard class="basis-1/2 pt-4">
       <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
@@ -255,6 +230,11 @@ const searchList = computedAsync(
 
 const rejectAll = async () => {
   await batchUpdateSong(unsetList.value, 'rejected');
+  rejectOpen.value = false;
+};
+
+const approveAll = async () => {
+  await batchUpdateSong(unsetList.value, 'approved');
   rejectOpen.value = false;
 };
 
