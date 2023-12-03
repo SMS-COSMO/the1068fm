@@ -46,7 +46,6 @@
 
       <UiCard class="my-4 shadow">
         <UiCardContent class="p-4">
-          <template v-if="!isDataLoading">
             <UiTabs v-model="selectedTab" class="overflow-x-hidden">
               <UiTabsList class="grid grid-cols-2">
                 <UiTabsTrigger value="songList">
@@ -59,36 +58,40 @@
               <UiTabsContent value="songList" ref="dragLeft" v-drag="dragLeftHandler"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
                 class="duration-100">
-                <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
-                <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
-                  <MusicCard :song="song" showMine />
-                </div>
-                <UiAlert v-if="showLength < processedListData.length">
-                  <UiAlertDescription class="flex flex-row">
-                    <span class="self-center">
-                      出于性能考虑，仅加载前 {{ showLength }} 首歌
-                    </span>
-                    <UiButton variant="secondary" @click="showLength += 50" class="ml-auto w-[100px]">
-                      加载更多
-                    </UiButton>
-                  </UiAlertDescription>
-                </UiAlert>
+                <template v-if="!isSongListLoading">
+                  <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
+                  <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
+                    <MusicCard :song="song" showMine />
+                  </div>
+                  <UiAlert v-if="showLength < processedListData.length">
+                    <UiAlertDescription class="flex flex-row">
+                      <span class="self-center">
+                        出于性能考虑，仅加载前 {{ showLength }} 首歌
+                      </span>
+                      <UiButton variant="secondary" @click="showLength += 50" class="ml-auto w-[100px]">
+                        加载更多
+                      </UiButton>
+                    </UiAlertDescription>
+                  </UiAlert>
+                </template>
+                <ContentLoading v-else />
               </UiTabsContent>
               <UiTabsContent value="arrangement" ref="dragRight" v-drag="dragRightHandler"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
                 class="duration-100">
-                <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                <template v-if="!isArrangementLoading">
+                  <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
                   borderless :attributes="calendarAttr" class="mb-2" is-required />
-                <div v-for="song in arrangement" :key="song.id">
-                  <MusicCard :song="song" showMine />
-                </div>
-                <p v-if="!arrangement" class="text-sm text-center">
-                  今日无排歌哦~
-                </p>
+                  <div v-for="song in arrangement" :key="song.id">
+                    <MusicCard :song="song" showMine />
+                  </div>
+                  <p v-if="!arrangement" class="text-sm text-center">
+                    今日无排歌哦~
+                  </p>
+                </template>
+                <ContentLoading v-else />
               </UiTabsContent>
             </UiTabs>
-          </template>
-          <ContentLoading v-else />
         </UiCardContent>
       </UiCard>
     </div>
@@ -111,7 +114,8 @@ const { $api } = useNuxtApp();
 const songList = ref<TSafeSongList>([]);
 const songListInfo = ref<TSongListInfo>();
 const selectedTab = ref('songList');
-const isDataLoading = ref(true);
+const isSongListLoading = ref(true);
+const isArrangementLoading = ref(true);
 const canSubmit = ref(true);
 
 const tabShift = ref(0);
@@ -205,8 +209,9 @@ try {
 onMounted(async () => {
   try {
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+    isSongListLoading.value = false
     arrangementList.value = await $api.arrangement.listSafe.query();
-    isDataLoading.value = false
+    isArrangementLoading.value = false
   } catch (err) {
     useErrorHandler(err)
   }
