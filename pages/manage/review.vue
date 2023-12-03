@@ -109,7 +109,7 @@
             已审核
           </UiCardTitle>
         </div>
-        <UiButton @click="enterManage" variant="secondary" class="self-center my-[-10px] ml-auto">
+        <UiButton @click="navigateTo('/manage')" variant="secondary" class="self-center my-[-10px] ml-auto">
           返回排歌模式
         </UiButton>
       </UiCardHeader>
@@ -274,17 +274,11 @@ const reviewSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
   selectedSong.value = unsetList.value[unsetList.value.indexOf(song) + 1];
 };
 
-const enterManage = () => {
-  const router = useRouter();
-  router.push('/manage');
-};
-
 onMounted(async () => {
   try {
     await $api.user.tokenValidity.query();
   } catch (err) {
-    const router = useRouter();
-    router.push('/login');
+    navigateTo('/manage/login');
   }
 
   try {

@@ -618,9 +618,8 @@ const rejectAll = async () => {
 };
 
 const logout = () => {
-  const router = useRouter();
   userStore.logout();
-  router.push('/login');
+  navigateTo('/manage/login');
 };
 
 const listLoading = ref(true);
@@ -646,8 +645,7 @@ onMounted(async () => {
     try {
       await $api.user.tokenValidity.query();
     } catch (err) {
-      const router = useRouter();
-      router.push('/login');
+      navigateTo('/manage/login');
     }
 
     songList.value = await $api.song.listUnused.query();
