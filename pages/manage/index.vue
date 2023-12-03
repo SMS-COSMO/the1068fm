@@ -440,8 +440,7 @@ const arrange = async () => {
       date: getDateString(i.toDate()),
       songs: songs,
     });
-    for (const song of songs)
-      await updateSong(song, 'used');
+    await batchUpdateSong(songs, 'used');
     i = i.add(1, 'd');
   }
   arrangeLoading.value = false;
@@ -513,7 +512,8 @@ const calendarAttr = computed(() => {
   return res;
 });
 
-const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected' | 'used') => {
+type TStatus = 'unset' | 'approved' | 'rejected' | 'used';
+const updateSong = async (song: TSong, status: TStatus) => {
   try {
     await $api.song.modifyStatus.mutate({ id: song.id, status });
     const i = songList.value.findIndex(item => item.id === song.id);
@@ -528,9 +528,26 @@ const updateSong = async (song: TSong, status: 'unset' | 'approved' | 'rejected'
   }
 };
 
+const batchUpdateSong = async (songs: TSong[], status: TStatus) => {
+  try {
+    await $api.song.batchModifyStatus.mutate({ ids: songs.map(item => item.id), status });
+    for (const song of songs) {
+      const i = songList.value.findIndex(item => item.id === song.id);
+      if (i === -1) {
+        song.status = status;
+        songList.value.push(song);
+      } else {
+        songList.value[i].status = status;
+      }
+    }
+  } catch (err) {
+    useErrorHandler(err)
+  }
+};
+
 const addToArrangement = async (song: TSong) => {
   const i = arrangementList.value.findIndex(e => e.date === dateString.value);
-  if (!arrangementList.value[i])
+  if (!arrangementList.value[i] || arrangementList.value[i].songs.includes(song))
     return;
 
   arrangementList.value[i].songs.push(song);
@@ -553,6 +570,8 @@ const removeFromArrangement = async (song: TSong) => {
     return;
 
   const j = arrangementList.value[i].songs.indexOf(song);
+  if (j === -1)
+    return;
   arrangementList.value[i].songs.splice(j, 1);
   try {
     await $api.arrangement.modifySongList.mutate({
@@ -583,10 +602,12 @@ const move = async (song: TSong, upset: 1 | -1) => {
     return;
 
   const j = arrangementList.value[i].songs.indexOf(song);
-  if (j + upset >= 0 && j + upset < arrangementList.value[i].songs.length)
-    [arrangementList.value[i].songs[j], arrangementList.value[i].songs[j + upset]] =
-      [arrangementList.value[i].songs[j + upset], arrangementList.value[i].songs[j]]
+  const swap = (array: TSong[], i: number, j: number) => {
+    array[i] = array.splice(j, 1, array[i])[0];
+  };
 
+  if (j + upset >= 0 && j + upset < arrangementList.value[i].songs.length)
+    swap(arrangementList.value[i].songs, j, j + upset);
   try {
     await $api.arrangement.modifySongList.mutate({
       date: dateString.value,
@@ -594,8 +615,7 @@ const move = async (song: TSong, upset: 1 | -1) => {
     });
   } catch (err) {
     useErrorHandler(err)
-    [arrangementList.value[i].songs[j], arrangementList.value[i].songs[j + upset]] =
-      [arrangementList.value[i].songs[j + upset], arrangementList.value[i].songs[j]]
+    swap(arrangementList.value[i].songs, j, j + upset);
   }
 }
 
@@ -612,9 +632,8 @@ const createEmptyArrangement = async () => {
 };
 
 const rejectAll = async () => {
+  await batchUpdateSong(unsetList.value, 'rejected');
   rejectOpen.value = false;
-  for (let song of songList.value)
-    await updateSong(song, 'rejected');
 };
 
 const logout = () => {
@@ -625,19 +644,19 @@ const logout = () => {
 const listLoading = ref(true);
 const arrangementLoading = ref(true);
 
-const { copy: useCopy } = useClipboard({})
+const { copy: useCopy } = useClipboard({});
 
 function copySongInfo() {
-  let info = ''
+  let info = '';
   if (!arrangement.value) {
-    $toast.error('排歌表为空')
-    return
+    $toast.error('排歌表为空');
+    return;
   }
   for (const song of arrangement.value) {
-    info += `《${song.name}》 ${song.creator}\r`
+    info += `《${song.name}》 ${song.creator}\r`;
   }
-  useCopy(info)
-  $toast.success('复制成功')
+  useCopy(info);
+  $toast.success('复制成功');
 }
 
 onMounted(async () => {

@@ -1,7 +1,7 @@
 import { songs } from '~/server/db/schema';
 import { type TNewSong, db } from '../../db/db';
 import { LibsqlError } from '@libsql/client';
-import { eq, gt, and } from 'drizzle-orm';
+import { eq, gt, and, inArray } from 'drizzle-orm';
 
 export class SongController {
     async create(newSong: TNewSong) {
@@ -56,6 +56,15 @@ export class SongController {
     async modifyStatus(id: string, status: 'unset' | 'approved' | 'rejected' | 'used') {
         try {
             await db.update(songs).set({ status }).where(eq(songs.id, id));
+            return { success: true, message: '修改成功' };
+        } catch (err) {
+            return { success: false, message: '歌曲不存在' }
+        }
+    }
+
+    async batchModifyStatus(ids: string[], status: 'unset' | 'approved' | 'rejected' | 'used') {
+        try {
+            await db.update(songs).set({ status }).where(inArray(songs.id, ids));
             return { success: true, message: '修改成功' };
         } catch (err) {
             return { success: false, message: '歌曲不存在' }

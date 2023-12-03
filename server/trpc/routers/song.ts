@@ -63,6 +63,18 @@ export const songRouter = router({
             else return res;
         }),
 
+    batchModifyStatus: protectedProcedure
+        .input(z.object({
+            ids: z.array(z.string().min(1, '歌曲不存在')),
+            status: z.enum(['unset', 'approved', 'rejected', 'used']),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const res = await ctx.songController.batchModifyStatus(input.ids, input.status);
+            if (!res.success)
+                throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+            else return res;
+        }),
+
     listSafe: publicProcedure
         .query(async ({ ctx }) => {
             const res = await ctx.songController.getList();
