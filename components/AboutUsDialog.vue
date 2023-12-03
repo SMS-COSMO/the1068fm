@@ -11,11 +11,30 @@
         <NuxtImg src="/logo.svg" class="mx-auto mb-4 w-[50%]"></NuxtImg>
         <section class="prose">
           <p>
-            <em>the1068fm</em> 是由<b>COSMO智慧校园平台运研中心</b>为<b>风华子衿广播站</b>声声慢点歌节目开发的一体化系统，包含歌曲投稿，歌曲审核，一键排歌等功能。
+            <em>the1068fm</em> 是由<b>COSMO智慧校园平台运研中心</b>为<b>风华子衿广播站</b>声声慢点歌节目开发的一体化系统，包含歌曲投稿，歌曲审核，一键排歌，导出歌单等功能。
           </p>
           <p>
-            <b>COSMO智慧校园平台运研中心</b>是深圳中学七大校级学生组织之一，也是最年轻的校级学生组织。欢迎大家关注我们的微信公众号！
+            这个项目的代码是开源的，你可以在<NuxtLink to="https://github.com/SMS-COSMO/the1068fm" class="font-bold">这里</NuxtLink>
+            查看源代码。期待各位同学的反馈！
           </p>
+        </section>
+        <NuxtImg src="/cosmo-logo.png" class="mx-auto my-0 w-[80%]"></NuxtImg>
+        <section class="prose">
+          <p>
+            <b>COSMO智慧校园平台运研中心</b>是深圳中学七大校级学生组织之一，也是最年轻的校级学生组织。欢迎大家通过下方链接关注我们！
+          </p>
+          <section class="flex gap-4">
+            <NuxtLink
+              to="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Mzg2NzUzOTIyOA==&scene=124#wechat_redirect"
+              class="text-gray-600 flex justify-center items-center gap-1">
+              <WeChatLogo></WeChatLogo>
+              微信公众号
+            </NuxtLink>
+            <NuxtLink to="https://github.com/SMS-COSMO/" class="text-gray-600 flex justify-center items-center gap-1">
+              <span class="icon-[radix-icons--github-logo]"></span>
+              GitHub
+            </NuxtLink>
+          </section>
         </section>
       </div>
       <UiDialogFooter>
