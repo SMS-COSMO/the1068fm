@@ -40,26 +40,43 @@ const showLength = reactive({
 
 const selectedSong = ref<TSong>();
 const searchLoading = ref(false);
-const searchList = computedAsync(
-  async () => {
-    searchLoading.value = true;
-    const formData = new FormData();
-    formData.append('input', `${selectedSong.value?.name ?? ''} ${selectedSong.value?.creator ?? ''}`);
-    formData.append('filter', 'name');
-    formData.append('type', 'qq');
+interface TCache {
+  name: string,
+  data: any,
+};
+const searchListCache = ref<TCache[]>([]);
+const searchList = ref();
+async function setSearchList() {
+  searchLoading.value = true;
+  searchList.value = await getSearchList(selectedSong.value);
+  searchLoading.value = false;
+}
+async function getSearchList(song?: TSong) {
+  // Use cache
+  const name = `${song?.name ?? ''} ${song?.creator ?? ''}`;
+  const i = searchListCache.value.findIndex(item => item.name === name);
+  if (i !== -1)
+    return searchListCache.value[i].data;
 
-    const data: any = (await useFetch('/liuzhijin', {
-      method: 'post',
-      body: formData,
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-      mode: 'cors',
-    })).data;
-    searchLoading.value = false;
-    return JSON.parse(data.value).data;
-  },
-);
+  const formData = new FormData();
+  formData.append('input', name);
+  formData.append('filter', 'name');
+  formData.append('type', 'qq');
+
+  const res: any = (await useFetch('/liuzhijin', {
+    method: 'post',
+    body: formData,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    mode: 'cors',
+  })).data;
+
+  // Store cache
+  const data = JSON.parse(res.value).data;
+  searchListCache.value.push({ name, data });
+  return data;
+};
 
 async function rejectAll() {
   await batchUpdateSong(unsetList.value, 'rejected');
@@ -96,7 +113,7 @@ async function batchUpdateSong(songs: TSong[], status: TStatus) {
   }
 }
 
-async function reviewSong(song: TSong, status: 'unset' | 'approved' | 'rejected' | 'used') {
+async function reviewSong(song: TSong, status: TStatus) {
   await updateSong(song, status);
   selectedSong.value = unsetList.value[unsetList.value.indexOf(song) + 1];
 }
@@ -112,6 +129,11 @@ onMounted(async () => {
     songList.value = await $api.song.listUnused.query();
   } catch (err) {
     useErrorHandler(err);
+  }
+
+  // prefetch songList cache
+  for (const song of unsetList.value.slice(0, 100)) {
+    await getSearchList(song);
   }
 });
 </script>
@@ -133,10 +155,8 @@ onMounted(async () => {
             <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
               <UiContextMenu>
                 <UiContextMenuTrigger>
-                  <MusicCard
-                    :song="song" :selected="selectedSong === song" class="cursor-pointer"
-                    @click="selectedSong = song"
-                  />
+                  <MusicCard :song="song" :selected="selectedSong === song" class="cursor-pointer"
+                    @click="selectedSong = song; setSearchList()" />
                 </UiContextMenuTrigger>
                 <UiContextMenuContent>
                   <UiContextMenuItem @click="updateSong(song, 'approved')">
@@ -172,18 +192,14 @@ onMounted(async () => {
           歌曲试听
         </UiCardTitle>
         <div v-if="selectedSong" class="ml-auto h-4">
-          <UiButton
-            variant="secondary" size="icon"
+          <UiButton variant="secondary" size="icon"
             class="w-20 my-[-10px] hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-            @click="reviewSong(selectedSong, 'approved');"
-          >
+            @click="reviewSong(selectedSong, 'approved');">
             <Check class="w-5 h-5" />
           </UiButton>
-          <UiButton
-            variant="secondary" size="icon"
+          <UiButton variant="secondary" size="icon"
             class="w-20 ml-3 my-[-10px] hover:bg-red-200 hover:border-red-400 hover:text-red-700"
-            @click="reviewSong(selectedSong, 'rejected');"
-          >
+            @click="reviewSong(selectedSong, 'rejected');">
             <X class="w-5 h-5" />
           </UiButton>
         </div>
@@ -196,10 +212,7 @@ onMounted(async () => {
             </div>
           </template>
           <template v-if="searchLoading && selectedSong">
-            <UiCard
-              v-for="n in 10" :key="n"
-              class="flex items-center space-x-4 mb-4"
-            >
+            <UiCard v-for="n in 10" :key="n" class="flex items-center space-x-4 mb-4">
               <UiCardHeader class="items-start gap-4 space-y-0 flex-row w-full">
                 <UiSkeleton class="h-20 w-20 rounded-sm" />
                 <div class="space-y-2 w-full">
@@ -264,10 +277,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.approved }} 首歌
                   </span>
-                  <UiButton
-                    variant="secondary" class="float-right ml-auto"
-                    @click="showLength.approved += 10"
-                  >
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.approved += 10">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -298,10 +308,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.rejected }} 首歌
                   </span>
-                  <UiButton
-                    variant="secondary" class="float-right ml-auto"
-                    @click="showLength.rejected += 10"
-                  >
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.rejected += 10">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
