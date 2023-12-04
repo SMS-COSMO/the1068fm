@@ -112,7 +112,7 @@ try {
 
 onMounted(async () => {
   try {
-    isDesktop.value = window.innerWidth > 700;
+    isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
     isSongListLoading.value = false;
     arrangementList.value = await $api.arrangement.listSafe.query();
@@ -124,8 +124,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="md:max-w-[1200px] max-w-[600px] mx-auto">
-    <div class="mx-5 md:grid md:grid-cols-2 md:gap-8">
+  <div :class="`${isDesktop ? 'max-w-[1200px]' : 'max-w-[600px]'} mx-auto`">
+    <div :class="`mx-5 ${isDesktop ? 'grid grid-cols-2 gap-8' : ''}`">
       <div>
         <div class="mb-4 mt-8 flex justify-start">
           <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]" />
@@ -228,7 +228,7 @@ onMounted(async () => {
             <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md" />
           </UiCardHeader>
           <UiCardContent>
-            <UiScrollArea class="h-[calc(100vh-29rem)]">
+            <UiScrollArea class="h-[calc(100svh-29rem)]">
               <template v-if="!isSongListLoading">
                 <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
                   <MusicCard :song="song" show-mine />
@@ -259,7 +259,7 @@ onMounted(async () => {
           <template v-if="!isArrangementLoading">
             <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
               borderless :attributes="calendarAttr" class="mb-2" is-required />
-            <UiScrollArea class="h-[calc(100vh-19rem)]">
+            <UiScrollArea class="h-[calc(100svh-19rem)]">
               <div v-for="song in arrangement" :key="song.id">
                 <MusicCard :song="song" show-mine />
               </div>
