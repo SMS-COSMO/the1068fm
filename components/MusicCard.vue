@@ -36,7 +36,7 @@ function isMine() {
           </UiBadge>
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
-          by {{ song?.creator }}
+          歌手：{{ song?.creator }}
           <UiTooltipProvider v-if="(typeof song.message) === 'string' && 'type' in song && song.type === 'withMsg'">
             <UiTooltip>
               <UiTooltipTrigger as-child>

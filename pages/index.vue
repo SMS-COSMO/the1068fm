@@ -124,69 +124,112 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="max-w-[600px] mx-auto">
-    <div class="mx-5">
-      <div class="mb-4 mt-8 flex justify-start">
-        <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]" />
-      </div>
-      <section class="my-4 grid grid-cols-1 gap-4 font-shuhei">
-        <div class="grid grid-cols-2 gap-2">
-          <UiCard class="shadow p-0 pt-1 pb-2">
-            <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-              {{ songListInfo?.allSongs }}
-            </UiCardHeader>
-            <UiCardContent class="pt-0 pb-0">
-              <span class="text-md">已收集歌曲</span>
-            </UiCardContent>
-          </UiCard>
-          <TimeAvailability is-card />
+  <div class="md:max-w-[1200px] max-w-[600px] mx-auto">
+    <div class="mx-5 md:grid md:grid-cols-2 md:gap-8">
+      <div>
+        <div class="mb-4 mt-8 flex justify-start">
+          <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]" />
         </div>
-        <div class="grid grid-cols-3 gap-2">
-          <SubmissionRulesDialog>
-            <UiButton type="button" class="w-auto shadow text-md p-0" variant="outline">
-              <span class="icon-[radix-icons--question-mark-circled] w-5 h-5 mr-1" />
-              <span class="align-bottom">
-                规则介绍
-              </span>
-            </UiButton>
-          </SubmissionRulesDialog>
-          <SubmitDialog @submit-success="(song) => songList.unshift(song)">
-            <UiButton type="button" class="w-auto shadow text-md p-0" :disabled="!canSubmit">
-              <Music4 class="w-5 h-5 mr-1" />
-              <span class="align-bottom">
-                歌曲投稿
-              </span>
-            </UiButton>
-          </SubmitDialog>
-          <AboutUsDialog>
-            <UiButton type="button" class="w-auto shadow text-md p-0" variant="outline">
-              <span class="icon-[radix-icons--info-circled] w-5 h-5 mr-1" />
-              <span class="align-bottom">
-                关于我们
-              </span>
-            </UiButton>
-          </AboutUsDialog>
-        </div>
-      </section>
+        <section class="my-4 grid grid-cols-1 gap-4 font-shuhei">
+          <div class="grid grid-cols-2 gap-2">
+            <UiCard class="shadow p-0 pt-1 pb-2">
+              <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
+                {{ songListInfo?.allSongs }}
+              </UiCardHeader>
+              <UiCardContent class="pt-0 pb-0">
+                <span class="text-md">已收集歌曲</span>
+              </UiCardContent>
+            </UiCard>
+            <TimeAvailability is-card />
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <SubmissionRulesDialog>
+              <UiButton type="button" class="w-auto shadow text-md p-0" variant="outline">
+                <span class="icon-[radix-icons--question-mark-circled] w-5 h-5 mr-1" />
+                <span class="align-bottom">
+                  规则介绍
+                </span>
+              </UiButton>
+            </SubmissionRulesDialog>
+            <SubmitDialog @submit-success="(song) => songList.unshift(song)">
+              <UiButton type="button" class="w-auto shadow text-md p-0" :disabled="!canSubmit">
+                <Music4 class="w-5 h-5 mr-1" />
+                <span class="align-bottom">
+                  歌曲投稿
+                </span>
+              </UiButton>
+            </SubmitDialog>
+            <AboutUsDialog>
+              <UiButton type="button" class="w-auto shadow text-md p-0" variant="outline">
+                <span class="icon-[radix-icons--info-circled] w-5 h-5 mr-1" />
+                <span class="align-bottom">
+                  关于我们
+                </span>
+              </UiButton>
+            </AboutUsDialog>
+          </div>
+        </section>
 
-      <UiCard class="my-4 shadow">
-        <UiCardContent class="p-4">
-          <UiTabs v-model="selectedTab" class="overflow-x-hidden">
-            <UiTabsList class="grid grid-cols-2">
-              <UiTabsTrigger value="songList" class="font-shuhei">
-                已收集投稿
-              </UiTabsTrigger>
-              <UiTabsTrigger value="arrangement" class="font-shuhei">
-                歌单
-              </UiTabsTrigger>
-            </UiTabsList>
-            <UiTabsContent
-              ref="dragLeft" v-drag="dragLeftHandler" value="songList"
-              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
-              class="duration-100"
-            >
+        <UiCard class="my-4 shadow" v-if="!isDesktop">
+          <UiCardContent class="p-4">
+            <UiTabs v-model="selectedTab" class="overflow-x-hidden">
+              <UiTabsList class="grid grid-cols-2">
+                <UiTabsTrigger value="songList" class="font-shuhei">
+                  已收集投稿
+                </UiTabsTrigger>
+                <UiTabsTrigger value="arrangement" class="font-shuhei">
+                  歌单
+                </UiTabsTrigger>
+              </UiTabsList>
+              <UiTabsContent ref="dragLeft" v-drag="dragLeftHandler" value="songList"
+                :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
+                class="duration-100">
+                <template v-if="!isSongListLoading">
+                  <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
+                  <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
+                    <MusicCard :song="song" show-mine />
+                  </div>
+                  <UiAlert v-if="showLength < processedListData.length">
+                    <UiAlertDescription class="flex flex-row">
+                      <span class="self-center">
+                        出于性能考虑，仅加载前 {{ showLength }} 首歌
+                      </span>
+                      <UiButton variant="secondary" class="ml-auto w-[100px]" @click="showLength += 50">
+                        加载更多
+                      </UiButton>
+                    </UiAlertDescription>
+                  </UiAlert>
+                </template>
+                <ContentLoading v-else />
+              </UiTabsContent>
+              <UiTabsContent ref="dragRight" v-drag="dragRightHandler" value="arrangement"
+                :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
+                class="duration-100">
+                <template v-if="!isArrangementLoading">
+                  <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                    borderless :attributes="calendarAttr" class="mb-2" is-required />
+                  <div v-for="song in arrangement" :key="song.id">
+                    <MusicCard :song="song" show-mine />
+                  </div>
+                  <p v-if="!arrangement" class="text-sm text-center">
+                    今日无排歌哦~
+                  </p>
+                </template>
+                <ContentLoading v-else />
+              </UiTabsContent>
+            </UiTabs>
+          </UiCardContent>
+        </UiCard>
+        <UiCard v-else>
+          <UiCardHeader class="pb-4">
+            <UiCardTitle class="mb-2">
+              已收集投稿
+            </UiCardTitle>
+            <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md" />
+          </UiCardHeader>
+          <UiCardContent>
+            <UiScrollArea class="h-[calc(100vh-29rem)]">
               <template v-if="!isSongListLoading">
-                <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
                 <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
                   <MusicCard :song="song" show-mine />
                 </div>
@@ -202,27 +245,30 @@ onMounted(async () => {
                 </UiAlert>
               </template>
               <ContentLoading v-else />
-            </UiTabsContent>
-            <UiTabsContent
-              ref="dragRight" v-drag="dragRightHandler" value="arrangement"
-              :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
-              class="duration-100"
-            >
-              <template v-if="!isArrangementLoading">
-                <DatePicker
-                  v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-                  borderless :attributes="calendarAttr" class="mb-2" is-required
-                />
-                <div v-for="song in arrangement" :key="song.id">
-                  <MusicCard :song="song" show-mine />
-                </div>
-                <p v-if="!arrangement" class="text-sm text-center">
-                  今日无排歌哦~
-                </p>
-              </template>
-              <ContentLoading v-else />
-            </UiTabsContent>
-          </UiTabs>
+            </UiScrollArea>
+          </UiCardContent>
+        </UiCard>
+      </div>
+      <UiCard v-if="isDesktop" class="mt-10">
+        <UiCardHeader>
+          <UiCardTitle>
+            歌单
+          </UiCardTitle>
+        </UiCardHeader>
+        <UiCardContent>
+          <template v-if="!isArrangementLoading">
+            <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+              borderless :attributes="calendarAttr" class="mb-2" is-required />
+            <UiScrollArea class="h-[calc(100vh-19rem)]">
+              <div v-for="song in arrangement" :key="song.id">
+                <MusicCard :song="song" show-mine />
+              </div>
+              <p v-if="!arrangement" class="text-sm text-center">
+                今日无排歌哦~
+              </p>
+            </UiScrollArea>
+          </template>
+          <ContentLoading v-else />
         </UiCardContent>
       </UiCard>
     </div>
