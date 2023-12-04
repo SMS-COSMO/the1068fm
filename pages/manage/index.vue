@@ -221,11 +221,14 @@ async function removeFromArrangement(song: TSong) {
   }
 }
 
+const removeArrangementLoading = ref(false);
 async function removeArrangement() {
   try {
+    removeArrangementLoading.value = true;
     await $api.arrangement.remove.mutate({ date: dateString.value });
     const i = arrangementList.value.findIndex(item => item.date === dateString.value);
     arrangementList.value.splice(i, 1);
+    removeArrangementLoading.value = false;
   } catch (err) {
     useErrorHandler(err);
   }
@@ -324,16 +327,10 @@ onMounted(async () => {
         </UiCardTitle>
       </UiCardHeader>
       <UiCardContent>
-        <DatePicker
-          v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
-          :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless
-          is-required
-        />
+        <DatePicker v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
+          :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required />
         <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-4">
-          <UiButton
-            :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none"
-            @click="arrange"
-          >
+          <UiButton :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none" @click="arrange">
             <Loader2 v-if="arrangeLoading" class="w-4 h-4 mr-2 animate-spin" />
             一键排歌
           </UiButton>
@@ -349,16 +346,12 @@ onMounted(async () => {
             <UiDropdownMenuContent align="end" :align-offset="-5" class="w-[200px]">
               <UiDropdownMenuLabel>排歌时长</UiDropdownMenuLabel>
               <UiDropdownMenuSeparator />
-              <UiDropdownMenuCheckboxItem
-                :checked="autoArrangeScopeLength === 'day'"
-                @click="setAutoArrangeScopeLength('day')"
-              >
+              <UiDropdownMenuCheckboxItem :checked="autoArrangeScopeLength === 'day'"
+                @click="setAutoArrangeScopeLength('day')">
                 一天
               </UiDropdownMenuCheckboxItem>
-              <UiDropdownMenuCheckboxItem
-                :checked="autoArrangeScopeLength === 'week'"
-                @click="setAutoArrangeScopeLength('week')"
-              >
+              <UiDropdownMenuCheckboxItem :checked="autoArrangeScopeLength === 'week'"
+                @click="setAutoArrangeScopeLength('week')">
                 一周
               </UiDropdownMenuCheckboxItem>
             </UiDropdownMenuContent>
@@ -373,10 +366,8 @@ onMounted(async () => {
         <TimeAvailability show-button class="mt-4" />
         <UiPopover v-model:open="accountOpen">
           <UiPopoverTrigger as-child>
-            <UiButton
-              variant="outline" role="combobox" :aria-expanded="accountOpen"
-              class="justify-between absolute bottom-5 left-5 w-[200px]"
-            >
+            <UiButton variant="outline" role="combobox" :aria-expanded="accountOpen"
+              class="justify-between absolute bottom-5 left-5 w-[200px]">
               {{ userStore.userId }}
               <span class="icon-[radix-icons--caret-sort] text-lg" />
             </UiButton>
@@ -422,16 +413,10 @@ onMounted(async () => {
                   <UiContextMenuTrigger>
                     <MusicCard :song="song" sorting>
                       <template #prefix>
-                        <UiButton
-                          variant="outline" size="icon" class="h-7 w-8"
-                          @click="move(song, -1)"
-                        >
+                        <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, -1)">
                           <ChevronUp class="w-3.5 h-3.5" />
                         </UiButton>
-                        <UiButton
-                          variant="outline" size="icon" class="h-7 w-8"
-                          @click="move(song, 1)"
-                        >
+                        <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, 1)">
                           <ChevronDown class="w-3.5 h-3.5" />
                         </UiButton>
                       </template>
@@ -439,11 +424,8 @@ onMounted(async () => {
                         <UiTooltipProvider>
                           <UiTooltip>
                             <UiTooltipTrigger as-child>
-                              <UiButton
-                                class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
-                                variant="outline" size="icon"
-                                @click="removeFromArrangement(song)"
-                              >
+                              <UiButton class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
+                                variant="outline" size="icon" @click="removeFromArrangement(song)">
                                 <ChevronRight class="w-4 h-4" />
                               </UiButton>
                             </UiTooltipTrigger>
@@ -476,10 +458,9 @@ onMounted(async () => {
           </UiScrollArea>
         </div>
       </UiCardContent>
-      <UiButton
-        v-if="arrangement?.length === 0" variant="destructive" class="absolute right-5 bottom-5"
-        @click="removeArrangement"
-      >
+      <UiButton v-if="arrangement?.length === 0" variant="destructive" class="absolute right-5 bottom-5"
+        @click="removeArrangement" :disable="removeArrangementLoading">
+        <Loader2 v-if="removeArrangementLoading" class="w-4 h-4 mr-2 animate-spin" />
         删除排歌表
       </UiButton>
     </UiCard>
@@ -528,11 +509,8 @@ onMounted(async () => {
                           <UiTooltipProvider>
                             <UiTooltip>
                               <UiTooltipTrigger as-child>
-                                <UiButton
-                                  class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                                  variant="outline" size="icon"
-                                  @click="addToArrangement(song)"
-                                >
+                                <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                                  variant="outline" size="icon" @click="addToArrangement(song)">
                                   <ChevronLeft class="w-4 h-4" />
                                 </UiButton>
                               </UiTooltipTrigger>
@@ -564,10 +542,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.approved }} 首歌
                   </span>
-                  <UiButton
-                    variant="secondary" class="float-right ml-auto"
-                    @click="showLength.approved += 50"
-                  >
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.approved += 50">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -588,9 +563,7 @@ onMounted(async () => {
                                 <UiTooltipTrigger as-child>
                                   <UiButton
                                     class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                                    variant="outline" size="icon"
-                                    @click="updateSong(song, 'approved')"
-                                  >
+                                    variant="outline" size="icon" @click="updateSong(song, 'approved')">
                                     <Check class="w-4 h-4" />
                                   </UiButton>
                                 </UiTooltipTrigger>
@@ -602,11 +575,8 @@ onMounted(async () => {
                             <UiTooltipProvider>
                               <UiTooltip>
                                 <UiTooltipTrigger as-child>
-                                  <UiButton
-                                    class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
-                                    variant="outline" size="icon"
-                                    @click="updateSong(song, 'rejected')"
-                                  >
+                                  <UiButton class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
+                                    variant="outline" size="icon" @click="updateSong(song, 'rejected')">
                                     <X class="w-4 h-4" />
                                   </UiButton>
                                 </UiTooltipTrigger>
@@ -639,10 +609,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.unset }} 首歌
                   </span>
-                  <UiButton
-                    variant="secondary" class="float-right ml-auto"
-                    @click="showLength.unset += 50"
-                  >
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.unset += 50">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -664,11 +631,8 @@ onMounted(async () => {
                           <UiTooltipProvider>
                             <UiTooltip>
                               <UiTooltipTrigger as-child>
-                                <UiButton
-                                  class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-                                  variant="outline" size="icon"
-                                  @click="updateSong(song, 'approved')"
-                                >
+                                <UiButton class="basis-1/2 hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+                                  variant="outline" size="icon" @click="updateSong(song, 'approved')">
                                   <Check class="w-4 h-4" />
                                 </UiButton>
                               </UiTooltipTrigger>
@@ -700,10 +664,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.rejected }} 首歌
                   </span>
-                  <UiButton
-                    variant="secondary" class="float-right ml-auto"
-                    @click="showLength.rejected += 50"
-                  >
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.rejected += 50">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -718,14 +679,14 @@ onMounted(async () => {
 
 <style>
 .calendar .vc-day:has(.vc-highlights) {
-    background: transparent;
+  background: transparent;
 }
 
 .vc-day-box-center-bottom {
-    margin: 3px !important;
+  margin: 3px !important;
 }
 
 .vc-week {
-    height: 48px !important;
+  height: 48px !important;
 }
 </style>
