@@ -1,14 +1,75 @@
+<script setup lang="ts">
+import { Loader2 } from 'lucide-vue-next';
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import { z } from 'zod';
+import { useSongStore } from '~/stores/song';
+import type { TSafeSong } from '~/types';
+
+const emit = defineEmits<{ (event: 'submitSuccess', song: TSafeSong): void }>();
+
+const { $toast, $api } = useNuxtApp();
+
+const formSchema = toTypedSchema(z.object({
+  name: z.string({ required_error: '歌名长度至少为1' })
+    .min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
+  creator: z.string({ required_error: '歌手名长度至少为1' })
+    .min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
+  submitterName: z.string({ required_error: '提交者名字长度至少为2' })
+    .min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
+  submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' })
+    .int('请填一个整数').min(1, '年级为1或2').max(2, '年级为1或2'),
+  submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' })
+    .min(0, '班级号应大于0').max(100, '班级号应小于100'),
+  type: z.enum(
+    ['normal', 'withMsg'],
+    { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) },
+  ),
+  message: z.string().nullish(),
+}));
+
+const { handleSubmit, values, resetForm } = useForm({
+  validationSchema: formSchema,
+});
+
+const [buttonLoading, toggleLoading] = useToggle(false);
+const onSubmit = handleSubmit(async (values) => {
+  toggleLoading();
+  try {
+    const id = await $api.song.create.mutate(values);
+    const song = {
+      id,
+      name: values.name,
+      creator: values.creator,
+      message: values.type === 'withMsg',
+      createdAt: new Date(), // fake createdAt because it is assigned on server
+    };
+    const songStore = useSongStore();
+    songStore.submitSong(id);
+
+    $toast.success('提交成功！');
+    resetForm();
+    emit('submitSuccess', song);
+  } catch (err) {
+    useErrorHandler(err);
+  }
+  toggleLoading();
+});
+</script>
+
 <template>
   <UiDialog>
     <UiDialogTrigger as-child>
-      <slot></slot>
+      <slot />
     </UiDialogTrigger>
     <UiDialogContent class="w-[92vw] rounded-md">
       <UiDialogHeader>
-        <UiDialogTitle class="text-xl font-bold text-start">歌曲投稿</UiDialogTitle>
+        <UiDialogTitle class="text-xl font-bold text-start">
+          歌曲投稿
+        </UiDialogTitle>
       </UiDialogHeader>
       <UiScrollArea class="max-h-[calc(100svh-10rem)]">
-        <form @submit="onSubmit" class="grid grid-cols-1 gap-4">
+        <form class="grid grid-cols-1 gap-4" @submit="onSubmit">
           <UiFormField v-slot="{ componentField }" name="type">
             <UiFormItem>
               <UiFormLabel>投稿类型</UiFormLabel>
@@ -101,7 +162,7 @@
             </UiFormField>
           </div>
 
-          <UiFormField v-slot="{ componentField }" name="message" v-if="values.type === 'withMsg'">
+          <UiFormField v-if="values.type === 'withMsg'" v-slot="{ componentField }" name="message">
             <UiFormItem>
               <UiFormLabel>投稿留言</UiFormLabel>
               <UiFormControl>
@@ -111,9 +172,11 @@
             </UiFormItem>
           </UiFormField>
           <UiDialogFooter>
-            <UiButton type="submit" class="mt-3 ml-auto px-6 font-bold text-md flex items-center justify-center"
-              :disabled="buttonLoading">
-              <Loader2 class="w-4 h-4 mr-2 animate-spin" v-show="buttonLoading" />
+            <UiButton
+              type="submit" class="mt-3 ml-auto px-6 font-bold text-md flex items-center justify-center"
+              :disabled="buttonLoading"
+            >
+              <Loader2 v-show="buttonLoading" class="w-4 h-4 mr-2 animate-spin" />
               提交
             </UiButton>
           </UiDialogFooter>
@@ -122,62 +185,3 @@
     </UiDialogContent>
   </UiDialog>
 </template>
-
-<script setup lang="ts">
-import { Loader2 } from 'lucide-vue-next';
-import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import { z } from 'zod';
-import { useSongStore } from '~/stores/song';
-import { type TSafeSong } from '~/types';
-
-const emit = defineEmits<{ (event: 'submitSuccess', song: TSafeSong): void }>()
-
-const { $toast, $api } = useNuxtApp();
-
-const formSchema = toTypedSchema(z.object({
-  name: z.string({ required_error: '歌名长度至少为1' })
-    .min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
-  creator: z.string({ required_error: '歌手名长度至少为1' })
-    .min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
-  submitterName: z.string({ required_error: '提交者名字长度至少为2' })
-    .min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
-  submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' })
-    .int('请填一个整数').min(1, '年级为1或2').max(2, '年级为1或2'),
-  submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' })
-    .min(0, '班级号应大于0').max(100, '班级号应小于100'),
-  type: z.enum(
-    ['normal', 'withMsg'],
-    { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) }
-  ),
-  message: z.string().nullish(),
-}));
-
-const { handleSubmit, values, resetForm } = useForm({
-  validationSchema: formSchema,
-});
-
-const [buttonLoading, toggleLoading] = useToggle(false);
-const onSubmit = handleSubmit(async (values) => {
-  toggleLoading()
-  try {
-    const id = await $api.song.create.mutate(values);
-    const song = {
-      id,
-      name: values.name,
-      creator: values.creator,
-      message: values.type === 'withMsg' ? true : false,
-      createdAt: new Date() // fake createdAt because it is assigned on server
-    }
-    const songStore = useSongStore();
-    songStore.submitSong(id);
-
-    $toast.success('提交成功！')
-    resetForm();
-    emit('submitSuccess', song)
-  } catch (err) {
-    useErrorHandler(err);
-  }
-  toggleLoading();
-});
-</script>

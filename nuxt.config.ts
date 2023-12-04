@@ -27,9 +27,9 @@ export default defineNuxtConfig({
         path: '~/components/ui',
         extensions: ['.vue'],
         prefix: 'Ui',
-        pathPrefix: false
-      })
-    }
+        pathPrefix: false,
+      });
+    },
   },
   build: {
     transpile: ['trpc-nuxt', 'vue-sonner'],
@@ -37,8 +37,8 @@ export default defineNuxtConfig({
   nitro: {
     esbuild: {
       options: {
-        target: 'esnext'
-      }
+        target: 'esnext',
+      },
     },
     routeRules: {
       '/liuzhijin': {
@@ -46,4 +46,4 @@ export default defineNuxtConfig({
       },
     },
   },
-})
+});

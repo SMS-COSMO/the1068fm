@@ -1,17 +1,19 @@
 import process from 'node:process';
 import type { inferAsyncReturnType } from '@trpc/server';
-import { type TRawUser, db, TRawSong, TRawArrangement, TRawTime } from '../db/db';
+import type { H3Event } from 'h3';
+import { db } from '../db/db';
+import type { TRawArrangement, TRawSong, TRawTime, type TRawUser } from '../db/db';
+
 import { UserController } from './controllers/user';
 import { SongController } from './controllers/song';
 import { ArrangementController } from './controllers/arrangement';
-import type { H3Event } from 'h3'
 import { TimeController } from './controllers/time';
 
 const newGlobal = globalThis as unknown as {
-    userController: UserController | undefined;
-    songController: SongController | undefined;
-    timeController: TimeController | undefined;
-    arrangementController: ArrangementController | undefined;
+  userController: UserController | undefined
+  songController: SongController | undefined
+  timeController: TimeController | undefined
+  arrangementController: ArrangementController | undefined
 };
 
 const userController = newGlobal.userController ?? new UserController();
@@ -20,17 +22,17 @@ const timeController = newGlobal.timeController ?? new TimeController();
 const arrangementController = newGlobal.arrangementController ?? new ArrangementController();
 
 if (process.env.NODE_ENV !== 'production') {
-    newGlobal.userController = userController;
-    newGlobal.songController = songController;
-    newGlobal.timeController = timeController;
-    newGlobal.arrangementController = arrangementController;
+  newGlobal.userController = userController;
+  newGlobal.songController = songController;
+  newGlobal.timeController = timeController;
+  newGlobal.arrangementController = arrangementController;
 }
 
 interface CreateContextOptions {
-    user?: TRawUser;
-    song?: TRawSong;
-    time?: TRawTime;
-    arrangement?: TRawArrangement;
+  user?: TRawUser
+  song?: TRawSong
+  time?: TRawTime
+  arrangement?: TRawArrangement
 }
 
 /**
@@ -39,14 +41,14 @@ interface CreateContextOptions {
  * @credits https://create.t3.gg/en/usage/trpc#-servertrpccontextts'
  */
 export function createInnerContext(opts: CreateContextOptions) {
-    return {
-        user: opts.user,
-        db,
-        userController,
-        songController,
-        timeController,
-        arrangementController,
-    };
+  return {
+    user: opts.user,
+    db,
+    userController,
+    songController,
+    timeController,
+    arrangementController,
+  };
 }
 
 /**
@@ -55,9 +57,9 @@ export function createInnerContext(opts: CreateContextOptions) {
  * @link https://trpc.io/docs/context
  */
 export async function createContext(event: H3Event) {
-    const authorization = getRequestHeader(event, 'authorization')
-    const user = await userController.getUserFromHeader(authorization);
-    return createInnerContext({ user });
+  const authorization = getRequestHeader(event, 'authorization');
+  const user = await userController.getUserFromHeader(authorization);
+  return createInnerContext({ user });
 }
 
-export type Context = inferAsyncReturnType<typeof createContext>
+export type Context = inferAsyncReturnType<typeof createContext>;

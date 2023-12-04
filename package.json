@@ -1,30 +1,14 @@
 {
   "name": "nuxt-app",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "devDependencies": {
-    "@iconify-json/radix-icons": "^1.1.13",
-    "@iconify-json/tabler": "^1.1.100",
-    "@iconify/tailwind": "^0.1.4",
-    "@nuxt/devtools": "latest",
-    "@nuxtjs/tailwindcss": "^6.10.1",
-    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
-    "@tailwindcss/typography": "^0.5.10",
-    "@types/bcrypt": "^5.0.2",
-    "dotenv": "^16.3.1",
-    "drizzle-kit": "^0.20.6",
-    "nuxt": "^3.8.2",
-    "trpc-panel": "^1.3.4",
-    "typescript": "^5.3.2",
-    "vue": "^3.3.9",
-    "vue-router": "^4.2.5"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@libsql/client": "0.4.0-pre.1",
@@ -57,5 +41,24 @@
     "vee-validate": "^4.12.2",
     "vue-sonner": "^1.0.2",
     "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.2.1",
+    "@iconify-json/radix-icons": "^1.1.13",
+    "@iconify-json/tabler": "^1.1.100",
+    "@iconify/tailwind": "^0.1.4",
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/tailwindcss": "^6.10.1",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/bcrypt": "^5.0.2",
+    "dotenv": "^16.3.1",
+    "drizzle-kit": "^0.20.6",
+    "eslint": "^8.55.0",
+    "nuxt": "^3.8.2",
+    "trpc-panel": "^1.3.4",
+    "typescript": "^5.3.2",
+    "vue": "^3.3.9",
+    "vue-router": "^4.2.5"
   }
 }

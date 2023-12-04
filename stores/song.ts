@@ -1,21 +1,21 @@
 import { defineStore } from 'pinia';
 
 export const useSongStore = defineStore('song', () => {
-    const mySongs = ref<string[]>([]);
+  const mySongs = ref<string[]>([]);
 
-    const submitSong = (songId: string) => {
-        mySongs.value.push(songId);
-    };
+  const submitSong = (songId: string) => {
+    mySongs.value.push(songId);
+  };
 
-    const isMySong = (songId: string) => {
-        return mySongs.value.indexOf(songId) !== -1;
-    };
+  const isMySong = (songId: string) => {
+    return mySongs.value.includes(songId);
+  };
 
-    return {
-        mySongs,
-        submitSong,
-        isMySong,
-    };
+  return {
+    mySongs,
+    submitSong,
+    isMySong,
+  };
 }, {
-    persist: true,
+  persist: true,
 });

@@ -1,6 +1,6 @@
-import animate from 'tailwindcss-animate'
-import { addDynamicIconSelectors } from '@iconify/tailwind'
-import typography from '@tailwindcss/typography'
+import animate from 'tailwindcss-animate';
+import { addDynamicIconSelectors } from '@iconify/tailwind';
+import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -16,7 +16,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        'shuhei': ['AlimamaShuHeiTi', 'sans-serif']
+        shuhei: ['AlimamaShuHeiTi', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -79,4 +79,4 @@ export default {
     addDynamicIconSelectors(),
     typography(),
   ],
-}
+};
