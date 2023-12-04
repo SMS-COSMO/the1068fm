@@ -67,6 +67,9 @@ const onSubmit = handleSubmit(async (values) => {
         <UiDialogTitle class="text-xl font-bold text-start">
           歌曲投稿
         </UiDialogTitle>
+        <UiDialogDescription>
+          投稿之前请在首页搜索查看是否有其他人投了这首歌哦！
+        </UiDialogDescription>
       </UiDialogHeader>
       <UiScrollArea class="max-h-[calc(100svh-10rem)]">
         <form class="grid grid-cols-1 gap-4" @submit="onSubmit">
