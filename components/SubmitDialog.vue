@@ -12,7 +12,8 @@ const { $toast, $api } = useNuxtApp();
 
 const formSchema = toTypedSchema(z.object({
   name: z.string({ required_error: '歌名长度至少为1' })
-    .min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
+    .min(1, '歌名长度至少为1').max(50, '歌名长度最大为50')
+    .refine((val) => !(val.trim().startsWith('《') || val.trim().endsWith('》')), '歌曲名不需带书名号'),
   creator: z.string({ required_error: '歌手名长度至少为1' })
     .min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
   submitterName: z.string({ required_error: '提交者名字长度至少为2' })
@@ -67,7 +68,7 @@ const onSubmit = handleSubmit(async (values) => {
         <UiDialogTitle class="text-xl font-bold text-start">
           歌曲投稿
         </UiDialogTitle>
-        <UiDialogDescription>
+        <UiDialogDescription class="text-left">
           投稿之前请在首页搜索查看是否有其他人投了这首歌哦！
         </UiDialogDescription>
       </UiDialogHeader>
@@ -99,7 +100,7 @@ const onSubmit = handleSubmit(async (values) => {
 
           <UiFormField v-slot="{ componentField }" name="name">
             <UiFormItem>
-              <UiFormLabel>歌曲名</UiFormLabel>
+              <UiFormLabel>歌曲名（不需带书名号）</UiFormLabel>
               <UiFormControl>
                 <UiInput type="text" v-bind="componentField" />
               </UiFormControl>
@@ -175,10 +176,8 @@ const onSubmit = handleSubmit(async (values) => {
             </UiFormItem>
           </UiFormField>
           <UiDialogFooter>
-            <UiButton
-              type="submit" class="mt-3 ml-auto px-6 font-bold text-md flex items-center justify-center"
-              :disabled="buttonLoading"
-            >
+            <UiButton type="submit" class="mt-3 ml-auto px-6 font-bold text-md flex items-center justify-center"
+              :disabled="buttonLoading">
               <Loader2 v-show="buttonLoading" class="w-4 h-4 mr-2 animate-spin" />
               提交
             </UiButton>
