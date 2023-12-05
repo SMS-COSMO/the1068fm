@@ -134,7 +134,7 @@ onMounted(async () => {
           <div class="grid grid-cols-2 gap-2">
             <UiCard class="shadow p-0 pt-1 pb-2">
               <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-                {{ songListInfo?.allSongs }}
+                {{ songListInfo }}
               </UiCardHeader>
               <UiCardContent class="pt-0 pb-0">
                 <span class="text-md">已收集歌曲</span>

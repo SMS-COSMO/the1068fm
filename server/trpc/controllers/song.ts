@@ -1,5 +1,5 @@
 import { LibsqlError } from '@libsql/client';
-import { and, eq, gt, inArray } from 'drizzle-orm';
+import { and, eq, gt, inArray, lt, or } from 'drizzle-orm';
 import { type TNewSong, db } from '../../db/db';
 import { songs } from '~/server/db/schema';
 
@@ -16,14 +16,25 @@ export class SongController {
     const sameSong = await db.select().from(songs).where(
       and(
         eq(songs.name, newSong.name),
-        gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000)),
-        eq(songs.status, 'used'),
-      ),
+        or(
+          // Last week
+          and(
+            gt(songs.createdAt, new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)),
+            eq(songs.status, 'used'),
+          ),
+          // This week
+          gt(songs.createdAt, new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)),
+        ),
+      )
     );
+
     if (lastSong.length)
       return { success: false, message: '每周每人只能投一首歌哦' };
-    else if (sameSong.length)
+    else if (sameSong.length && sameSong[0].status === 'used')
       return { success: false, message: '上周放过的不能再投稿哦' };
+    else if (sameSong.length)
+      return { success: false, message: '本周已投稿的歌不能再投稿哦' };
+
     try {
       const id = (await db.insert(songs).values(newSong).returning({ id: songs.id }))[0].id;
       return { success: true, res: id, message: '创建成功！' };

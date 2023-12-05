@@ -113,8 +113,7 @@ export const songRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
       } else {
         const allSongs = res.res.length;
-        const reviewedSongs = res.res.filter(song => song.status !== 'unset').length;
-        return { allSongs, reviewedSongs };
+        return allSongs;
       }
     }),
 });
