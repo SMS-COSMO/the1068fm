@@ -20,8 +20,8 @@ export class UserController {
       await db.insert(users).values(user);
       return { success: true, message: '注册成功！' };
     } catch (err) {
-      if (err instanceof LibsqlError && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY')
-        return { success: false, message: '用户ID出现重复' };
+      if (err instanceof LibsqlError)
+        return { success: false, message: '用户名出现重复' };
       else return { success: false, message: '服务器内部错误' };
     }
   }

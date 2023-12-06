@@ -375,6 +375,12 @@ onMounted(async () => {
           <UiPopoverContent class="w-[200px] p-0">
             <UiCommand>
               <UiCommandGroup>
+                <RegisterDialog>
+                  <UiCommandItem value="register">
+                    <span class="icon-[tabler--plus] mr-1" />
+                    创建新账号
+                  </UiCommandItem>
+                </RegisterDialog>
                 <UiCommandItem value="logout" @select="logout">
                   <span class="icon-[tabler--logout] mr-1" />
                   登出
