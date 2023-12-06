@@ -31,6 +31,9 @@ const formSchema = toTypedSchema(z.object({
 
 const { handleSubmit, values, resetForm } = useForm({
   validationSchema: formSchema,
+  initialValues: {
+    type: 'normal',
+  }
 });
 
 const [buttonLoading, toggleLoading] = useToggle(false);

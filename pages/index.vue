@@ -5,14 +5,14 @@ import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import { useDrag } from '@vueuse/gesture';
 import { getDateString } from '~/lib/utils';
-import type { TSafeArrangementList, TSafeSongList, TSongListInfo } from '~/types';
+import type { TSafeArrangementList, TSafeSongList } from '~/types';
 
 const { $api } = useNuxtApp();
 
 const isDesktop = ref(false);
 
 const songList = ref<TSafeSongList>([]);
-const songListInfo = ref<TSongListInfo>();
+const songListInfo = ref(0);
 const selectedTab = ref('songList');
 const isSongListLoading = ref(true);
 const isArrangementLoading = ref(true);

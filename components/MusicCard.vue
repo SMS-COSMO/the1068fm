@@ -24,19 +24,21 @@ function isMine() {
 
 <template>
   <UiCard :class="`mb-2 ${selected ? 'bg-slate-100' : ''} transition-all ease-in-out`">
-    <UiCardHeader :class="`${compact ? 'p-4' : ''} items-start gap-4 space-y-0 flex-row`">
+    <UiCardHeader :class="`${compact ? 'p-4' : ''} items-start space-y-0 flex-row`">
       <div v-if="sorting" class="self-center w-4 mr-3 my-[-10px] flex flex-col gap-1">
         <slot name="prefix" />
       </div>
-      <div class="space-y-1">
-        <UiCardTitle :class="`${compact ? 'text-lg' : ''} flex flex-row`">
+      <div class="space-y-1 w-full">
+        <UiCardTitle :class="`${compact ? 'text-lg' : ''} flex flex-row break-all`">
           {{ song?.name }}
-          <UiBadge v-if="isMine()" class="rounded-md ml-2" variant="secondary">
+          <UiBadge v-if="isMine()" class="rounded-md ml-2 self-center h-6 min-w-[66px]" variant="secondary">
             我投稿的
           </UiBadge>
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
-          歌手：{{ song?.creator }}
+          <span class="break-all">
+            歌手：{{ song?.creator }}
+          </span>
           <UiTooltipProvider v-if="(typeof song.message) === 'string' && 'type' in song && song.type === 'withMsg'">
             <UiTooltip>
               <UiTooltipTrigger as-child>
