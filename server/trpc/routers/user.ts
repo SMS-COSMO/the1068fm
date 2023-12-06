@@ -40,4 +40,14 @@ export const userRouter = router({
       return res;
     }),
 
+  modifyPassword: protectedProcedure
+    .input(z.object({ oldPassword: z.string(), newPassword: z.string().min(8, { message: '用户密码长度应至少为8' }) }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.userController.modifyPassword(ctx.user, input.oldPassword, input.newPassword);
+      if (!res.success)
+        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+      else
+        return res;
+    }),
+
 });

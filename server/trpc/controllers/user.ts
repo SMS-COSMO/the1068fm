@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { and, eq } from 'drizzle-orm';
 import { LibsqlError } from '@libsql/client';
-import { type TNewUser, db } from '../../db/db';
+import { type TNewUser, type TRawUser, db } from '../../db/db';
 import { refreshTokens, users } from '../../db/schema/';
 import { Auth } from '../utils/auth';
 
@@ -54,5 +54,15 @@ export class UserController {
     const newRefreshToken = await this.auth.produceRefreshToken(id);
     const newAccessToken = await this.auth.produceAccessToken(id);
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  }
+
+  async modifyPassword(user: TRawUser, oldPassword: string, newPassword: string) {
+    if (!await bcrypt.compare(oldPassword, user.password))
+      return { success: false, message: '旧密码不正确' };
+    if (newPassword === oldPassword)
+      return { success: false, message: '新密码不能与旧密码相同' };
+
+    await db.update(users).set({ password: await bcrypt.hash(newPassword, 8) }).where(eq(users.id, user.id));
+    return { success: true, message: '修改成功' };
   }
 }
