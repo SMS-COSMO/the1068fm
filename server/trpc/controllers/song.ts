@@ -86,7 +86,7 @@ export class SongController {
       const res = await db.select().from(songs).where(gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000)));
       return { success: true, res, message: '获取成功' };
     } catch (err) {
-      return { success: false, message: '歌曲不存在' };
+      return { success: false, message: '服务器内部错误' };
     }
   }
 }

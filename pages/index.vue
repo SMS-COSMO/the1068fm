@@ -204,9 +204,11 @@ onMounted(async () => {
               >
                 <template v-if="!isSongListLoading">
                   <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
-                  <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
-                    <MusicCard :song="song" show-mine />
-                  </div>
+                  <TransitionGroup name="list" tag="ul">
+                    <li v-for="song in processedListData.slice(0, showLength)" :key="song.id">
+                      <MusicCard :song="song" show-mine />
+                    </li>
+                  </TransitionGroup>
                   <UiAlert v-if="showLength < processedListData.length">
                     <UiAlertDescription class="flex flex-row">
                       <span class="self-center">
@@ -230,9 +232,11 @@ onMounted(async () => {
                     v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
                     borderless :attributes="calendarAttr" class="mb-2" is-required
                   />
-                  <div v-for="song in arrangement" :key="song.id">
-                    <MusicCard :song="song" show-mine />
-                  </div>
+                  <TransitionGroup name="list" tag="ul">
+                    <li v-for="song in arrangement" :key="song.id">
+                      <MusicCard :song="song" show-mine />
+                    </li>
+                  </TransitionGroup>
                   <p v-if="!arrangement" class="text-sm text-center">
                     今日无排歌哦~
                   </p>
@@ -252,9 +256,11 @@ onMounted(async () => {
           <UiCardContent>
             <UiScrollArea class="h-[calc(100svh-29rem)]">
               <template v-if="!isSongListLoading">
-                <div v-for="song in processedListData.slice(0, showLength)" :key="song.id">
-                  <MusicCard :song="song" show-mine />
-                </div>
+                <TransitionGroup name="list" tag="ul">
+                  <li v-for="song in processedListData.slice(0, showLength)" :key="song.id">
+                    <MusicCard :song="song" show-mine />
+                  </li>
+                </TransitionGroup>
                 <UiAlert v-if="showLength < processedListData.length">
                   <UiAlertDescription class="flex flex-row">
                     <span class="self-center">
@@ -284,9 +290,11 @@ onMounted(async () => {
               borderless :attributes="calendarAttr" class="mb-2" is-required
             />
             <UiScrollArea class="h-[calc(100svh-19rem)]">
-              <div v-for="song in arrangement" :key="song.id">
-                <MusicCard :song="song" show-mine />
-              </div>
+              <TransitionGroup name="list" tag="ul">
+                <li v-for="song in arrangement" :key="song.id">
+                  <MusicCard :song="song" show-mine />
+                </li>
+              </TransitionGroup>
               <p v-if="!arrangement" class="text-sm text-center">
                 今日无排歌哦~
               </p>
