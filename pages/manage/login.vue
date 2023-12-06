@@ -34,7 +34,8 @@ const onSubmit = form.handleSubmit(async (values) => {
       userId: res.userId,
     });
 
-    navigateTo('/manage');
+    const router = useRouter();
+    router.back();
     buttonLoading.value = false;
   } catch (err) {
     if (useIsTRPCClientError(err)) {
