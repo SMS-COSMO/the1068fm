@@ -16,7 +16,8 @@ const songListInfo = ref(0);
 const selectedTab = ref('songList');
 const isSongListLoading = ref(true);
 const isArrangementLoading = ref(true);
-const canSubmit = ref(true);
+const timeCanSubmit = ref(true);
+const canSubmit = ref(false);
 
 const tabShift = ref(0);
 const dragLeft = ref();
@@ -110,7 +111,7 @@ async function useRefreshData() {
     const newSongListData = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
     const newArrangementData = await $api.arrangement.listSafe.query();
     songListInfo.value = newSongInfoData;
-    canSubmit.value = newCanSubmit;
+    timeCanSubmit.value = newCanSubmit;
     songList.value = newSongListData;
     arrangementList.value = newArrangementData;
   } catch (err) {
@@ -120,12 +121,15 @@ async function useRefreshData() {
 
 try {
   songListInfo.value = await $api.song.info.query();
-  canSubmit.value = await $api.time.currently.query();
+  timeCanSubmit.value = await $api.time.currently.query();
 } catch (err) {
   useErrorHandler(err);
 }
 
 onMounted(async () => {
+  const userStore = useUserStore();
+  canSubmit.value = userStore.canSubmit();
+
   try {
     isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
@@ -167,8 +171,8 @@ onMounted(async () => {
                 </span>
               </UiButton>
             </SubmissionRulesDialog>
-            <SubmitDialog @submit-success="(song) => songList.unshift(song)">
-              <UiButton type="button" class="w-auto shadow text-md p-0" :disabled="!canSubmit">
+            <SubmitDialog @submit-success="(song) => { songList.unshift(song); canSubmit = false; }">
+              <UiButton type="button" class="w-auto shadow text-md p-0" :disabled="!timeCanSubmit || !canSubmit">
                 <Music4 class="w-5 h-5 mr-1" />
                 <span class="align-bottom">
                   歌曲投稿
@@ -197,11 +201,9 @@ onMounted(async () => {
                   歌单
                 </UiTabsTrigger>
               </UiTabsList>
-              <UiTabsContent
-                ref="dragLeft" v-drag="dragLeftHandler" value="songList"
+              <UiTabsContent ref="dragLeft" v-drag="dragLeftHandler" value="songList"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
-                class="duration-100"
-              >
+                class="duration-100">
                 <template v-if="!isSongListLoading">
                   <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
                   <TransitionGroup name="list" tag="ul">
@@ -222,16 +224,12 @@ onMounted(async () => {
                 </template>
                 <ContentLoading v-else />
               </UiTabsContent>
-              <UiTabsContent
-                ref="dragRight" v-drag="dragRightHandler" value="arrangement"
+              <UiTabsContent ref="dragRight" v-drag="dragRightHandler" value="arrangement"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
-                class="duration-100"
-              >
+                class="duration-100">
                 <template v-if="!isArrangementLoading">
-                  <DatePicker
-                    v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-                    borderless :attributes="calendarAttr" class="mb-2" is-required
-                  />
+                  <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                    borderless :attributes="calendarAttr" class="mb-2" is-required />
                   <TransitionGroup name="list" tag="ul">
                     <li v-for="song in arrangement" :key="song.id">
                       <MusicCard :song="song" show-mine />
@@ -285,10 +283,8 @@ onMounted(async () => {
         </UiCardHeader>
         <UiCardContent>
           <template v-if="!isArrangementLoading">
-            <DatePicker
-              v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-              borderless :attributes="calendarAttr" class="mb-2" is-required
-            />
+            <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+              borderless :attributes="calendarAttr" class="mb-2" is-required />
             <UiScrollArea class="h-[calc(100svh-19rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in arrangement" :key="song.id">

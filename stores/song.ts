@@ -17,5 +17,7 @@ export const useSongStore = defineStore('song', () => {
     isMySong,
   };
 }, {
-  persist: true,
+  persist: {
+    storage: persistedState.localStorage,
+  },
 });

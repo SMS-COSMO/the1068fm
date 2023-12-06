@@ -50,6 +50,8 @@ const onSubmit = handleSubmit(async (values) => {
     };
     const songStore = useSongStore();
     songStore.submitSong(id);
+    const userStore = useUserStore();
+    userStore.submit();
 
     $toast.success('提交成功！');
     resetForm();

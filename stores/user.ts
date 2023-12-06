@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', () => {
   const refreshToken = ref('');
   const userId = ref('');
   const autoArrange = ref<'day' | 'week'>('week');
+  const lastSubmission = ref<Date>();
 
   const login = (data: {
     accessToken: string
@@ -16,6 +17,16 @@ export const useUserStore = defineStore('user', () => {
     accessToken.value = data.accessToken;
     refreshToken.value = data.refreshToken;
     userId.value = data.userId;
+  };
+
+  const submit = () => {
+    lastSubmission.value = new Date();
+  };
+
+  const canSubmit = () => {
+    if (!lastSubmission.value)
+      return true;
+    return new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) > new Date(lastSubmission.value);
   };
 
   const changeAutoArrange = (data: 'day' | 'week') => {
@@ -35,10 +46,15 @@ export const useUserStore = defineStore('user', () => {
     refreshToken,
     userId,
     autoArrange,
+    lastSubmission,
+    canSubmit,
+    submit,
     login,
     logout,
     changeAutoArrange,
   };
 }, {
-  persist: true,
+  persist: {
+    storage: persistedState.localStorage,
+  },
 });
