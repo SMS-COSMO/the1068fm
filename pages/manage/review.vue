@@ -40,11 +40,7 @@ const showLength = reactive({
 
 const selectedSong = ref<TSong>();
 const searchLoading = ref(false);
-interface TCache {
-  name: string,
-  data: any,
-};
-const searchListCache = ref<TCache[]>([]);
+const searchListCache = ref<Map<string, any>>(new Map());
 const searchList = ref();
 async function setSearchList() {
   searchLoading.value = true;
@@ -54,9 +50,9 @@ async function setSearchList() {
 async function getSearchList(song?: TSong) {
   // Use cache
   const name = `${song?.name ?? ''} ${song?.creator ?? ''}`;
-  const i = searchListCache.value.findIndex(item => item.name === name);
-  if (i !== -1)
-    return searchListCache.value[i].data;
+  const mapVal = searchListCache.value.get(name);
+  if (mapVal)
+    return mapVal;
 
   const formData = new FormData();
   formData.append('input', name);
@@ -74,7 +70,7 @@ async function getSearchList(song?: TSong) {
 
   // Store cache
   const data = JSON.parse(res.value).data;
-  searchListCache.value.push({ name, data });
+  searchListCache.value.set(name, data);
   return data;
 };
 
