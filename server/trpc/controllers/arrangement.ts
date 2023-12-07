@@ -44,10 +44,11 @@ export class ArrangementController {
     }
   }
 
-  async getList() {
+  async getList(isPublic: boolean) {
     try {
+      const arr = isPublic ? (await db.select().from(arrangements).where(eq(arrangements.isPublic, true))) : (await db.select().from(arrangements));
       const res = await Promise.all(
-        (await db.select().from(arrangements)).map(async (item) => {
+        arr.map(async (item) => {
           const songs: TRawSong[] = [];
           const songController = new SongController();
           for (const songId of item.songIds ?? []) {
@@ -64,7 +65,7 @@ export class ArrangementController {
       );
       return { success: true, res, message: '获取成功' };
     } catch (err) {
-      return { success: false, message: '排歌表不存在' };
+      return { success: false, message: '服务器内部错误' };
     }
   }
 }

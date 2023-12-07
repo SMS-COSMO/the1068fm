@@ -52,14 +52,15 @@ export const arrangementRouter = router({
 
   list: protectedProcedure
     .query(async ({ ctx }) => {
-      const res = await ctx.arrangementController.getList();
+      const res = await ctx.arrangementController.getList(false);
       if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
       else return res.res;
     }),
+
   listSafe: publicProcedure
     .query(async ({ ctx }) => {
-      const res = await ctx.arrangementController.getList();
+      const res = await ctx.arrangementController.getList(true);
       if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
       const safeList: { date: string, songs: TSerializedSong[] }[] = [];
