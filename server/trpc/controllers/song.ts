@@ -1,5 +1,5 @@
 import { LibsqlError } from '@libsql/client';
-import { and, eq, gt, inArray, lt, or } from 'drizzle-orm';
+import { and, eq, gt, inArray, or } from 'drizzle-orm';
 import { type TNewSong, db } from '../../db/db';
 import { songs } from '~/server/db/schema';
 
@@ -25,7 +25,7 @@ export class SongController {
           // This week
           gt(songs.createdAt, new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)),
         ),
-      )
+      ),
     );
 
     if (lastSong.length)

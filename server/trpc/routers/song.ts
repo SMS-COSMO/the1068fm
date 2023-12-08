@@ -10,7 +10,7 @@ export const songRouter = router({
       name: z.string({ required_error: '歌名长度至少为1' }).min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
       creator: z.string({ required_error: '歌手名长度至少为1' }).min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
       submitterName: z.string({ required_error: '提交者名字长度至少为2' }).min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
-      submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' }).int('请填一个整数').min(1, '年级为1或2').max(2, '年级为1或2'), // problem for people in 5000s
+      submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' }).int('请填一个整数').min(1, '年级为1~5').max(5, '年级为1~5'),
       submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' }).min(0, '班级号应大于0').max(100, '班级号应小于100'),
       type: z.enum(['normal', 'withMsg'], { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) }),
       message: z.string().nullish(),
@@ -109,10 +109,8 @@ export const songRouter = router({
   info: publicProcedure
     .query(async ({ ctx }) => {
       const res = await ctx.songController.getList();
-      if (!res.success || !res.res) {
+      if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      } else {
-        return res.res.length;
-      }
+      else return res.res.length;
     }),
 });

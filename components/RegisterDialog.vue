@@ -10,9 +10,9 @@ const formSchema = toTypedSchema(z.object({
     .min(4, { message: '用户名长度应至少为4' }).max(24, { message: '用户名超出长度范围' }),
   password: z.string({ required_error: '请输入密码' }).min(8, { message: '用户密码长度应至少为8' }),
   confirm: z.string({ required_error: '请再次输入密码' }),
-}).refine((data) => data.password === data.confirm, {
-  message: "密码不匹配",
-  path: ["confirm"],
+}).refine(data => data.password === data.confirm, {
+  message: '密码不匹配',
+  path: ['confirm'],
 }));
 
 const { handleSubmit } = useForm({
@@ -82,7 +82,6 @@ const onSubmit = handleSubmit(async (values) => {
           </UiButton>
         </UiDialogFooter>
       </form>
-
     </UiDialogContent>
   </UiDialog>
 </template>

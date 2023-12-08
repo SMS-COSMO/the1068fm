@@ -11,6 +11,8 @@ const emit = defineEmits<{ (event: 'submitSuccess', song: TSafeSong): void }>();
 const { $toast, $api } = useNuxtApp();
 const [isOpen, toggleOpen] = useToggle(false);
 
+const isInternational = ref(false);
+
 const formSchema = toTypedSchema(z.object({
   name: z.string({ required_error: '歌名长度至少为1' })
     .min(1, '歌名长度至少为1').max(50, '歌名长度最大为50')
@@ -20,7 +22,7 @@ const formSchema = toTypedSchema(z.object({
   submitterName: z.string({ required_error: '提交者名字长度至少为2' })
     .min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
   submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' })
-    .int('请填一个整数').min(1, '年级为1或2').max(2, '年级为1或2'),
+    .int('请填一个整数').min(1, '年级为1~5').max(5, '年级为1~5'),
   submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' })
     .min(0, '班级号应大于0').max(100, '班级号应小于100'),
   type: z.enum(
@@ -135,6 +137,16 @@ const onSubmit = handleSubmit(async (values) => {
             </UiFormItem>
           </UiFormField>
 
+          <div class="flex items-center space-x-2">
+            <UiCheckbox id="isInternational" v-model:checked="isInternational" />
+            <label
+              for="isInternational"
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              国体
+            </label>
+          </div>
+
           <div class="flex gap-2">
             <UiFormField v-slot="{ componentField }" name="submitterGrade">
               <UiFormItem class="grow">
@@ -143,16 +155,27 @@ const onSubmit = handleSubmit(async (values) => {
                   <UiSelect v-bind="componentField">
                     <UiFormControl>
                       <UiSelectTrigger>
-                        <UiSelectValue placeholder="选择" class="" />
+                        <UiSelectValue placeholder="选择" />
                       </UiSelectTrigger>
                     </UiFormControl>
                     <UiSelectContent>
-                      <UiSelectGroup>
+                      <UiSelectGroup v-if="!isInternational">
                         <UiSelectItem value="1" class="text-sm">
                           高一
                         </UiSelectItem>
                         <UiSelectItem value="2" class="text-sm">
                           高二
+                        </UiSelectItem>
+                      </UiSelectGroup>
+                      <UiSelectGroup v-else>
+                        <UiSelectItem value="3" class="text-sm">
+                          高一
+                        </UiSelectItem>
+                        <UiSelectItem value="4" class="text-sm">
+                          高二
+                        </UiSelectItem>
+                        <UiSelectItem value="5" class="text-sm">
+                          高三
                         </UiSelectItem>
                       </UiSelectGroup>
                     </UiSelectContent>
