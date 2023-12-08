@@ -430,7 +430,7 @@ onMounted(async () => {
                 </RegisterDialog>
                 <ModifyPasswordDialog>
                   <UiCommandItem value="modifyPassword">
-                    <span class="icon-[tabler--lock-square-rounded] mr-1" />
+                    <span class="icon-[tabler--lock] mr-1" />
                     修改密码
                   </UiCommandItem>
                 </ModifyPasswordDialog>
@@ -515,10 +515,6 @@ onMounted(async () => {
                     <UiContextMenuItem @click="removeFromArrangement(song)">
                       <ArrowRight class="mr-1 h-4 w-4" />
                       从排歌表中移除
-                    </UiContextMenuItem>
-                    <UiContextMenuItem @click="remove(song)">
-                      <Trash2 class="mr-1 h-4 w-4" />
-                      彻底删除
                     </UiContextMenuItem>
                   </UiContextMenuContent>
                 </UiContextMenu>
