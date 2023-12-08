@@ -201,9 +201,11 @@ onMounted(async () => {
                   歌单
                 </UiTabsTrigger>
               </UiTabsList>
-              <UiTabsContent ref="dragLeft" v-drag="dragLeftHandler" value="songList"
+              <UiTabsContent
+                ref="dragLeft" v-drag="dragLeftHandler" value="songList"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
-                class="duration-100">
+                class="duration-100"
+              >
                 <template v-if="!isSongListLoading">
                   <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
                   <TransitionGroup name="list" tag="ul">
@@ -224,12 +226,16 @@ onMounted(async () => {
                 </template>
                 <ContentLoading v-else />
               </UiTabsContent>
-              <UiTabsContent ref="dragRight" v-drag="dragRightHandler" value="arrangement"
+              <UiTabsContent
+                ref="dragRight" v-drag="dragRightHandler" value="arrangement"
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
-                class="duration-100">
+                class="duration-100"
+              >
                 <template v-if="!isArrangementLoading">
-                  <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-                    borderless :attributes="calendarAttr" class="mb-2" is-required />
+                  <DatePicker
+                    v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                    borderless :attributes="calendarAttr" class="mb-2" is-required
+                  />
                   <TransitionGroup name="list" tag="ul">
                     <li v-for="song in arrangement" :key="song.id">
                       <MusicCard :song="song" show-mine />
@@ -283,8 +289,10 @@ onMounted(async () => {
         </UiCardHeader>
         <UiCardContent>
           <template v-if="!isArrangementLoading">
-            <DatePicker v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-              borderless :attributes="calendarAttr" class="mb-2" is-required />
+            <DatePicker
+              v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+              borderless :attributes="calendarAttr" class="mb-2" is-required
+            />
             <UiScrollArea class="h-[calc(100svh-19rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in arrangement" :key="song.id">

@@ -128,9 +128,8 @@ onMounted(async () => {
   }
 
   // prefetch songList cache
-  for (const song of unsetList.value.slice(0, 100)) {
+  for (const song of unsetList.value.slice(0, 100))
     await getSearchList(song);
-  }
 });
 </script>
 
@@ -151,8 +150,10 @@ onMounted(async () => {
             <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
               <UiContextMenu>
                 <UiContextMenuTrigger>
-                  <MusicCard :song="song" :selected="selectedSong === song" class="cursor-pointer"
-                    @click="selectedSong = song; setSearchList()" />
+                  <MusicCard
+                    :song="song" :selected="selectedSong === song" class="cursor-pointer"
+                    @click="selectedSong = song; setSearchList()"
+                  />
                 </UiContextMenuTrigger>
                 <UiContextMenuContent>
                   <UiContextMenuItem @click="updateSong(song, 'approved')">
@@ -188,14 +189,18 @@ onMounted(async () => {
           歌曲试听
         </UiCardTitle>
         <div v-if="selectedSong" class="ml-auto h-4">
-          <UiButton variant="secondary" size="icon"
+          <UiButton
+            variant="secondary" size="icon"
             class="w-20 my-[-10px] hover:bg-green-200 hover:border-green-400 hover:text-green-700"
-            @click="reviewSong(selectedSong, 'approved');">
+            @click="reviewSong(selectedSong, 'approved');"
+          >
             <Check class="w-5 h-5" />
           </UiButton>
-          <UiButton variant="secondary" size="icon"
+          <UiButton
+            variant="secondary" size="icon"
             class="w-20 ml-3 my-[-10px] hover:bg-red-200 hover:border-red-400 hover:text-red-700"
-            @click="reviewSong(selectedSong, 'rejected');">
+            @click="reviewSong(selectedSong, 'rejected');"
+          >
             <X class="w-5 h-5" />
           </UiButton>
         </div>
