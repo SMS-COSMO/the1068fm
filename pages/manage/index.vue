@@ -83,7 +83,7 @@ const showLength = reactive({
 const date = ref(new Date());
 const dateString = computed(() => getDateString(date.value));
 const arrangement = computed(
-  () => arrangementList.value.find(e => e.date === dateString.value)?.songs,
+  () => arrangementList.value.find(e => e.date === dateString.value),
 );
 
 const calendarAttr = computed(() => {
@@ -139,6 +139,7 @@ async function arrange() {
     await $api.arrangement.create.mutate({ date: getDateString(i.toDate()), songIds: songs.map(item => item.id) });
     arrangementList.value.push({
       date: getDateString(i.toDate()),
+      isPublic: false,
       songs,
     });
     await batchUpdateSong(songs, 'used');
@@ -146,6 +147,17 @@ async function arrange() {
   }
   arrangeLoading.value = false;
   $toast.success('排歌成功');
+}
+
+async function changeVisibility(date: string | undefined, isPublic: boolean) {
+  if (!date)
+    return;
+
+  try {
+    await $api.arrangement.modifyVisibility.mutate({ date, isPublic });
+  } catch (err) {
+    useErrorHandler(err);
+  }
 }
 
 async function updateSong(song: TSong, status: TStatus) {
@@ -262,6 +274,7 @@ async function createEmptyArrangement() {
     await $api.arrangement.create.mutate({ date: dateString.value, songIds: [] });
     arrangementList.value.push({
       date: dateString.value,
+      isPublic: false,
       songs: [],
     });
   } catch (err) {
@@ -293,7 +306,7 @@ function copySongInfo() {
     $toast.error('排歌表为空');
     return;
   }
-  for (const song of arrangement.value)
+  for (const song of arrangement.value.songs)
     info += `《${song.name}》 ${song.creator}\r`;
 
   useCopy(info);
@@ -400,10 +413,14 @@ onMounted(async () => {
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4">
-      <UiCardHeader>
+      <UiCardHeader class="flex flex-row align-top">
         <UiCardTitle>
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
         </UiCardTitle>
+        <div class="ml-auto flex items-center space-x-2">
+          <Label for="public" class="text-slate-600">是否公开</Label>
+          <UiSwitch id="public" :checked="arrangement?.isPublic" @update:checked="changeVisibility(arrangement?.date, !arrangement?.isPublic)" />
+        </div>
       </UiCardHeader>
       <UiCardContent>
         <ContentLoading v-if="arrangementLoading" />
@@ -422,7 +439,7 @@ onMounted(async () => {
         <div v-else>
           <UiScrollArea class="h-[calc(100vh-12rem)]">
             <TransitionGroup name="list" tag="ul">
-              <li v-for="song in arrangement" :key="song.id">
+              <li v-for="song in arrangement.songs" :key="song.id">
                 <UiContextMenu>
                   <UiContextMenuTrigger>
                     <MusicCard :song="song" sorting show-grade>
@@ -468,14 +485,14 @@ onMounted(async () => {
                 </UiContextMenu>
               </li>
             </TransitionGroup>
-            <span v-if="arrangement?.length === 0">
+            <span v-if="arrangement?.songs.length === 0">
               排歌表中暂无歌曲，请从已审核中添加~
             </span>
           </UiScrollArea>
         </div>
       </UiCardContent>
       <UiButton
-        v-if="arrangement?.length === 0" variant="destructive" class="absolute right-5 bottom-5"
+        v-if="arrangement?.songs.length === 0" variant="destructive" class="absolute right-5 bottom-5"
         :disable="removeArrangementLoading" @click="removeArrangement"
       >
         <Loader2 v-if="removeArrangementLoading" class="w-4 h-4 mr-2 animate-spin" />

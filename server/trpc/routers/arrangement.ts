@@ -50,6 +50,18 @@ export const arrangementRouter = router({
       else return res;
     }),
 
+  modifyVisibility: protectedProcedure
+    .input(z.object({
+      date: dateZod,
+      isPublic: z.boolean(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.arrangementController.modifyVisibility(input.date, input.isPublic);
+      if (!res.success)
+        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
+      else return res;
+    }),
+
   list: protectedProcedure
     .query(async ({ ctx }) => {
       const res = await ctx.arrangementController.getList(false);

@@ -60,7 +60,7 @@ function isMine() {
           </span>
         </UiCardDescription>
       </div>
-      <div class="self-center ml-auto">
+      <div class="self-center ml-auto pl-3">
         <slot name="suffix" />
       </div>
     </UiCardHeader>

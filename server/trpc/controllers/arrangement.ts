@@ -44,6 +44,15 @@ export class ArrangementController {
     }
   }
 
+  async modifyVisibility(date: string, isPublic: boolean) {
+    try {
+      await db.update(arrangements).set({ isPublic }).where(eq(arrangements.date, date));
+      return { success: true, message: '修改成功' };
+    } catch (err) {
+      return { success: false, message: '服务器内部错误' };
+    }
+  }
+
   async getList(isPublic: boolean) {
     try {
       const arr = isPublic ? (await db.select().from(arrangements).where(eq(arrangements.isPublic, true))) : (await db.select().from(arrangements));
@@ -59,6 +68,7 @@ export class ArrangementController {
 
           return {
             date: item.date,
+            isPublic: item.isPublic,
             songs,
           };
         }),

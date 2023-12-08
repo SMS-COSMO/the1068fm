@@ -9,6 +9,7 @@ export type TSafeSongList = RouterOutput['song']['listSafe'];
 export type TSongListInfo = RouterOutput['song']['info'];
 export type TArrangementList = RouterOutput['arrangement']['list'];
 export type TSafeArrangementList = RouterOutput['arrangement']['listSafe'];
+export type TArrangement = RouterOutput['arrangement']['content'];
 export type TTime = RouterOutput['time']['content'];
 export type TTimeList = RouterOutput['time']['list'];
 
