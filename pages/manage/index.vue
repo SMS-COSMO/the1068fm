@@ -402,6 +402,12 @@ onMounted(async () => {
                     创建新账号
                   </UiCommandItem>
                 </RegisterDialog>
+                <ModifyPasswordDialog>
+                  <UiCommandItem value="modifyPassword">
+                    <span class="icon-[tabler--lock-square-rounded] mr-1" />
+                    修改密码
+                  </UiCommandItem>
+                </ModifyPasswordDialog>
                 <UiCommandItem value="logout" @select="logout">
                   <span class="icon-[tabler--logout] mr-1" />
                   登出
@@ -418,7 +424,7 @@ onMounted(async () => {
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
         </UiCardTitle>
         <div class="ml-auto flex items-center space-x-2">
-          <Label for="public" class="text-slate-600">是否公开</Label>
+          <label for="public" class="text-slate-600">是否公开</label>
           <UiSwitch id="public" :checked="arrangement?.isPublic" @update:checked="changeVisibility(arrangement?.date, !arrangement?.isPublic)" />
         </div>
       </UiCardHeader>
