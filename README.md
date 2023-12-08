@@ -4,8 +4,6 @@
   </a>
 </p>
 
-<hr/>
-
 <p align="center">
 A simple yet powerful song request system
 </p>
