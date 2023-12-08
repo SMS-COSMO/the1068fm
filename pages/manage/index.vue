@@ -1,5 +1,21 @@
 <script setup lang="ts">
-import { Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Loader2, Plus, X } from 'lucide-vue-next';
+import {
+  ArrowDown,
+  ArrowDownRight,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowUpLeft,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Loader2,
+  Plus,
+  Trash2,
+  X,
+} from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import dayjs from 'dayjs';
@@ -170,6 +186,16 @@ async function updateSong(song: TSong, status: TStatus) {
     } else {
       songList.value[i].status = status;
     }
+  } catch (err) {
+    useErrorHandler(err);
+  }
+}
+
+async function remove(song: TSong) {
+  try {
+    await $api.song.remove.mutate({ id: song.id });
+    const i = songList.value.findIndex(item => item.id === song.id);
+    songList.value.splice(i, 1);
   } catch (err) {
     useErrorHandler(err);
   }
@@ -478,14 +504,21 @@ onMounted(async () => {
                   </UiContextMenuTrigger>
                   <UiContextMenuContent>
                     <UiContextMenuItem @click="move(song, -1)">
+                      <ArrowUp class="mr-1 h-4 w-4" />
                       上移
                     </UiContextMenuItem>
                     <UiContextMenuItem @click="move(song, 1)">
+                      <ArrowDown class="mr-1 h-4 w-4" />
                       下移
                     </UiContextMenuItem>
                     <UiContextMenuSeparator />
                     <UiContextMenuItem @click="removeFromArrangement(song)">
+                      <ArrowRight class="mr-1 h-4 w-4" />
                       从排歌表中移除
+                    </UiContextMenuItem>
+                    <UiContextMenuItem @click="remove(song)">
+                      <Trash2 class="mr-1 h-4 w-4" />
+                      彻底删除
                     </UiContextMenuItem>
                   </UiContextMenuContent>
                 </UiContextMenu>
@@ -567,14 +600,21 @@ onMounted(async () => {
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'rejected')">
+                        <X class="mr-1 h-4 w-4" />
                         拒绝
                       </UiContextMenuItem>
                       <UiContextMenuItem @click="updateSong(song, 'unset')">
+                        <ArrowDownRight class="mr-1 h-4 w-4" />
                         移入待审核
                       </UiContextMenuItem>
                       <UiContextMenuSeparator />
                       <UiContextMenuItem @click="addToArrangement(song)">
+                        <ArrowLeft class="mr-1 h-4 w-4" />
                         加入排歌表
+                      </UiContextMenuItem>
+                      <UiContextMenuItem @click="remove(song)">
+                        <Trash2 class="mr-1 h-4 w-4" />
+                        彻底删除
                       </UiContextMenuItem>
                     </UiContextMenuContent>
                   </UiContextMenu>
@@ -637,14 +677,21 @@ onMounted(async () => {
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'approved')">
+                        <Check class="mr-1 h-4 w-4" />
                         通过
                       </UiContextMenuItem>
                       <UiContextMenuItem @click="updateSong(song, 'rejected')">
+                        <X class="mr-1 h-4 w-4" />
                         拒绝
                       </UiContextMenuItem>
                       <UiContextMenuSeparator />
                       <UiContextMenuItem @click="addToArrangement(song)">
+                        <ArrowLeft class="mr-1 h-4 w-4" />
                         直接加入排歌表
+                      </UiContextMenuItem>
+                      <UiContextMenuItem @click="remove(song)">
+                        <Trash2 class="mr-1 h-4 w-4" />
+                        彻底删除
                       </UiContextMenuItem>
                     </UiContextMenuContent>
                   </UiContextMenu>
@@ -694,14 +741,21 @@ onMounted(async () => {
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'approved')">
+                        <Check class="mr-1 h-4 w-4" />
                         通过
                       </UiContextMenuItem>
                       <UiContextMenuItem @click="updateSong(song, 'unset')">
+                        <ArrowUpLeft class="mr-1 h-4 w-4" />
                         移入待审核
                       </UiContextMenuItem>
                       <UiContextMenuSeparator />
                       <UiContextMenuItem @click="addToArrangement(song)">
+                        <ArrowLeft class="mr-1 h-4 w-4" />
                         直接加入排歌表
+                      </UiContextMenuItem>
+                      <UiContextMenuItem @click="remove(song)">
+                        <Trash2 class="mr-1 h-4 w-4" />
+                        彻底删除
                       </UiContextMenuItem>
                     </UiContextMenuContent>
                   </UiContextMenu>

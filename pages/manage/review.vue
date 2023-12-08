@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Check, X } from 'lucide-vue-next';
+import {
+  ArrowLeft,
+  Check,
+  Trash2,
+  X,
+} from 'lucide-vue-next';
 import type { TSong, TSongList, TStatus } from '~/types';
 
 const { $api } = useNuxtApp();
@@ -92,6 +97,16 @@ async function updateSong(song: TSong, status: TStatus) {
   }
 }
 
+async function remove(song: TSong) {
+  try {
+    await $api.song.remove.mutate({ id: song.id });
+    const i = songList.value.findIndex(item => item.id === song.id);
+    songList.value.splice(i, 1);
+  } catch (err) {
+    useErrorHandler(err);
+  }
+}
+
 async function batchUpdateSong(songs: TSong[], status: TStatus) {
   try {
     await $api.song.batchModifyStatus.mutate({ ids: songs.map(item => item.id), status });
@@ -157,10 +172,16 @@ onMounted(async () => {
                 </UiContextMenuTrigger>
                 <UiContextMenuContent>
                   <UiContextMenuItem @click="updateSong(song, 'approved')">
+                    <Check class="mr-1 h-4 w-4" />
                     通过
                   </UiContextMenuItem>
-                  <UiContextMenuItem @click="updateSong(song, 'unset')">
+                  <UiContextMenuItem @click="updateSong(song, 'rejected')">
+                    <X class="mr-1 h-4 w-4" />
                     拒绝
+                  </UiContextMenuItem>
+                  <UiContextMenuItem @click="remove(song)">
+                    <Trash2 class="mr-1 h-4 w-4" />
+                    彻底删除
                   </UiContextMenuItem>
                 </UiContextMenuContent>
               </UiContextMenu>
@@ -264,10 +285,16 @@ onMounted(async () => {
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'rejected')">
+                        <X class="mr-1 h-4 w-4" />
                         拒绝
                       </UiContextMenuItem>
                       <UiContextMenuItem @click="updateSong(song, 'unset')">
+                        <ArrowLeft class="mr-1 h-4 w-4" />
                         移入待审核
+                      </UiContextMenuItem>
+                      <UiContextMenuItem @click="remove(song)">
+                        <Trash2 class="mr-1 h-4 w-4" />
+                        彻底删除
                       </UiContextMenuItem>
                     </UiContextMenuContent>
                   </UiContextMenu>
@@ -295,10 +322,16 @@ onMounted(async () => {
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'approved')">
+                        <Check class="mr-1 h-4 w-4" />
                         通过
                       </UiContextMenuItem>
                       <UiContextMenuItem @click="updateSong(song, 'unset')">
+                        <ArrowLeft class="mr-1 h-4 w-4" />
                         移入待审核
+                      </UiContextMenuItem>
+                      <UiContextMenuItem @click="remove(song)">
+                        <Trash2 class="mr-1 h-4 w-4" />
+                        彻底删除
                       </UiContextMenuItem>
                     </UiContextMenuContent>
                   </UiContextMenu>
