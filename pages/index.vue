@@ -10,6 +10,7 @@ import type { TSafeArrangementList, TSafeSongList } from '~/types';
 const { $api } = useNuxtApp();
 
 const isDesktop = ref(false);
+const [isSubmitOpen, toggleSubmit] = useToggle(false);
 
 const songList = ref<TSafeSongList>([]);
 const songListInfo = ref(0);
@@ -105,17 +106,19 @@ const calendarAttr = computed(() => {
 });
 
 async function useRefreshData() {
+  if (isSubmitOpen)
+    return; // pause refresh data when submit dialog is open
   try {
     const newSongInfoData = await $api.song.info.query();
-    const newCanSubmit = await $api.time.currently.query();
-    const newSongListData = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-    const newArrangementData = await $api.arrangement.listSafe.query();
     songListInfo.value = newSongInfoData;
+    const newCanSubmit = await $api.time.currently.query();
     timeCanSubmit.value = newCanSubmit;
+    const newSongListData = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
     songList.value = newSongListData;
+    const newArrangementData = await $api.arrangement.listSafe.query();
     arrangementList.value = newArrangementData;
   } catch (err) {
-    useErrorHandler(err);
+    // swallow the errors
   }
 }
 
@@ -171,7 +174,7 @@ onMounted(async () => {
                 </span>
               </UiButton>
             </SubmissionRulesDialog>
-            <SubmitDialog @submit-success="(song) => { songList.unshift(song); canSubmit = false; }">
+            <SubmitDialog :is-open="isSubmitOpen" :toggle-open="toggleSubmit" @submit-success="(song) => { songList.unshift(song); canSubmit = false; }">
               <UiButton type="button" class="w-auto shadow text-md p-0" :disabled="!timeCanSubmit || !canSubmit">
                 <Music4 class="w-5 h-5 mr-1" />
                 <span class="align-bottom">
