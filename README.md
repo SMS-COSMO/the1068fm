@@ -1,10 +1,10 @@
 <p align="center">
   <a href="https://fm.the1068.pictures" target="_blank" rel="noopener noreferrer">
-    <img width="324" height="89" src="https://oss.the1068.pictures/logo.svg" alt="the1068fm logo">
+    <img width="500" src="https://oss.the1068.pictures/readme-hero.png" alt="the1068fm logo">
   </a>
 </p>
 
-<h1 align="center"/>the1068fm<sup><em>alpha</em></sup></h1>
+<hr/>
 
 <p align="center">
 A simple yet powerful song request system
@@ -12,12 +12,16 @@ A simple yet powerful song request system
 
 <br/>
 <p align="center">
-  <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website"></a>
+  <a href="https://nuxt.com">
+  <img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website">
+  </a>
+  <a href="https://github.com/SMS-COSMO/the1068fm/pulls">
   <img src="https://img.shields.io/badge/PRs-welcome-blue.svg" alt="PRs Welcome">
+  </a>
 </p>
 <br/>
 
-## 🚧 the1068fm is in Alpha 🚧
+## 🚧 the1068fm is in Beta 🚧
 
 It is already quite usable, but some bugs still may appear. We appreciate your feedback and contributions. Check out the [Open Issues](https://github.com/sms-cosmo/the1068fm/issues) and jump in the action.
 
