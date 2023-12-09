@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://fm.the1068.pictures" target="_blank" rel="noopener noreferrer">
-    <img width="500" src="https://oss.the1068.pictures/readme-hero.png" alt="the1068fm logo">
+    <img width="500" src="https://github.com/SMS-COSMO/the1068fm/assets/49156174/c8643d08-0279-4b54-b305-bbdd7224852f" alt="the1068fm logo">
   </a>
 </p>
 
@@ -8,7 +8,6 @@
 A simple yet powerful song request system
 </p>
 
-<br/>
 <p align="center">
   <a href="https://nuxt.com">
   <img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website">
@@ -17,7 +16,6 @@ A simple yet powerful song request system
   <img src="https://img.shields.io/badge/PRs-welcome-blue.svg" alt="PRs Welcome">
   </a>
 </p>
-<br/>
 
 ## 🚧 the1068fm is in Beta 🚧
 
