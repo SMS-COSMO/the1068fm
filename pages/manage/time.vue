@@ -37,6 +37,11 @@ function deleteSuccess(id: string) {
 
 onMounted(async () => {
   try {
+    await $api.user.tokenValidity.query();
+  } catch (err) {
+    navigateTo('/manage/login');
+  }
+  try {
     timeList.value = await $api.time.list.query();
     selectedTime.value = timeList.value[0];
     rightPanelMode.value = 'modify';
