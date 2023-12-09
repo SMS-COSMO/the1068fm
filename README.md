@@ -10,10 +10,13 @@ A simple yet powerful song request system
 
 <p align="center">
   <a href="https://nuxt.com">
-  <img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website">
+    <img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website">
   </a>
   <a href="https://github.com/SMS-COSMO/the1068fm/pulls">
-  <img src="https://img.shields.io/badge/PRs-welcome-blue.svg" alt="PRs Welcome">
+    <img src="https://img.shields.io/badge/PRs-welcome-blue.svg" alt="PRs Welcome">
+  </a>
+  <a href="https://github.com/SMS-COSMO/the1068fm/actions/workflows/fly.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/SMS-COSMO/the1068fm/fly.yml" alt="Build">
   </a>
 </p>
 
