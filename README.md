@@ -11,7 +11,7 @@ A simple yet powerful song request system
 <p align="center">
   <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js" alt="Nuxt Website"></a>
   <a href="https://github.com/SMS-COSMO/the1068fm/pulls"><img src="https://img.shields.io/badge/PRs-welcome-blue.svg" alt="PRs Welcome"></a>
-  <a href="https://github.com/SMS-COSMO/the1068fm/actions/workflows/fly.yml"><img src="https://img.shields.io/github/actions/workflow/status/SMS-COSMO/the1068fm/fly.yml" alt="Build"></a>
+  <a href="https://stats.uptimerobot.com/AGNLNIrGM6"><img src="https://img.shields.io/uptimerobot/ratio/7/m795876635-3a8b812dbc51e838cfb3229a" alt="Uptime"></a>
 </p>
 
 ## 🚧 the1068fm is in Beta 🚧
