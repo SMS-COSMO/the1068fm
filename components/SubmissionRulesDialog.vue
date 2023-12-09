@@ -9,10 +9,10 @@
           规则介绍
         </UiDialogTitle>
       </UiDialogHeader>
-      <UiScrollArea class="h-[60vh]">
+      <UiScrollArea class="h-[50vh] sm:h-auto">
         <div class="prose">
           <ol>
-            <li>歌曲内容务必积极向上，充满正能量，适合在校园内播放，风华子衿广播站有权对歌曲进行筛</li>
+            <li>歌曲内容务必积极向上，充满正能量，适合在校园内播放，风华子衿广播站有权对歌曲进行筛选</li>
             <li>会控制每天的歌曲风格，使各个风格的歌曲平均分配，因此有部分通过审核的歌曲不会播放，相同曲风的歌曲以投稿时间先后播放</li>
             <li>与上周歌单有重复的歌曲不播放</li>
             <li>最终选取约50首歌曲播放</li>
