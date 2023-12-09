@@ -129,6 +129,7 @@ async function reviewSong(song: TSong, status: TStatus) {
   selectedSong.value = unsetList.value[unsetList.value.indexOf(song) + 1];
 }
 
+const listLoading = ref(false);
 onMounted(async () => {
   try {
     await $api.user.tokenValidity.query();
@@ -137,7 +138,9 @@ onMounted(async () => {
   }
 
   try {
+    listLoading.value = true;
     songList.value = await $api.song.listUnused.query();
+    listLoading.value = false;
   } catch (err) {
     useErrorHandler(err);
   }
@@ -160,7 +163,8 @@ onMounted(async () => {
         </UiCardTitle>
       </UiCardHeader>
       <UiCardContent>
-        <UiScrollArea class="h-[calc(100vh-13rem)]">
+        <ContentLoading v-if="listLoading" class="h-[calc(100vh-13rem)]" />
+        <UiScrollArea v-else class="h-[calc(100vh-13rem)]">
           <TransitionGroup name="list" tag="ul">
             <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
               <UiContextMenu>
@@ -276,7 +280,8 @@ onMounted(async () => {
             </UiTabsTrigger>
           </UiTabsList>
           <UiTabsContent value="approved">
-            <UiScrollArea class="h-[calc(100vh-14rem)]">
+            <ContentLoading v-if="listLoading" />
+            <UiScrollArea v-else class="h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
                   <UiContextMenu>
@@ -313,7 +318,8 @@ onMounted(async () => {
             </UiScrollArea>
           </UiTabsContent>
           <UiTabsContent value="rejected">
-            <UiScrollArea class="h-[calc(100vh-14rem)]">
+            <ContentLoading v-if="listLoading" />
+            <UiScrollArea v-else class="h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                   <UiContextMenu>

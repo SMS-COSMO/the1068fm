@@ -629,7 +629,8 @@ onMounted(async () => {
             </UiScrollArea>
           </UiTabsContent>
           <UiTabsContent value="unset">
-            <UiScrollArea class="h-[calc(100vh-17rem)]">
+            <ContentLoading v-if="listLoading" />
+            <UiScrollArea v-else class="h-[calc(100vh-17rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
                   <UiContextMenu>
@@ -710,7 +711,8 @@ onMounted(async () => {
             </div>
           </UiTabsContent>
           <UiTabsContent value="rejected">
-            <UiScrollArea class="h-[calc(100vh-14rem)]">
+            <ContentLoading v-if="listLoading" />
+            <UiScrollArea v-else class="h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                   <UiContextMenu>
