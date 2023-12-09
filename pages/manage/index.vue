@@ -451,7 +451,7 @@ onMounted(async () => {
         </UiCardTitle>
         <div class="ml-auto flex items-center space-x-2">
           <label for="public" class="text-slate-600">是否公开</label>
-          <UiSwitch id="public" :checked="arrangement?.isPublic" @update:checked="changeVisibility(arrangement?.date, !arrangement?.isPublic)" />
+          <UiSwitch id="public" :disabled="!arrangement" :checked="arrangement?.isPublic" @update:checked="changeVisibility(arrangement?.date, !arrangement?.isPublic)" />
         </div>
       </UiCardHeader>
       <UiCardContent>
