@@ -106,7 +106,7 @@ const calendarAttr = computed(() => {
 });
 
 async function useRefreshData() {
-  if (isSubmitOpen)
+  if (isSubmitOpen.value)
     return; // pause refresh data when submit dialog is open
   try {
     const newSongInfoData = await $api.song.info.query();
