@@ -12,7 +12,7 @@ primary_region = "hkg"
   DATABASE_CONNECTION_TYPE = "remote"
   NODE_ENV = "development"
   PORT = "3000"
-  SERVER_URL = "http://the1068fm.fly.dev"
+  SERVER_URL = "https://fm.the1068.pictures"
 
 [http_service]
   internal_port = 3000
