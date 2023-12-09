@@ -192,7 +192,7 @@ onMounted(async () => {
               <span class="self-center">
                 出于性能考虑，仅加载前 {{ showLength.unset }} 首歌
               </span>
-              <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.unset += 10">
+              <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.unset += 50">
                 加载更多
               </UiButton>
             </UiAlertDescription>
@@ -305,7 +305,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.approved }} 首歌
                   </span>
-                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.approved += 10">
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.approved += 50">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
@@ -342,7 +342,7 @@ onMounted(async () => {
                   <span class="self-center">
                     出于性能考虑，仅加载前 {{ showLength.rejected }} 首歌
                   </span>
-                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.rejected += 10">
+                  <UiButton variant="secondary" class="float-right ml-auto" @click="showLength.rejected += 50">
                     加载更多
                   </UiButton>
                 </UiAlertDescription>
