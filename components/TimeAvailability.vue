@@ -54,7 +54,7 @@ onMounted(async () => {
   <div>
     <UiCard
       v-if="isCard"
-      :class="`shadow p-0 pt-1 pb-2 ${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`" style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
+      :class="`flex flex-col justify-center items-start shadow p-0 pt-1 pb-2 ${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`" style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
     >
       <UiCardHeader :class="`pt-1 pb-0 text-3xl font-bold ${stateColor.text[state]}`">
         {{ stateText[state] }}

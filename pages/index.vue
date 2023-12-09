@@ -163,7 +163,9 @@ onMounted(async () => {
                 <span class="text-md">已收集歌曲</span>
               </UiCardContent>
             </UiCard>
-            <TimeAvailability is-card />
+            <TimeAvailableDialog>
+              <TimeAvailability is-card />
+            </TimeAvailableDialog>
           </div>
           <div class="grid grid-cols-3 gap-2">
             <SubmissionRulesDialog>
