@@ -155,7 +155,8 @@ onMounted(async () => {
   <div class="flex flex-row gap-5 h-screen p-5">
     <UiCard class="basis-1/4 pt-4 relative">
       <UiCardHeader>
-        <UiCardTitle class="flex">
+        <UiCardTitle class="flex flex-row">
+          <span class="icon-[tabler--help-square] mr-2" />
           待审核
           <UiBadge variant="secondary" class="ml-2 self-center">
             {{ unsetList.length }}
@@ -210,7 +211,8 @@ onMounted(async () => {
     </UiCard>
     <UiCard class="basis-1/2 pt-4">
       <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
-        <UiCardTitle>
+        <UiCardTitle class="flex flex-row">
+          <span class="icon-[tabler--headphones] mr-2" />
           歌曲试听
         </UiCardTitle>
         <div v-if="selectedSong" class="ml-auto h-4">
@@ -255,7 +257,8 @@ onMounted(async () => {
     <UiCard class="basis-1/4 pt-4">
       <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
         <div class="space-y-1">
-          <UiCardTitle>
+          <UiCardTitle class="flex flex-row">
+            <span class="icon-[tabler--square-check] mr-2" />
             已审核
           </UiCardTitle>
         </div>

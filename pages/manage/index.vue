@@ -53,9 +53,9 @@ function setAutoArrangeScopeLength(newVal: TArrange) {
   userStore.changeAutoArrange(newVal);
 }
 
-const showAutoArrangePreview = ref(false);
+const showArrangeScope = ref(false);
 const arrangeScope = computed(() => {
-  let maxDate = dayjs('2000-01-01');
+  let maxDate = dayjs();
   for (const arrangement of arrangementList.value) {
     const d = dayjs(arrangement.date);
     maxDate = maxDate > d ? maxDate : d;
@@ -123,7 +123,7 @@ const calendarAttr = computed(() => {
     });
   }
 
-  if (showAutoArrangePreview.value) {
+  if (showArrangeScope.value) {
     res.push({
       highlight: {
         start: { fillMode: 'outline', color: 'blue' },
@@ -401,7 +401,7 @@ onMounted(async () => {
               </UiDropdownMenuCheckboxItem>
             </UiDropdownMenuContent>
           </UiDropdownMenu>
-          <UiToggle class="basis-1/6 shadow-none" @click="showAutoArrangePreview = !showAutoArrangePreview">
+          <UiToggle v-model:pressed="showArrangeScope" class="basis-1/6 shadow-none" variant="outline">
             预览
           </UiToggle>
         </div>
@@ -446,7 +446,8 @@ onMounted(async () => {
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4">
       <UiCardHeader class="flex flex-row align-top">
-        <UiCardTitle>
+        <UiCardTitle class="flex flex-row">
+          <span class="icon-[tabler--list-details] mr-2" />
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
         </UiCardTitle>
         <div class="ml-auto flex items-center space-x-2">
@@ -537,7 +538,8 @@ onMounted(async () => {
     <UiCard class="basis-1/2 relative pt-4">
       <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
         <div class="space-y-1">
-          <UiCardTitle>
+          <UiCardTitle class="flex flex-row">
+            <span class="icon-[tabler--list] mr-2" />
             总歌单
           </UiCardTitle>
         </div>
