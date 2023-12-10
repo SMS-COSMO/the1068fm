@@ -79,7 +79,6 @@ export class TimeController {
       return true; // This is to prevent a total shutdown when getList breaks
     const list = listRes.res;
 
-    let fits = 0;
     for (const time of list) {
       if (!time.isActive)
         continue;
@@ -93,7 +92,7 @@ export class TimeController {
           m: d.getMinutes(),
           s: d.getSeconds(),
         });
-        const date2num = (d: ReturnType<typeof dhms>) => d.h * 10000 + d.m * 100 + d.s;
+        const date2num = (d: ReturnType<typeof dhms>) => d.d * 1000000 + d.h * 10000 + d.m * 100 + d.s;
 
         const start = dhms(time.startAt);
         const end = dhms(time.endAt);
@@ -101,13 +100,15 @@ export class TimeController {
 
         if ((start.d < end.d && (current.d < start.d || end.d < current.d)) || (start.d > end.d && current.d < start.d))
           continue;
+        if (start.d === end.d && (date2num(current) < date2num(start) || date2num(current) > date2num(end)))
+          continue;
         if (current.d === start.d && date2num(current) < date2num(start))
           continue;
         if (current.d === end.d && date2num(current) > date2num(end))
           continue;
       }
-      fits++;
+      return true;
     }
-    return fits > 0;
+    return false;
   }
 }
