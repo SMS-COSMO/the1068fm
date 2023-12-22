@@ -17,7 +17,9 @@
           </p>
           <p>
             这个项目的代码是开源的，你可以在
-            <NuxtLink to="https://github.com/SMS-COSMO/the1068fm" class="font-bold">这里</NuxtLink>
+            <NuxtLink to="https://github.com/SMS-COSMO/the1068fm" class="font-bold">
+              这里
+            </NuxtLink>
             查看源代码。期待各位同学的反馈！
           </p>
         </section>

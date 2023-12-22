@@ -19,6 +19,7 @@ import {
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import dayjs from 'dayjs';
+import { VueDraggable } from 'vue-draggable-plus';
 import { getDateString } from '~/lib/utils';
 import type { TArrangementList, TSong, TSongList, TStatus } from '~/types';
 
@@ -101,6 +102,30 @@ const dateString = computed(() => getDateString(date.value));
 const arrangement = computed(
   () => arrangementList.value.find(e => e.date === dateString.value),
 );
+
+async function updateArrangement() {
+  try {
+    await $api.arrangement.modifySongList.mutate({
+      date: dateString.value,
+      newSongList: arrangement.value?.songs.map(item => item.id) ?? [],
+    });
+    return true;
+  } catch (err) {
+    useErrorHandler(err);
+    return false;
+  }
+}
+
+const drag = ref(false);
+function onStart() {
+  drag.value = true;
+}
+
+function onEnd() {
+  nextTick(() => {
+    drag.value = false;
+  });
+}
 
 const calendarAttr = computed(() => {
   const res = [];
@@ -273,26 +298,19 @@ async function removeArrangement() {
 }
 
 async function move(song: TSong, upset: 1 | -1) {
-  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
-  if (!arrangementList.value[i])
+  if (!arrangement.value)
     return;
 
-  const j = arrangementList.value[i].songs.indexOf(song);
+  const j = arrangement.value.songs.indexOf(song);
   const swap = (array: TSong[], i: number, j: number) => {
     array[i] = array.splice(j, 1, array[i])[0];
   };
 
-  if (j + upset >= 0 && j + upset < arrangementList.value[i].songs.length)
-    swap(arrangementList.value[i].songs, j, j + upset);
-  try {
-    await $api.arrangement.modifySongList.mutate({
-      date: dateString.value,
-      newSongList: arrangementList.value[i].songs.map(item => item.id) ?? [],
-    });
-  } catch (err) {
-    useErrorHandler(err);
-    swap(arrangementList.value[i].songs, j, j + upset);
-  }
+  if (j + upset >= 0 && j + upset < arrangement.value.songs.length)
+    swap(arrangement.value.songs, j, j + upset);
+  const res = await updateArrangement();
+  if (!res)
+    swap(arrangement.value.songs, j, j + upset);
 }
 
 async function createEmptyArrangement() {
@@ -452,7 +470,10 @@ onMounted(async () => {
         </UiCardTitle>
         <div class="ml-auto flex items-center space-x-2">
           <label for="public" class="text-slate-600">是否公开</label>
-          <UiSwitch id="public" :disabled="!arrangement" :checked="arrangement?.isPublic" @update:checked="changeVisibility(arrangement?.date, !arrangement?.isPublic)" />
+          <UiSwitch
+            id="public" :disabled="!arrangement" :checked="arrangement?.isPublic"
+            @update:checked="changeVisibility(arrangement?.date, !arrangement?.isPublic)"
+          />
         </div>
       </UiCardHeader>
       <UiCardContent>
@@ -471,56 +492,65 @@ onMounted(async () => {
         </UiTooltipProvider>
         <div v-else>
           <UiScrollArea class="h-[calc(100vh-12rem)]">
-            <TransitionGroup name="list" tag="ul">
-              <li v-for="song in arrangement.songs" :key="song.id">
-                <UiContextMenu>
-                  <UiContextMenuTrigger>
-                    <MusicCard :song="song" sorting show-grade>
-                      <template #prefix>
-                        <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, -1)">
-                          <ChevronUp class="w-3.5 h-3.5" />
-                        </UiButton>
-                        <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, 1)">
-                          <ChevronDown class="w-3.5 h-3.5" />
-                        </UiButton>
-                      </template>
-                      <template #suffix>
-                        <UiTooltipProvider>
-                          <UiTooltip>
-                            <UiTooltipTrigger as-child>
-                              <UiButton
-                                class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
-                                variant="outline" size="icon" @click="removeFromArrangement(song)"
-                              >
-                                <ChevronRight class="w-4 h-4" />
-                              </UiButton>
-                            </UiTooltipTrigger>
-                            <UiTooltipContent>
-                              <p>从排歌表中移除</p>
-                            </UiTooltipContent>
-                          </UiTooltip>
-                        </UiTooltipProvider>
-                      </template>
-                    </MusicCard>
-                  </UiContextMenuTrigger>
-                  <UiContextMenuContent>
-                    <UiContextMenuItem @click="move(song, -1)">
-                      <ArrowUp class="mr-1 h-4 w-4" />
-                      上移
-                    </UiContextMenuItem>
-                    <UiContextMenuItem @click="move(song, 1)">
-                      <ArrowDown class="mr-1 h-4 w-4" />
-                      下移
-                    </UiContextMenuItem>
-                    <UiContextMenuSeparator />
-                    <UiContextMenuItem @click="removeFromArrangement(song)">
-                      <ArrowRight class="mr-1 h-4 w-4" />
-                      从排歌表中移除
-                    </UiContextMenuItem>
-                  </UiContextMenuContent>
-                </UiContextMenu>
-              </li>
-            </TransitionGroup>
+            <VueDraggable
+              v-model="arrangement.songs" target=".sort-target" :animation="400" @update="updateArrangement"
+              @start="onStart"
+              @end="onEnd"
+            >
+              <TransitionGroup
+                :name="!drag ? 'list' : ''"
+                tag="ul" class="sort-target" type="transition"
+              >
+                <li v-for="song in arrangement.songs" :key="song.id">
+                  <UiContextMenu>
+                    <UiContextMenuTrigger>
+                      <MusicCard :song="song" sorting show-grade>
+                        <template #prefix>
+                          <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, -1)">
+                            <ChevronUp class="w-3.5 h-3.5" />
+                          </UiButton>
+                          <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, 1)">
+                            <ChevronDown class="w-3.5 h-3.5" />
+                          </UiButton>
+                        </template>
+                        <template #suffix>
+                          <UiTooltipProvider>
+                            <UiTooltip>
+                              <UiTooltipTrigger as-child>
+                                <UiButton
+                                  class="basis-1/2 hover:bg-red-200 hover:border-red-400 hover:text-red-700"
+                                  variant="outline" size="icon" @click="removeFromArrangement(song)"
+                                >
+                                  <ChevronRight class="w-4 h-4" />
+                                </UiButton>
+                              </UiTooltipTrigger>
+                              <UiTooltipContent>
+                                <p>从排歌表中移除</p>
+                              </UiTooltipContent>
+                            </UiTooltip>
+                          </UiTooltipProvider>
+                        </template>
+                      </MusicCard>
+                    </UiContextMenuTrigger>
+                    <UiContextMenuContent>
+                      <UiContextMenuItem @click="move(song, -1)">
+                        <ArrowUp class="mr-1 h-4 w-4" />
+                        上移
+                      </UiContextMenuItem>
+                      <UiContextMenuItem @click="move(song, 1)">
+                        <ArrowDown class="mr-1 h-4 w-4" />
+                        下移
+                      </UiContextMenuItem>
+                      <UiContextMenuSeparator />
+                      <UiContextMenuItem @click="removeFromArrangement(song)">
+                        <ArrowRight class="mr-1 h-4 w-4" />
+                        从排歌表中移除
+                      </UiContextMenuItem>
+                    </UiContextMenuContent>
+                  </UiContextMenu>
+                </li>
+              </TransitionGroup>
+            </VueDraggable>
             <span v-if="arrangement?.songs.length === 0">
               排歌表中暂无歌曲，请从已审核中添加~
             </span>
