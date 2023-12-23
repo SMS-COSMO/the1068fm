@@ -244,44 +244,31 @@ async function batchUpdateSong(songs: TSong[], status: TStatus) {
 }
 
 async function addToArrangement(song: TSong) {
-  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
-  if (!arrangementList.value[i] || arrangementList.value[i].songs.includes(song))
+  if (!arrangement.value || arrangement.value.songs.includes(song))
     return;
 
-  arrangementList.value[i].songs.push(song);
-  try {
-    await $api.arrangement.modifySongList.mutate({
-      date: dateString.value,
-      newSongList: arrangementList.value[i].songs.map(item => item.id) ?? [],
-    });
-
+  arrangement.value.songs.push(song);
+  const res = await updateArrangement();
+  if (!res)
+    arrangement.value.songs.pop();
+  else
     await updateSong(song, 'used');
-  } catch (err) {
-    useErrorHandler(err);
-    arrangementList.value[i].songs.pop();
-  }
 }
 
 async function removeFromArrangement(song: TSong) {
-  const i = arrangementList.value.findIndex(e => e.date === dateString.value);
-  if (!arrangementList.value[i])
+  if (!arrangement.value)
     return;
 
-  const j = arrangementList.value[i].songs.indexOf(song);
+  const j = arrangement.value.songs.indexOf(song);
   if (j === -1)
     return;
-  arrangementList.value[i].songs.splice(j, 1);
-  try {
-    await $api.arrangement.modifySongList.mutate({
-      date: dateString.value,
-      newSongList: arrangementList.value[i].songs.map(item => item.id) ?? [],
-    });
+  arrangement.value.songs.splice(j, 1);
 
+  const res = await updateArrangement();
+  if (!res)
+    arrangement.value.songs.splice(j, 1, song);
+  else
     await updateSong(song, 'approved');
-  } catch (err) {
-    useErrorHandler(err);
-    arrangementList.value[i].songs.splice(j, 1, song);
-  }
 }
 
 const removeArrangementLoading = ref(false);

@@ -1,15 +1,20 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+type TState = 'unknown' | 'can' | 'cannot';
+
+const props = withDefaults(defineProps<{
   borderless?: boolean
   showButton?: boolean
   isCard?: boolean
+  status?: TState
 }>(), {
   borderless: false,
   showButton: false,
   isCard: false,
+  status: 'unknown',
 });
+
 const { $api } = useNuxtApp();
-const state = ref<'unknown' | 'can' | 'cannot'>('unknown');
+const state = ref<TState>('unknown');
 
 const stateText = {
   unknown: '未知',
@@ -46,7 +51,8 @@ const stateColor = {
 };
 
 onMounted(async () => {
-  state.value = await $api.time.currently.query() ? 'can' : 'cannot';
+  if (!props.isCard)
+    state.value = await $api.time.currently.query() ? 'can' : 'cannot';
 });
 </script>
 
@@ -54,10 +60,10 @@ onMounted(async () => {
   <div>
     <UiCard
       v-if="isCard"
-      :class="`flex flex-col justify-center items-start shadow p-0 pt-1 pb-2 ${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`" style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
+      :class="`flex flex-col justify-center items-start shadow p-0 pt-1 pb-2 ${stateColor.from[status]} from-[-10%] ${stateColor.via[status]} via-30% to-white to-80%`" style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
     >
-      <UiCardHeader :class="`pt-1 pb-0 text-3xl font-bold ${stateColor.text[state]}`">
-        {{ stateText[state] }}
+      <UiCardHeader :class="`pt-1 pb-0 text-3xl font-bold ${stateColor.text[status]}`">
+        {{ stateText[status] }}
       </UiCardHeader>
       <UiCardContent class="pt-0 pb-0">
         <span class="text-md">目前投稿状态</span>

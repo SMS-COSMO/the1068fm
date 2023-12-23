@@ -109,14 +109,15 @@ async function useRefreshData() {
   if (isSubmitOpen.value)
     return; // pause refresh data when submit dialog is open
   try {
-    const newSongInfoData = await $api.song.info.query();
-    songListInfo.value = newSongInfoData;
-    const newCanSubmit = await $api.time.currently.query();
-    timeCanSubmit.value = newCanSubmit;
-    const newSongListData = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-    songList.value = newSongListData;
-    const newArrangementData = await $api.arrangement.listSafe.query();
-    arrangementList.value = newArrangementData;
+    const res = await Promise.all([
+      $api.song.info.query(),
+      $api.time.currently.query(),
+      $api.song.listSafe.query(),
+    ]);
+
+    songListInfo.value = res[0];
+    timeCanSubmit.value = res[1];
+    songList.value = res[2].sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   } catch (err) {
     // swallow the errors
   }
@@ -164,7 +165,7 @@ onMounted(async () => {
               </UiCardContent>
             </UiCard>
             <TimeAvailableDialog>
-              <TimeAvailability is-card />
+              <TimeAvailability :status="timeCanSubmit ? 'can' : 'cannot'" is-card />
             </TimeAvailableDialog>
           </div>
           <div class="grid grid-cols-3 gap-2">
