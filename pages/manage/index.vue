@@ -40,6 +40,7 @@ useHead({
 });
 
 const userStore = useUserStore();
+const isDesktop = ref(true);
 const accountOpen = ref(false);
 const arrangementList = ref<TArrangementList>([]);
 
@@ -345,6 +346,7 @@ function copySongInfo() {
 }
 
 onMounted(async () => {
+  isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
   try {
     try {
       await $api.user.tokenValidity.query();
@@ -363,8 +365,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-row gap-5 h-screen p-5">
-    <UiCard class="w-[600px] relative">
+  <div class="flex flex-col lg:flex-row gap-5 h-screen p-5">
+    <DatePicker
+      v-if="!isDesktop"
+      v-model="date" mode="date" color="gray" locale="zh" view="weekly" :attributes="calendarAttr"
+      :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required
+    />
+    <UiCard v-else class="lg:w-[600px] w-full relative">
       <UiCardHeader>
         <UiCardTitle class="my-[-0.5rem]">
           <NuxtImg src="/logo.svg" class="h-14 mx-auto" />
@@ -480,7 +487,8 @@ onMounted(async () => {
         <div v-else>
           <UiScrollArea class="h-[calc(100vh-12rem)]">
             <VueDraggable
-              v-model="arrangement.songs" target=".sort-target" :animation="400" @update="updateArrangement"
+              v-model="arrangement.songs"
+              :disabled="!isDesktop" target=".sort-target" :animation="400" @update="updateArrangement"
               @start="onStart"
               @end="onEnd"
             >

@@ -131,11 +131,11 @@ try {
 }
 
 onMounted(async () => {
+  isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
   const userStore = useUserStore();
   canSubmit.value = userStore.canSubmit();
 
   try {
-    isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
     songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
     isSongListLoading.value = false;
     arrangementList.value = await $api.arrangement.listSafe.query();
