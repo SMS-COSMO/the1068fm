@@ -55,6 +55,8 @@ function setAutoArrangeScopeLength(newVal: TArrange) {
   userStore.changeAutoArrange(newVal);
 }
 
+const showActions = ref(false);
+
 const showArrangeScope = ref(false);
 const arrangeScope = computed(() => {
   let maxDate = dayjs();
@@ -365,13 +367,94 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row gap-5 h-screen p-5">
+  <div class="flex flex-col lg:flex-row gap-3 lg:gap-5 lg:h-screen p-5">
+    <UiCard v-if="!isDesktop">
+      <UiCardHeader class="flex flex-row p-0 pl-4 space-y-0">
+        <UiButton variant="outline" size="icon" class="self-center" @click="showActions = !showActions">
+          <ChevronDown v-if="!showActions" class="w-4 h-4" />
+          <ChevronUp v-else class="w-4 h-4" />
+        </UiButton>
+        <TimeAvailability show-button borderless class="w-full" />
+      </UiCardHeader>
+      <UiCardContent v-if="showActions" class="px-4 pb-4">
+        <UiButton variant="outline" class="mt-2 w-full" :disabled="!arrangement" @click="copySongInfo">
+          复制歌单内容
+        </UiButton>
+        <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-2">
+          <UiButton :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none" @click="arrange">
+            <Loader2 v-if="arrangeLoading" class="w-4 h-4 mr-2 animate-spin" />
+            一键排歌
+          </UiButton>
+          <UiDropdownMenu>
+            <UiDropdownMenuTrigger as-child>
+              <UiButton variant="outline" class="basis-1/3 px-2 shadow-none">
+                <span class="w-16">
+                  {{ autoArrangeScopeText[autoArrangeScopeLength] }}
+                </span>
+                <ChevronDown class="h-4 w-4 ml-1 text-secondary-foreground" />
+              </UiButton>
+            </UiDropdownMenuTrigger>
+            <UiDropdownMenuContent align="end" :align-offset="-5" class="w-[200px]">
+              <UiDropdownMenuLabel>排歌时长</UiDropdownMenuLabel>
+              <UiDropdownMenuSeparator />
+              <UiDropdownMenuCheckboxItem
+                :checked="autoArrangeScopeLength === 'day'"
+                @click="setAutoArrangeScopeLength('day')"
+              >
+                一天
+              </UiDropdownMenuCheckboxItem>
+              <UiDropdownMenuCheckboxItem
+                :checked="autoArrangeScopeLength === 'week'"
+                @click="setAutoArrangeScopeLength('week')"
+              >
+                一周
+              </UiDropdownMenuCheckboxItem>
+            </UiDropdownMenuContent>
+          </UiDropdownMenu>
+          <UiToggle v-model:pressed="showArrangeScope" class="basis-1/6 shadow-none" variant="outline">
+            预览
+          </UiToggle>
+        </div>
+        <UiPopover v-model:open="accountOpen">
+          <UiPopoverTrigger as-child>
+            <UiButton
+              variant="outline" role="combobox" :aria-expanded="accountOpen"
+              class="justify-between w-full mt-2"
+            >
+              {{ userStore.userId }}
+              <span class="icon-[radix-icons--caret-sort] text-lg" />
+            </UiButton>
+          </UiPopoverTrigger>
+          <UiPopoverContent class="w-[200px] p-0">
+            <UiCommand>
+              <UiCommandGroup>
+                <RegisterDialog>
+                  <UiCommandItem value="register">
+                    <span class="icon-[tabler--plus] mr-1" />
+                    创建新账号
+                  </UiCommandItem>
+                </RegisterDialog>
+                <ModifyPasswordDialog>
+                  <UiCommandItem value="modifyPassword">
+                    <span class="icon-[tabler--lock] mr-1" />
+                    修改密码
+                  </UiCommandItem>
+                </ModifyPasswordDialog>
+                <UiCommandItem value="logout" @select="logout">
+                  <span class="icon-[tabler--logout] mr-1" />
+                  登出
+                </UiCommandItem>
+              </UiCommandGroup>
+            </UiCommand>
+          </UiPopoverContent>
+        </UiPopover>
+      </UiCardContent>
+    </UiCard>
     <DatePicker
-      v-if="!isDesktop"
-      v-model="date" mode="date" color="gray" locale="zh" view="weekly" :attributes="calendarAttr"
-      :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required
+      v-if="!isDesktop" v-model="date" mode="date" color="gray" locale="zh" view="weekly" :attributes="calendarAttr"
+      :masks="{ title: 'YYYY MMM' }" class="rounded-lg border shadow-sm pb-3" expanded trim-weeks borderless is-required
     />
-    <UiCard v-else class="lg:w-[600px] w-full relative">
+    <UiCard v-if="isDesktop" class="lg:w-[600px] w-full relative hidden lg:block">
       <UiCardHeader>
         <UiCardTitle class="my-[-0.5rem]">
           <NuxtImg src="/logo.svg" class="h-14 mx-auto" />
@@ -485,7 +568,7 @@ onMounted(async () => {
           </UiTooltip>
         </UiTooltipProvider>
         <div v-else>
-          <UiScrollArea class="h-[calc(100vh-12rem)]">
+          <UiScrollArea class="lg:h-[calc(100vh-12rem)]">
             <VueDraggable
               v-model="arrangement.songs"
               :disabled="!isDesktop" target=".sort-target" :animation="400" @update="updateArrangement"
@@ -546,9 +629,9 @@ onMounted(async () => {
                 </li>
               </TransitionGroup>
             </VueDraggable>
-            <span v-if="arrangement?.songs.length === 0">
+            <div v-if="arrangement?.songs.length === 0" class="h-16">
               排歌表中暂无歌曲，请从已审核中添加~
-            </span>
+            </div>
           </UiScrollArea>
         </div>
       </UiCardContent>
@@ -560,7 +643,7 @@ onMounted(async () => {
         删除排歌表
       </UiButton>
     </UiCard>
-    <UiCard class="basis-1/2 relative pt-4">
+    <UiCard class="basis-1/2 relative pt-4 pb-6 lg:pb-0">
       <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
         <div class="space-y-1">
           <UiCardTitle class="flex flex-row">
@@ -596,7 +679,7 @@ onMounted(async () => {
           </UiTabsList>
           <UiTabsContent value="approved">
             <ContentLoading v-if="listLoading" />
-            <UiScrollArea v-else class="h-[calc(100vh-14rem)]">
+            <UiScrollArea v-else class="lg:h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
                   <UiContextMenu>
@@ -657,7 +740,7 @@ onMounted(async () => {
           </UiTabsContent>
           <UiTabsContent value="unset">
             <ContentLoading v-if="listLoading" />
-            <UiScrollArea v-else class="h-[calc(100vh-17rem)]">
+            <UiScrollArea v-else class="lg:h-[calc(100vh-17rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
                   <UiContextMenu>
@@ -739,7 +822,7 @@ onMounted(async () => {
           </UiTabsContent>
           <UiTabsContent value="rejected">
             <ContentLoading v-if="listLoading" />
-            <UiScrollArea v-else class="h-[calc(100vh-14rem)]">
+            <UiScrollArea v-else class="lg:h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                   <UiContextMenu>
