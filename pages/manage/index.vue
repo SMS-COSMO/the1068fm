@@ -374,7 +374,7 @@ onMounted(async () => {
           <ChevronDown v-if="!showActions" class="w-4 h-4" />
           <ChevronUp v-else class="w-4 h-4" />
         </UiButton>
-        <TimeAvailability show-button borderless class="w-full" />
+        <TimeAvailability borderless class="w-full" @click="navigateTo('/manage/time')" />
       </UiCardHeader>
       <UiCardContent v-if="showActions" class="px-4 pb-4">
         <UiButton variant="outline" class="mt-2 w-full" :disabled="!arrangement" @click="copySongInfo">
