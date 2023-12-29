@@ -368,7 +368,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row gap-3 lg:gap-5 lg:h-screen p-5">
+  <div class="flex flex-col lg:flex-row gap-3 lg:gap-5 lg:h-screen p-4 lg:p-5">
     <UiCard v-if="!isDesktop">
       <UiCardHeader class="flex flex-row p-0 pl-4 space-y-0">
         <UiButton variant="outline" size="icon" class="self-center" @click="showActions = !showActions">
@@ -541,7 +541,7 @@ onMounted(async () => {
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4">
-      <UiCardHeader class="flex flex-row align-top">
+      <UiCardHeader class="flex flex-row align-top px-4 pt-3 lg:px-6 lg:pt-6">
         <UiCardTitle class="flex flex-row">
           <span class="icon-[tabler--list-details] mr-2" />
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表
@@ -554,7 +554,7 @@ onMounted(async () => {
           />
         </div>
       </UiCardHeader>
-      <UiCardContent>
+      <UiCardContent class="px-4 lg:px-6">
         <ContentLoading v-if="arrangementLoading" />
         <UiTooltipProvider v-else-if="arrangement === undefined">
           <UiTooltip>
@@ -583,7 +583,7 @@ onMounted(async () => {
                 <li v-for="song in arrangement.songs" :key="song.id">
                   <UiContextMenu>
                     <UiContextMenuTrigger>
-                      <MusicCard :song="song" sorting show-grade>
+                      <MusicCard :song="song" sorting show-grade :compact="!isDesktop">
                         <template #prefix>
                           <UiButton variant="outline" size="icon" class="h-7 w-8" @click="move(song, -1)">
                             <ChevronUp class="w-3.5 h-3.5" />
@@ -645,7 +645,7 @@ onMounted(async () => {
       </UiButton>
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4 pb-6 lg:pb-0">
-      <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
+      <UiCardHeader class="items-start gap-4 space-y-0 flex-row px-4 pt-3 lg:px-6 lg:pt-6">
         <div class="space-y-1">
           <UiCardTitle class="flex flex-row">
             <span class="icon-[tabler--list] mr-2" />
@@ -656,7 +656,7 @@ onMounted(async () => {
           进入审歌模式
         </UiButton>
       </UiCardHeader>
-      <UiCardContent>
+      <UiCardContent class="px-4 lg:px-6">
         <UiTabs default-value="approved">
           <UiTabsList class="grid grid-cols-3">
             <UiTabsTrigger value="approved">
@@ -685,7 +685,7 @@ onMounted(async () => {
                 <li v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
                   <UiContextMenu>
                     <UiContextMenuTrigger>
-                      <MusicCard :song="song" show-grade>
+                      <MusicCard :song="song" show-grade :compact="!isDesktop">
                         <template #suffix>
                           <UiTooltipProvider>
                             <UiTooltip>
@@ -746,7 +746,7 @@ onMounted(async () => {
                 <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
                   <UiContextMenu>
                     <UiContextMenuTrigger>
-                      <MusicCard :song="song" show-grade>
+                      <MusicCard :song="song" show-grade :compact="!isDesktop">
                         <template #suffix>
                           <div class="flex flex-row gap-1">
                             <UiTooltipProvider>
@@ -828,7 +828,7 @@ onMounted(async () => {
                 <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                   <UiContextMenu>
                     <UiContextMenuTrigger>
-                      <MusicCard :song="song" show-grade>
+                      <MusicCard :song="song" show-grade :compact="!isDesktop">
                         <template #suffix>
                           <UiTooltipProvider>
                             <UiTooltip>
