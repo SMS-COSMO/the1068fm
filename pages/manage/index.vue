@@ -194,11 +194,12 @@ async function arrange() {
 }
 
 async function changeVisibility(date: string | undefined, isPublic: boolean) {
-  if (!date)
+  if (!date || !arrangement.value)
     return;
 
   try {
     await $api.arrangement.modifyVisibility.mutate({ date, isPublic });
+    arrangement.value.isPublic = isPublic;
   } catch (err) {
     useErrorHandler(err);
   }
