@@ -541,7 +541,7 @@ onMounted(async () => {
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4">
-      <UiCardHeader class="flex flex-row align-top px-4 pt-3 lg:px-6 lg:pt-6">
+      <UiCardHeader class="flex flex-row align-top space-y-0 px-4 pt-3 lg:px-6 lg:pt-6">
         <UiCardTitle class="flex flex-row">
           <span class="icon-[tabler--list-details] mr-2" />
           {{ `${date.getMonth() + 1}-${date.getDate()}` }} 排歌表

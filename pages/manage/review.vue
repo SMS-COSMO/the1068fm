@@ -36,6 +36,7 @@ const rejectedList = computed(
   () => songList.value.filter(s => (s.status === 'rejected'))
     .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // Newest first
 );
+const isDesktop = ref(true);
 
 const showLength = reactive({
   unset: 100,
@@ -132,6 +133,7 @@ async function reviewSong(song: TSong, status: TStatus) {
 const listLoading = ref(false);
 onMounted(async () => {
   try {
+    isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
     await $api.user.tokenValidity.query();
   } catch (err) {
     navigateTo('/manage/login');
@@ -152,9 +154,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-row gap-5 h-screen p-5">
+  <div class="flex flex-col lg:flex-row gap-3 lg:gap-5 lg:h-screen p-4 lg:p-5">
     <UiCard class="basis-1/4 pt-4 relative">
-      <UiCardHeader>
+      <UiCardHeader class="px-4 pt-3 lg:px-6 lg:pt-6">
         <UiCardTitle class="flex flex-row">
           <span class="icon-[tabler--help-square] mr-2" />
           待审核
@@ -163,15 +165,15 @@ onMounted(async () => {
           </UiBadge>
         </UiCardTitle>
       </UiCardHeader>
-      <UiCardContent>
-        <ContentLoading v-if="listLoading" class="h-[calc(100vh-13rem)]" />
-        <UiScrollArea v-else class="h-[calc(100vh-13rem)]">
-          <TransitionGroup name="list" tag="ul">
+      <UiCardContent class="px-4 lg:px-6 overflow-hidden">
+        <ContentLoading v-if="listLoading" class="lg:h-[calc(100vh-13rem)]" />
+        <UiScrollArea v-else class="lg:h-[calc(100vh-13rem)]">
+          <TransitionGroup name="list" tag="ul" class="flex flex-row w-max gap-2 lg:block lg:w-full">
             <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
               <UiContextMenu>
                 <UiContextMenuTrigger>
                   <MusicCard
-                    :song="song" :selected="selectedSong === song" class="cursor-pointer"
+                    :compact="!isDesktop" :song="song" :selected="selectedSong === song" class="cursor-pointer w-[calc(100vw-6rem)] lg:w-full"
                     @click="selectedSong = song; setSearchList()"
                   />
                 </UiContextMenuTrigger>
@@ -202,15 +204,16 @@ onMounted(async () => {
               </UiButton>
             </UiAlertDescription>
           </UiAlert>
+          <UiScrollBar v-if="!isDesktop" orientation="horizontal" />
         </UiScrollArea>
-        <div class="float-right mt-4 flex flex-row gap-2">
+        <div class="float-right mt-2 lg:mt-4 flex flex-row gap-2">
           <OperationAllPopover :action="() => { approveAll() }" name="通过" />
           <OperationAllPopover :action="() => { rejectAll() }" name="拒绝" is-destructive />
         </div>
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-1/2 pt-4">
-      <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
+      <UiCardHeader class="items-start gap-4 space-y-0 flex-row px-4 pt-3 lg:px-6 lg:pt-6">
         <UiCardTitle class="flex flex-row">
           <span class="icon-[tabler--headphones] mr-2" />
           歌曲试听
@@ -218,29 +221,29 @@ onMounted(async () => {
         <div v-if="selectedSong" class="ml-auto h-4">
           <UiButton
             variant="secondary" size="icon"
-            class="w-20 my-[-10px] hover:bg-green-200 hover:border-green-400 hover:text-green-700"
+            class="w-10 lg:w-20 my-[-10px] hover:bg-green-200 hover:border-green-400 hover:text-green-700"
             @click="reviewSong(selectedSong, 'approved');"
           >
             <Check class="w-5 h-5" />
           </UiButton>
           <UiButton
             variant="secondary" size="icon"
-            class="w-20 ml-3 my-[-10px] hover:bg-red-200 hover:border-red-400 hover:text-red-700"
+            class="w-10 lg:w-20 ml-2 lg:ml-3 my-[-10px] hover:bg-red-200 hover:border-red-400 hover:text-red-700"
             @click="reviewSong(selectedSong, 'rejected');"
           >
             <X class="w-5 h-5" />
           </UiButton>
         </div>
       </UiCardHeader>
-      <UiCardContent>
-        <UiScrollArea class="h-[calc(100vh-10rem)]">
+      <UiCardContent class="px-4 lg:px-6">
+        <UiScrollArea class="lg:h-[calc(100vh-10rem)]">
           <template v-if="!searchLoading">
             <div v-for="song in searchList" :key="song">
-              <MusicPlayerCard :song="song" />
+              <MusicPlayerCard :song="song" :compact="!isDesktop" />
             </div>
           </template>
           <template v-if="searchLoading && selectedSong">
-            <UiCard v-for="n in 10" :key="n" class="flex items-center space-x-4 mb-4">
+            <UiCard v-for="n in 10" :key="n" class="flex items-center space-x-4 mb-2">
               <UiCardHeader class="items-start gap-4 space-y-0 flex-row w-full">
                 <UiSkeleton class="h-20 w-20 rounded-sm" />
                 <div class="space-y-2 w-full">
@@ -255,7 +258,7 @@ onMounted(async () => {
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-1/4 pt-4">
-      <UiCardHeader class="items-start gap-4 space-y-0 flex-row">
+      <UiCardHeader class="items-start gap-4 space-y-0 flex-row px-4 pt-3 lg:px-6 lg:pt-6">
         <div class="space-y-1">
           <UiCardTitle class="flex flex-row">
             <span class="icon-[tabler--square-check] mr-2" />
@@ -266,7 +269,7 @@ onMounted(async () => {
           返回排歌模式
         </UiButton>
       </UiCardHeader>
-      <UiCardContent>
+      <UiCardContent class="px-4 lg:px-6">
         <UiTabs default-value="approved">
           <UiTabsList class="grid grid-cols-2">
             <UiTabsTrigger value="approved">
@@ -289,7 +292,7 @@ onMounted(async () => {
                 <li v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
                   <UiContextMenu>
                     <UiContextMenuTrigger>
-                      <MusicCard :song="song" />
+                      <MusicCard :song="song" :compact="!isDesktop" />
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'rejected')">
@@ -327,7 +330,7 @@ onMounted(async () => {
                 <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                   <UiContextMenu>
                     <UiContextMenuTrigger>
-                      <MusicCard :song="song" />
+                      <MusicCard :song="song" :compact="!isDesktop" />
                     </UiContextMenuTrigger>
                     <UiContextMenuContent>
                       <UiContextMenuItem @click="updateSong(song, 'approved')">
