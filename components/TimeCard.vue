@@ -32,7 +32,7 @@ async function active() {
         </UiBadge>
       </span>
       <div class="flex flex-row my-1">
-        <span class="px-10 pt-2">
+        <span class="px-5 lg:px-10 pt-2">
           <div v-if="time.repeats" class="text-2xl font-bold text-center">
             {{ `${dayString[time.startAt.getDay()]}` }}
           </div>
@@ -46,7 +46,7 @@ async function active() {
         <span class="flex-grow flex">
           <div class="w-[50px] h-[2px] bg-slate-200 mx-auto self-center rounded-full" />
         </span>
-        <span class="px-10 pt-2">
+        <span class="px-5 lg:px-10 pt-2">
           <div v-if="time.repeats" class="text-2xl font-bold text-center">
             {{ `${dayString[time.endAt.getDay()]}` }}
           </div>

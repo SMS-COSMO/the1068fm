@@ -52,9 +52,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-row gap-5 h-screen p-5 max-w-[1400px] mx-auto">
+  <div class="flex flex-col lg:flex-row gap-5 lg:h-screen p-5 max-w-[1400px] mx-auto">
     <UiCard class="basis-1/3">
-      <UiCardHeader class="flex flex-row">
+      <UiCardHeader class="flex flex-row px-4 pt-5 lg:px-6 lg:pt-6">
         <UiButton variant="outline" size="icon" @click="navigateTo('/manage')">
           <ChevronLeft class="w-4 h-4" />
         </UiButton>
@@ -63,9 +63,9 @@ onMounted(async () => {
           <UiCardDescription>允许在这些时间段内投稿</UiCardDescription>
         </div>
       </UiCardHeader>
-      <UiCardContent>
+      <UiCardContent class="px-4 lg:px-6">
         <TimeAvailability :key="updateKey" borderless class="mt-[-1rem]" />
-        <UiScrollArea class="h-[calc(100vh-19rem)]">
+        <UiScrollArea class="lg:h-[calc(100vh-19rem)]">
           <TransitionGroup name="list" tag="ul">
             <li v-for="time in timeList" :key="time.id">
               <TimeCard
@@ -76,13 +76,13 @@ onMounted(async () => {
             </li>
           </TransitionGroup>
         </UiScrollArea>
-        <UiButton variant="outline" size="icon" class="mt-4 h-20 w-full" @click="rightPanelMode = 'create'">
+        <UiButton variant="outline" size="icon" class="mt-2 lg:mt-4 h-10 lg:h-20 w-full" @click="rightPanelMode = 'create'">
           <Plus class="w-5 h-5" />
         </UiButton>
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-2/3">
-      <UiCardHeader>
+      <UiCardHeader class="px-4 pt-5 lg:px-6 lg:pt-6">
         <UiCardTitle v-if="rightPanelMode === 'modify'">
           修改时间段
         </UiCardTitle>
@@ -90,8 +90,8 @@ onMounted(async () => {
           创建时间段
         </UiCardTitle>
       </UiCardHeader>
-      <UiCardContent class="px-10">
-        <UiScrollArea class="h-[calc(100vh-10rem)]">
+      <UiCardContent class="px-4 lg:px-10">
+        <UiScrollArea class="lg:h-[calc(100vh-10rem)]">
           <NewTimeForm
             v-if="rightPanelMode === 'create'"
             @submit-success="time => { timeList.push(time); updateKey += 1; }"

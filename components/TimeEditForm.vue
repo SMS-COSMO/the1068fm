@@ -105,7 +105,7 @@ async function deleteTime() {
         <UiFormMessage />
       </UiFormItem>
     </UiFormField>
-    <div v-show="!values.repeats" class="grid grid-cols-2 gap-5">
+    <div v-show="!values.repeats" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
       <UiFormField v-slot="{ handleChange, value }" name="startAt">
         <UiFormItem>
           <UiFormLabel>开始时间</UiFormLabel>
