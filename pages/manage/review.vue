@@ -173,7 +173,7 @@ onMounted(async () => {
               <UiContextMenu>
                 <UiContextMenuTrigger>
                   <MusicCard
-                    :compact="!isDesktop" :song="song" :selected="selectedSong === song" class="cursor-pointer w-[calc(100vw-6rem)] lg:w-full"
+                    :compact="!isDesktop" :song="song" :selected="selectedSong === song" class="cursor-pointer w-[calc(100vw-6rem)] lg:w-full h-full"
                     @click="selectedSong = song; setSearchList()"
                   />
                 </UiContextMenuTrigger>

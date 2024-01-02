@@ -52,7 +52,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row gap-5 lg:h-screen p-5 max-w-[1400px] mx-auto">
+  <div class="flex flex-col lg:flex-row gap-5 lg:h-screen p-4 lg:p-5 max-w-[1400px] mx-auto">
     <UiCard class="basis-1/3">
       <UiCardHeader class="flex flex-row px-4 pt-5 lg:px-6 lg:pt-6">
         <UiButton variant="outline" size="icon" @click="navigateTo('/manage')">
