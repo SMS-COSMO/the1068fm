@@ -333,7 +333,7 @@ function logout() {
 const listLoading = ref(true);
 const arrangementLoading = ref(true);
 
-const { copy: useCopy } = useClipboard({});
+const { copy: useCopy } = useClipboard({ legacy: true });
 
 function copySongInfo() {
   let info = '';
@@ -344,8 +344,9 @@ function copySongInfo() {
   for (const song of arrangement.value.songs)
     info += `《${song.name}》 ${song.creator}\r`;
 
-  useCopy(info);
-  $toast.success('复制成功');
+  useCopy(info.trim()).then(
+    () => $toast.success('复制成功'),
+  );
 }
 
 onMounted(async () => {
