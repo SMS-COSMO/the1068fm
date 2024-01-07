@@ -349,7 +349,10 @@ function copySongInfo() {
   useCopy(songInfo.value).then(
     () => $toast.success('复制成功'),
   ).catch((e) => {
-    $toast.error(e);
+    if (e.message)
+      $toast.error(e.message);
+    else
+      $toast.error(e.toString());
     toggleSongInfoOpen();
   });
 }
