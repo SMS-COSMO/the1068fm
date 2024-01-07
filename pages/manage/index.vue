@@ -334,6 +334,8 @@ const listLoading = ref(true);
 const arrangementLoading = ref(true);
 
 const { copy: useCopy } = useClipboard({ legacy: true });
+const [songInfoOpen, toggleSongInfoOpen] = useToggle(false);
+const songInfo = ref('');
 
 function copySongInfo() {
   let info = '';
@@ -342,11 +344,14 @@ function copySongInfo() {
     return;
   }
   for (const song of arrangement.value.songs)
-    info += `《${song.name}》 ${song.creator}\r`;
-
-  useCopy(info.trim()).then(
+    info += `《${song.name}》 ${song.creator}\n`;
+  songInfo.value = info.trim();
+  useCopy(songInfo.value).then(
     () => $toast.success('复制成功'),
-  );
+  ).catch((e) => {
+    $toast.error(e);
+    toggleSongInfoOpen();
+  });
 }
 
 onMounted(async () => {
@@ -370,6 +375,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col lg:flex-row gap-3 lg:gap-5 lg:h-screen p-4 lg:p-5">
+    <SongInfoDialog :is-open="songInfoOpen" :toggle-open="toggleSongInfoOpen" :info="songInfo" />
     <UiCard v-if="!isDesktop">
       <UiCardHeader class="flex flex-row p-0 pl-4 space-y-0">
         <UiButton variant="outline" size="icon" class="self-center" @click="showActions = !showActions">
