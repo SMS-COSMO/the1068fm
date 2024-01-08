@@ -41,18 +41,18 @@ function isMine() {
           <UiBadge v-if="showGrade && 'submitterGrade' in song" variant="secondary" class="rounded-md ml-2 self-center h-6 min-w-[2.8rem]">
             {{ gradeMap[song?.submitterGrade] }}
           </UiBadge>
-          <UiTooltipProvider v-if="(typeof song.message) === 'string' && 'type' in song && song.type === 'withMsg'">
-            <UiTooltip>
-              <UiTooltipTrigger as-child>
-                <UiBadge class="ml-1 rounded-md">
-                  留言
-                </UiBadge>
-              </UiTooltipTrigger>
-              <UiTooltipContent>
-                <p>{{ song?.message }}</p>
-              </UiTooltipContent>
-            </UiTooltip>
-          </UiTooltipProvider>
+          <UiPopover v-if="(typeof song.message) === 'string' && 'type' in song && song.type === 'withMsg'">
+            <UiPopoverTrigger as-child>
+              <UiBadge class="ml-1 rounded-md">
+                留言
+              </UiBadge>
+            </UiPopoverTrigger>
+            <UiPopoverContent class="flex">
+              <p class="text-md break-all">
+                {{ song?.message }}
+              </p>
+            </UiPopoverContent>
+          </UiPopover>
         </UiCardTitle>
         <UiCardDescription v-if="song?.creator">
           <span class="break-all">
