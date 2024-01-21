@@ -582,12 +582,11 @@ onMounted(async () => {
           <UiScrollArea class="lg:h-[calc(100vh-12rem)]">
             <VueDraggable
               v-model="arrangement.songs"
-              :disabled="!isDesktop" target=".sort-target" :animation="400" @update="updateArrangement"
-              @start="onStart"
-              @end="onEnd"
+              :delay="isDesktop ? 0 : 150" target=".sort-target" :animation="400"
+              @update="updateArrangement" @start="onStart" @end="onEnd"
             >
               <TransitionGroup
-                :name="!drag ? 'list' : ''"
+                :name="drag ? '' : 'list'"
                 tag="ul" class="sort-target" type="transition"
               >
                 <li v-for="song in arrangement.songs" :key="song.id">
