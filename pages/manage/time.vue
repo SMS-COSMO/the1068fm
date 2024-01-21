@@ -27,12 +27,27 @@ function editSuccess(time: TTime) {
   updateKey.value += 1;
   const i = timeList.value.findIndex(item => item.id === time.id);
   timeList.value[i] = time;
+  selectedTime.value = time;
+}
+
+function moveFocus(last: boolean = true) {
+  if (timeList.value.length) {
+    selectedTime.value = timeList.value[last ? timeList.value.length - 1 : 0];
+    rightPanelMode.value = 'modify';
+  } else { rightPanelMode.value = 'nothing'; }
 }
 
 function deleteSuccess(id: string) {
   updateKey.value += 1;
   const i = timeList.value.findIndex(item => item.id === id);
   timeList.value.splice(i, 1);
+  moveFocus();
+}
+
+function createSuccess(time: TTime) {
+  timeList.value.push(time);
+  updateKey.value += 1;
+  moveFocus();
 }
 
 onMounted(async () => {
@@ -43,8 +58,7 @@ onMounted(async () => {
   }
   try {
     timeList.value = await $api.time.list.query();
-    selectedTime.value = timeList.value[0];
-    rightPanelMode.value = 'modify';
+    moveFocus(false);
   } catch (err) {
     useErrorHandler(err);
   }
@@ -69,7 +83,7 @@ onMounted(async () => {
           <TransitionGroup name="list" tag="ul">
             <li v-for="time in timeList" :key="time.id">
               <TimeCard
-                :time="time" :selected="selectedTime === time && rightPanelMode === 'modify'"
+                :key="updateKey" :time="time" :selected="selectedTime === time && rightPanelMode === 'modify'"
                 class="cursor-pointer" @click="rightPanelMode = 'modify'; selectedTime = time;"
                 @edit-success="updateKey += 1;"
               />
@@ -92,9 +106,9 @@ onMounted(async () => {
       </UiCardHeader>
       <UiCardContent class="px-4 lg:px-10">
         <UiScrollArea class="lg:h-[calc(100vh-10rem)]">
-          <NewTimeForm
+          <TimeCreateForm
             v-if="rightPanelMode === 'create'"
-            @submit-success="time => { timeList.push(time); updateKey += 1; }"
+            @submit-success="createSuccess"
           />
           <TimeEditForm
             v-else-if="rightPanelMode === 'modify'" :time="selectedTime" @submit-success="editSuccess"

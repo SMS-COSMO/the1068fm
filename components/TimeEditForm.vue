@@ -26,47 +26,32 @@ const formSchema = toTypedSchema(z.object({
 
 const { handleSubmit, setValues, values } = useForm({
   validationSchema: formSchema,
-  initialValues: {
-    name: props.time.name,
-    startAt: props.time.startAt,
-    endAt: props.time.endAt,
-    repeats: props.time.repeats,
-    isActive: props.time.isActive,
-  },
+  initialValues: { ...props.time },
 });
 
 watch(props, (newValue: typeof props) => {
-  setValues({
-    name: newValue.time.name,
-    startAt: newValue.time.startAt,
-    endAt: newValue.time.endAt,
-    repeats: newValue.time.repeats,
-    isActive: newValue.time.isActive,
-  });
+  setValues({ ...newValue.time });
 });
 
 const submitButtonLoading = ref(false);
 const onSubmit = handleSubmit(async (values) => {
   submitButtonLoading.value = true;
   try {
-    const withId = Object.assign(values, { id: props.time.id });
+    const { startAt, endAt, ...info } = values;
     const notNullWithId = {
-      id: withId.id,
-      name: withId.name,
-      repeats: withId.repeats,
-      isActive: withId.isActive,
-      startAt: withId.startAt ?? props.time.startAt,
-      endAt: withId.endAt ?? props.time.endAt,
+      ...info,
+      startAt: startAt ?? props.time.startAt,
+      endAt: endAt ?? props.time.endAt,
+      id: props.time.id,
     };
 
     await $api.time.modify.mutate(notNullWithId);
     $toast.success('修改成功');
     emit('submitSuccess', notNullWithId);
-    submitButtonLoading.value = false;
   } catch (err) {
-    submitButtonLoading.value = false;
     useErrorHandler(err);
   }
+  submitButtonLoading.value = false;
 });
 
 const deleteButtonLoading = ref(false);
