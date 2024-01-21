@@ -2,6 +2,7 @@ import { LibsqlError } from '@libsql/client';
 import { and, eq, gt, inArray, or } from 'drizzle-orm';
 import { type TNewSong, db } from '../../db/db';
 import { songs } from '~/server/db/schema';
+import type { TStatus } from '~/types';
 
 export class SongController {
   async create(newSong: TNewSong) {
@@ -63,7 +64,7 @@ export class SongController {
     }
   }
 
-  async modifyStatus(id: string, status: 'unset' | 'approved' | 'rejected' | 'used') {
+  async modifyStatus(id: string, status: TStatus) {
     try {
       await db.update(songs).set({ status }).where(eq(songs.id, id));
       return { success: true, message: '修改成功' };
@@ -72,7 +73,7 @@ export class SongController {
     }
   }
 
-  async batchModifyStatus(ids: string[], status: 'unset' | 'approved' | 'rejected' | 'used') {
+  async batchModifyStatus(ids: string[], status: TStatus) {
     try {
       await db.update(songs).set({ status }).where(inArray(songs.id, ids));
       return { success: true, message: '修改成功' };

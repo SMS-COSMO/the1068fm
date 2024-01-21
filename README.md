@@ -14,10 +14,6 @@ A simple yet powerful song request system
   <a href="https://stats.uptimerobot.com/AGNLNIrGM6"><img src="https://img.shields.io/uptimerobot/ratio/7/m795876635-3a8b812dbc51e838cfb3229a" alt="Uptime"></a>
 </p>
 
-## 🚧 the1068fm is in Beta 🚧
-
-It is already quite usable, but some bugs still may appear. We appreciate your feedback and contributions. Check out the [Open Issues](https://github.com/sms-cosmo/the1068fm/issues) and jump in the action.
-
 ## Features
 - ✨ Effortlessly gather song requests from audience with our user-friendly interface.
 - 🕓 Real-time updates, stay up-to-date with the latest requests and changes in the playlist.
@@ -57,11 +53,21 @@ pnpm i
 pnpm run dev
 ```
 
+#### Scripts available:
+
+1. `dev`: Start dev server
+2. `build`: Build for production
+3. `lint`: Lint code
+4. `lint:fix`: Lint code with auto fixing
+5. `db:studio`: Start database management panel
+6. `db:push`: Push schema changes to database
+7. `db:createAdmin`: Create default user
+
 ## Contributors
 
 <a href="https://github.com/sms-cosmo/the1068fm/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=sms-cosmo/the1068fm" />   
-</a> 
+  <img src="https://contrib.rocks/image?repo=sms-cosmo/the1068fm" />
+</a>
 
 ## License
 

@@ -42,13 +42,7 @@ export class TimeController {
     isActive: boolean
   }) {
     try {
-      await db.update(times).set({
-        name: newTime.name,
-        startAt: newTime.startAt,
-        endAt: newTime.endAt,
-        repeats: newTime.repeats,
-        isActive: newTime.isActive,
-      }).where(eq(times.id, newTime.id));
+      await db.update(times).set({ ...newTime }).where(eq(times.id, newTime.id));
       return { success: true, message: '修改成功' };
     } catch (err) {
       return { success: false, message: '时间段不存在' };
