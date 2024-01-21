@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://fm.the1068.pictures" target="_blank" rel="noopener noreferrer">
-    <img width="500" src="https://oss.the1068.pictures/readme-hero.png" alt="the1068fm logo">
+    <img width="500" src="https://github.com/SMS-COSMO/the1068fm/assets/49156174/d8841777-5784-4db9-b306-bbcc4cc5cf88" alt="the1068fm logo">
   </a>
 </p>
 
