@@ -57,6 +57,7 @@
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@tailwindcss/typography": "^0.5.10",
     "@types/bcrypt": "^5.0.2",
+    "@types/bun": "^1.0.4",
     "dotenv": "^16.3.2",
     "drizzle-kit": "^0.20.13",
     "eslint": "^8.56.0",

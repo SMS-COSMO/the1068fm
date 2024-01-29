@@ -12,10 +12,8 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV="production"
 
-# Install pnpm
-ARG PNPM_VERSION=8.6.12
-RUN npm install -g pnpm@$PNPM_VERSION
-
+# Install bun
+RUN npm install -g bun
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
@@ -27,11 +25,11 @@ RUN apt-get update -qq && \
 COPY . ./
 
 # Install node modules
-COPY --link .npmrc package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod=false
+COPY --link .npmrc package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
 # Build application
-RUN pnpm run build
+RUN bun run build
 
 
 # Final stage for app image
@@ -42,4 +40,6 @@ COPY --from=build /app/.output ./
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
+# TODO: running index.mjs through bun is currently not doable
+# https://github.com/oven-sh/bun/issues/7142
 CMD [ "node", "/app/server/index.mjs" ]
