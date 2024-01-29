@@ -49,11 +49,13 @@ A simple yet powerful song request system
 Clone the repository and run on the root folder:
 
 ```
-pnpm i
-pnpm run dev
+bun i
+bun run dev
 ```
 
 #### Scripts available:
+
+Run the scrips with `bun run xxx`.
 
 1. `dev`: Start dev server
 2. `build`: Build for production
