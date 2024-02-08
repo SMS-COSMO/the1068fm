@@ -11,7 +11,6 @@ WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV="production"
-ENV NITRO_PRESET="bun"
 
 # Install bun
 RUN npm install -g bun
@@ -41,4 +40,4 @@ COPY --from=build /app/.output ./
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "bun", "run", "/app/server/index.mjs" ]
+CMD [ "node", "/app/server/index.mjs" ]
