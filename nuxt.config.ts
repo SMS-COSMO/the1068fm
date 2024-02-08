@@ -35,7 +35,6 @@ export default defineNuxtConfig({
     transpile: ['trpc-nuxt', 'vue-sonner'],
   },
   nitro: {
-    preset: 'bun',
     esbuild: {
       options: {
         target: 'esnext',

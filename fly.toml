@@ -13,6 +13,7 @@ primary_region = "hkg"
   NODE_ENV = "development"
   PORT = "3000"
   SERVER_URL = "https://fm.the1068.pictures"
+  NITRO_PRESET = "bun"
 
 [http_service]
   internal_port = 3000
