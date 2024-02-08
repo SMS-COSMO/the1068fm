@@ -11,6 +11,7 @@ WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV="production"
+ENV NITRO_PRESET=bun
 
 # Install bun
 RUN npm install -g bun
