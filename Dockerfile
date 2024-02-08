@@ -40,6 +40,4 @@ COPY --from=build /app/.output ./
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-# TODO: running index.mjs through bun is currently not doable
-# https://github.com/oven-sh/bun/issues/7142
-CMD [ "node", "/app/server/index.mjs" ]
+CMD [ "bun", "run", "/app/server/index.mjs" ]
