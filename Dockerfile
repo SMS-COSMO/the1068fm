@@ -28,7 +28,7 @@ COPY . ./
 
 # Install node modules
 COPY --link .npmrc package.json bun.lockb ./
-RUN ~/.bun/bin/bun install --frozen-lockfile
+RUN ~/.bun/bin/bun install
 
 # Build application
 RUN ~/.bun/bin/bun run build
