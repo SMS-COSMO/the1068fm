@@ -15,7 +15,7 @@ ENV NITRO_PRESET="bun"
 
 # Install bun
 # (Uses 1.0.18: https://github.com/oven-sh/bun/issues/7864)
-curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.18"
+RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.18"
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
