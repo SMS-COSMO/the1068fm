@@ -3,7 +3,7 @@
 ARG BUN_VERSION=latest
 FROM oven/bun:${BUN_VERSION} as base
 
-LABEL fly_launch_runtime="Bun"
+LABEL fly_launch_runtime="Node.js"
 
 # Node.js app lives here
 WORKDIR /app

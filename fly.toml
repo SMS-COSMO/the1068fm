@@ -5,6 +5,7 @@
 
 app = "the1068fm"
 primary_region = "hkg"
+swap_size_mb = 512
 
 [build]
 
