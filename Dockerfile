@@ -16,7 +16,7 @@ ENV NITRO_PRESET="bun"
 # Install bun
 # (Uses 1.0.18: https://github.com/oven-sh/bun/issues/7864)
 RUN apt-get update -qq && apt-get install -y curl unzip
-RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.18"
+RUN curl -fsSL https://bun.sh/install | sh -s "bun-v1.0.18"
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
@@ -28,10 +28,10 @@ COPY . ./
 
 # Install node modules
 COPY --link .npmrc package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+RUN ~/.bun/bin/bun install --frozen-lockfile
 
 # Build application
-RUN bun run build
+RUN ~/.bun/bin/bun run build
 
 
 # Final stage for app image
@@ -42,4 +42,4 @@ COPY --from=build /app/.output ./
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "bun", "run", "/app/server/index.mjs" ]
+CMD [ "~/.bun/bin/bun", "run", "/app/server/index.mjs" ]
