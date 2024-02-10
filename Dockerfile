@@ -15,15 +15,14 @@ ENV NITRO_PRESET="bun"
 
 # Install bun
 # (Uses 1.0.18: https://github.com/oven-sh/bun/issues/7864)
-RUN apt-get install curl
+RUN apt-get update -qq && apt-get install curl
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.18"
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
 # Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install -y build-essential pkg-config python-is-python3
+RUN apt-get install -y build-essential pkg-config python-is-python3
 
 COPY . ./
 
