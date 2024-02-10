@@ -23,7 +23,7 @@
             查看源代码。期待各位同学的反馈！
           </p>
         </section>
-        <NuxtImg src="/cosmo-logo.png" class="mx-auto my-0 w-[80%]" />
+        <NuxtImg src="/cosmo-logo.svg" class="mx-auto my-0 w-[80%]" />
         <section class="prose">
           <p>
             <b>COSMO智慧校园平台运研中心</b>是深圳中学七大校级学生组织之一，也是最年轻的校级学生组织。欢迎大家通过下方链接关注我们！
