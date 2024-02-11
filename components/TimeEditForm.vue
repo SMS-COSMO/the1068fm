@@ -10,8 +10,8 @@ import type { TTime } from '~/types';
 const props = defineProps<{ time: TTime }>();
 
 const emit = defineEmits<{
-  (event: 'submitSuccess', time: TTime): void
-  (event: 'deleteSuccess', id: string): void
+  (event: 'submitSuccess', time: TTime): void;
+  (event: 'deleteSuccess', id: string): void;
 }>();
 
 const { $api, $toast } = useNuxtApp();

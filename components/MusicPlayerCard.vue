@@ -2,8 +2,8 @@
 import { useMediaControls } from '@vueuse/core';
 
 const props = withDefaults(defineProps<{
-  song: any
-  compact?: boolean
+  song: any;
+  compact?: boolean;
 }>(), {
   compact: false,
 });

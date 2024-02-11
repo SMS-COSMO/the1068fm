@@ -2,8 +2,8 @@
 import type { TTime } from '~/types';
 
 const props = withDefaults(defineProps<{
-  time: TTime
-  selected?: boolean
+  time: TTime;
+  selected?: boolean;
 }>(), {
   selected: false,
 });

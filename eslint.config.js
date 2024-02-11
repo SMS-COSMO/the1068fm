@@ -9,6 +9,7 @@ export default antfu({
 }, {
   rules: {
     'style/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
+    'n/prefer-global/process': ['never'],
   },
   ignores: ['components/ui/**', '.github/**/*'],
 });

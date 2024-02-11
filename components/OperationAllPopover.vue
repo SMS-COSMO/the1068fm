@@ -1,8 +1,8 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
-  name: string
-  isDestructive?: boolean
-  action: () => void
+  name: string;
+  isDestructive?: boolean;
+  action: () => void;
 }>(), {
   isDestructive: false,
 });

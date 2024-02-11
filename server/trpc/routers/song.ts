@@ -2,7 +2,6 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, publicProcedure, router } from '../trpc';
 import { serializeSong } from '../utils/serializer';
-import type { TSerializedSong } from '~/server/trpc/utils/serializer';
 
 export const songRouter = router({
   create: publicProcedure
@@ -78,15 +77,10 @@ export const songRouter = router({
   listSafe: publicProcedure
     .query(async ({ ctx }) => {
       const res = await ctx.songController.getList();
-      if (!res.success || !res.res) {
+      if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      } else {
-        const safeList: TSerializedSong[] = [];
-        for (const song of res.res)
-          safeList.push(serializeSong(song));
-
-        return safeList;
-      }
+      else
+        return res.res.map(song => serializeSong(song));
     }),
 
   listUnused: protectedProcedure

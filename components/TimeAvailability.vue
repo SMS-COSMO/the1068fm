@@ -2,10 +2,10 @@
 type TState = 'unknown' | 'can' | 'cannot';
 
 const props = withDefaults(defineProps<{
-  borderless?: boolean
-  showButton?: boolean
-  isCard?: boolean
-  status?: TState
+  borderless?: boolean;
+  showButton?: boolean;
+  isCard?: boolean;
+  status?: TState;
 }>(), {
   borderless: false,
   showButton: false,

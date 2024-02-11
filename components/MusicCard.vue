@@ -3,12 +3,12 @@ import { useSongStore } from '~/stores/song';
 import type { TSafeSong, TSong } from '~/types';
 
 const props = withDefaults(defineProps<{
-  song: TSong | TSafeSong
-  compact?: boolean
-  sorting?: boolean
-  selected?: boolean
-  showMine?: boolean
-  showGrade?: boolean
+  song: TSong | TSafeSong;
+  compact?: boolean;
+  sorting?: boolean;
+  selected?: boolean;
+  showMine?: boolean;
+  showGrade?: boolean;
 }>(), {
   compact: false,
   editable: false,

@@ -6,6 +6,8 @@ import { SongController } from './song';
 import { arrangements } from '~/server/db/schema';
 
 export class ArrangementController {
+  sc = new SongController();
+
   async create(newArrangement: TNewArrangement) {
     try {
       await db.insert(arrangements).values(newArrangement);
@@ -59,9 +61,8 @@ export class ArrangementController {
       const res = await Promise.all(
         arr.map(async (item) => {
           const songs: TRawSong[] = [];
-          const songController = new SongController();
           for (const songId of item.songIds ?? []) {
-            const res = await songController.getContent(songId);
+            const res = await this.sc.getContent(songId);
             if (res.res)
               songs.push(res.res);
           }

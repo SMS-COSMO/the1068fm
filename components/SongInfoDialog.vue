@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isOpen, toggleOpen, info } = defineProps<{ isOpen: boolean, toggleOpen: (value?: boolean | undefined) => boolean, info: string }>();
+const { isOpen, toggleOpen, info } = defineProps<{ isOpen: boolean; toggleOpen: (value?: boolean | undefined) => boolean; info: string }>();
 </script>
 
 <template>

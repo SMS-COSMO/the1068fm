@@ -1,4 +1,3 @@
-import process from 'node:process';
 import * as dotenv from 'dotenv';
 import { z } from 'zod';
 
@@ -18,7 +17,7 @@ const envSchema = z.object({
   SERVER_URL: z.string(),
 });
 
-const envParse = envSchema.safeParse(process.env);
+const envParse = envSchema.safeParse(Bun.env);
 
 if (!envParse.success) {
   console.error('[ERROR] Invalid environment variables:', JSON.stringify(envParse.error.format(), null, 4));

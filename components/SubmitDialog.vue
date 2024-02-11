@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { useSongStore } from '~/stores/song';
 import type { TSafeSong } from '~/types';
 
-const { isOpen, toggleOpen } = defineProps<{ isOpen: boolean, toggleOpen: (value?: boolean | undefined) => boolean }>();
+const { isOpen, toggleOpen } = defineProps<{ isOpen: boolean; toggleOpen: (value?: boolean | undefined) => boolean }>();
 const emit = defineEmits<{ (event: 'submitSuccess', song: TSafeSong): void }>();
 const { $toast, $api } = useNuxtApp();
 

@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, publicProcedure, router } from '../trpc';
-import type { TSerializedSong } from '../utils/serializer';
 import { serializeSong } from '../utils/serializer';
 
 const dateRegExp = /(202[3-9]|20[3-9]\d)-[01]\d-[0-3]\d/;
@@ -75,14 +74,13 @@ export const arrangementRouter = router({
       const res = await ctx.arrangementController.getList(true);
       if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      const safeList: { date: string, songs: TSerializedSong[] }[] = [];
-      for (const rawList of res.res) {
-        const safeSongs: TSerializedSong[] = [];
-        for (const song of rawList.songs)
-          safeSongs.push(serializeSong(song));
 
-        safeList.push({ date: rawList.date, songs: safeSongs });
-      }
+      const safeList = res.res.map((rawList) => {
+        return {
+          date: rawList.date,
+          songs: rawList.songs.map(song => serializeSong(song)),
+        };
+      });
       return safeList;
     }),
 });

@@ -9,9 +9,9 @@ export const useUserStore = defineStore('user', () => {
   const lastSubmission = ref<Date>();
 
   const login = (data: {
-    accessToken: string
-    refreshToken: string
-    userId: string
+    accessToken: string;
+    refreshToken: string;
+    userId: string;
   }) => {
     loggedIn.value = true;
     accessToken.value = data.accessToken;

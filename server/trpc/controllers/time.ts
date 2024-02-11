@@ -34,12 +34,12 @@ export class TimeController {
   }
 
   async modify(newTime: {
-    id: string
-    name: string
-    startAt: Date
-    endAt: Date
-    repeats: boolean
-    isActive: boolean
+    id: string;
+    name: string;
+    startAt: Date;
+    endAt: Date;
+    repeats: boolean;
+    isActive: boolean;
   }) {
     try {
       await db.update(times).set({ ...newTime }).where(eq(times.id, newTime.id));
