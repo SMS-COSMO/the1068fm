@@ -6,10 +6,10 @@ export default antfu({
     quotes: 'single',
     semi: true,
   },
+  ignores: ['components/ui/**', '.github/**/*'],
 }, {
   rules: {
     'style/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
-    'n/prefer-global/process': ['never'],
+    'node/prefer-global/process': 'off',
   },
-  ignores: ['components/ui/**', '.github/**/*'],
 });
