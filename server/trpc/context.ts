@@ -1,3 +1,4 @@
+import process from 'node:process';
 import type { inferAsyncReturnType } from '@trpc/server';
 import type { H3Event } from 'h3';
 import { db } from '../db/db';
@@ -20,7 +21,7 @@ const songController = newGlobal.songController ?? new SongController();
 const timeController = newGlobal.timeController ?? new TimeController();
 const arrangementController = newGlobal.arrangementController ?? new ArrangementController();
 
-if (Bun.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   newGlobal.userController = userController;
   newGlobal.songController = songController;
   newGlobal.timeController = timeController;
