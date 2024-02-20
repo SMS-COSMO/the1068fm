@@ -11,6 +11,7 @@ export default defineNuxtPlugin(() => {
     links: [
       httpBatchLink({
         url: '/api/trpc',
+        maxURLLength: 4000,
         headers() {
           const userStore = useUserStore();
           return {
