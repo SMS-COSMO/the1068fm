@@ -358,6 +358,7 @@ function copySongInfo() {
 }
 
 onMounted(async () => {
+  // @ts-expect-error window
   isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
   try {
     try {
@@ -461,10 +462,17 @@ onMounted(async () => {
         </UiPopover>
       </UiCardContent>
     </UiCard>
-    <DatePicker
-      v-if="!isDesktop" v-model="date" mode="date" color="gray" locale="zh" view="weekly" :attributes="calendarAttr"
-      :masks="{ title: 'YYYY MMM' }" class="rounded-lg border shadow-sm pb-3" expanded trim-weeks borderless is-required
-    />
+    <client-only v-if="!isDesktop">
+      <DatePicker
+        v-model="date" mode="date" color="gray" locale="zh" view="weekly" :attributes="calendarAttr"
+        :masks="{ title: 'YYYY MMM' }" class="rounded-lg border shadow-sm pb-3" expanded trim-weeks borderless is-required
+      />
+      <template #fallback>
+        <UiAspectRatio :ratio="1 / 1">
+          aa
+        </UiAspectRatio>
+      </template>
+    </client-only>
     <UiCard v-if="isDesktop" class="lg:w-[600px] w-full relative hidden lg:block">
       <UiCardHeader>
         <UiCardTitle class="my-[-0.5rem]">
@@ -472,10 +480,17 @@ onMounted(async () => {
         </UiCardTitle>
       </UiCardHeader>
       <UiCardContent>
-        <DatePicker
-          v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
-          :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required
-        />
+        <client-only>
+          <DatePicker
+            v-model="date" mode="date" color="gray" locale="zh" :attributes="calendarAttr"
+            :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required
+          />
+          <template #fallback>
+            <UiAspectRatio :ratio="1 / 0.95">
+              <Loader2 class="w-8 h-8 mx-auto mt-[150px] animate-spin" />
+            </UiAspectRatio>
+          </template>
+        </client-only>
         <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-4">
           <UiButton :disabled="arrangeLoading" variant="outline" class="basis-1/2 px-3 shadow-none" @click="arrange">
             <Loader2 v-if="arrangeLoading" class="w-4 h-4 mr-2 animate-spin" />

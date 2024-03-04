@@ -133,6 +133,7 @@ async function reviewSong(song: TSong, status: TStatus) {
 const listLoading = ref(false);
 onMounted(async () => {
   try {
+  // @ts-expect-error window
     isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
     await $api.user.tokenValidity.query();
   } catch (err) {

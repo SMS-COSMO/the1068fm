@@ -131,6 +131,7 @@ try {
 }
 
 onMounted(async () => {
+  // @ts-expect-error window
   isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
   const userStore = useUserStore();
   canSubmit.value = userStore.canSubmit();
