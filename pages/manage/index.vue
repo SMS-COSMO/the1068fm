@@ -467,11 +467,6 @@ onMounted(async () => {
         v-model="date" mode="date" color="gray" locale="zh" view="weekly" :attributes="calendarAttr"
         :masks="{ title: 'YYYY MMM' }" class="rounded-lg border shadow-sm pb-3" expanded trim-weeks borderless is-required
       />
-      <template #fallback>
-        <UiAspectRatio :ratio="1 / 0.95">
-          <Loader2 class="w-8 h-8 mx-auto mt-[150px] animate-spin" />
-        </UiAspectRatio>
-      </template>
     </client-only>
     <UiCard v-if="isDesktop" class="lg:w-[600px] w-full relative hidden lg:block">
       <UiCardHeader>
