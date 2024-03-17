@@ -427,39 +427,41 @@ onMounted(async () => {
             预览
           </UiToggle>
         </div>
-        <UiPopover v-model:open="accountOpen">
-          <UiPopoverTrigger as-child>
-            <UiButton
-              variant="outline" role="combobox" :aria-expanded="accountOpen"
-              class="justify-between w-full mt-2"
-            >
-              {{ userStore.userId }}
-              <span class="icon-[radix-icons--caret-sort] text-lg" />
-            </UiButton>
-          </UiPopoverTrigger>
-          <UiPopoverContent class="w-[200px] p-0">
-            <UiCommand>
-              <UiCommandGroup>
-                <RegisterDialog>
-                  <UiCommandItem value="register">
-                    <span class="icon-[tabler--plus] mr-1" />
-                    创建新账号
+        <client-only>
+          <UiPopover v-model:open="accountOpen">
+            <UiPopoverTrigger as-child>
+              <UiButton
+                variant="outline" role="combobox" :aria-expanded="accountOpen"
+                class="justify-between w-full mt-2"
+              >
+                {{ userStore.userId }}
+                <span class="icon-[radix-icons--caret-sort] text-lg" />
+              </UiButton>
+            </UiPopoverTrigger>
+            <UiPopoverContent class="w-[200px] p-0">
+              <UiCommand>
+                <UiCommandGroup>
+                  <RegisterDialog>
+                    <UiCommandItem value="register">
+                      <span class="icon-[tabler--plus] mr-1" />
+                      创建新账号
+                    </UiCommandItem>
+                  </RegisterDialog>
+                  <ModifyPasswordDialog>
+                    <UiCommandItem value="modifyPassword">
+                      <span class="icon-[tabler--lock] mr-1" />
+                      修改密码
+                    </UiCommandItem>
+                  </ModifyPasswordDialog>
+                  <UiCommandItem value="logout" @select="logout">
+                    <span class="icon-[tabler--logout] mr-1" />
+                    登出
                   </UiCommandItem>
-                </RegisterDialog>
-                <ModifyPasswordDialog>
-                  <UiCommandItem value="modifyPassword">
-                    <span class="icon-[tabler--lock] mr-1" />
-                    修改密码
-                  </UiCommandItem>
-                </ModifyPasswordDialog>
-                <UiCommandItem value="logout" @select="logout">
-                  <span class="icon-[tabler--logout] mr-1" />
-                  登出
-                </UiCommandItem>
-              </UiCommandGroup>
-            </UiCommand>
-          </UiPopoverContent>
-        </UiPopover>
+                </UiCommandGroup>
+              </UiCommand>
+            </UiPopoverContent>
+          </UiPopover>
+        </client-only>
       </UiCardContent>
     </UiCard>
     <client-only v-if="!isDesktop">
@@ -525,39 +527,41 @@ onMounted(async () => {
           复制歌单内容
         </UiButton>
         <TimeAvailability show-button class="mt-4" />
-        <UiPopover v-model:open="accountOpen">
-          <UiPopoverTrigger as-child>
-            <UiButton
-              variant="outline" role="combobox" :aria-expanded="accountOpen"
-              class="justify-between absolute bottom-5 left-5 w-[200px]"
-            >
-              {{ userStore.userId }}
-              <span class="icon-[radix-icons--caret-sort] text-lg" />
-            </UiButton>
-          </UiPopoverTrigger>
-          <UiPopoverContent class="w-[200px] p-0">
-            <UiCommand>
-              <UiCommandGroup>
-                <RegisterDialog>
-                  <UiCommandItem value="register">
-                    <span class="icon-[tabler--plus] mr-1" />
-                    创建新账号
+        <client-only>
+          <UiPopover v-model:open="accountOpen">
+            <UiPopoverTrigger as-child>
+              <UiButton
+                variant="outline" role="combobox" :aria-expanded="accountOpen"
+                class="justify-between absolute bottom-5 left-5 w-[200px]"
+              >
+                {{ userStore.userId }}
+                <span class="icon-[radix-icons--caret-sort] text-lg" />
+              </UiButton>
+            </UiPopoverTrigger>
+            <UiPopoverContent side="top" :avoid-collisions="false" class="w-[200px] p-0">
+              <UiCommand>
+                <UiCommandGroup>
+                  <RegisterDialog>
+                    <UiCommandItem value="register">
+                      <span class="icon-[tabler--plus] mr-1" />
+                      创建新账号
+                    </UiCommandItem>
+                  </RegisterDialog>
+                  <ModifyPasswordDialog>
+                    <UiCommandItem value="modifyPassword">
+                      <span class="icon-[tabler--lock] mr-1" />
+                      修改密码
+                    </UiCommandItem>
+                  </ModifyPasswordDialog>
+                  <UiCommandItem value="logout" @select="logout">
+                    <span class="icon-[tabler--logout] mr-1" />
+                    登出
                   </UiCommandItem>
-                </RegisterDialog>
-                <ModifyPasswordDialog>
-                  <UiCommandItem value="modifyPassword">
-                    <span class="icon-[tabler--lock] mr-1" />
-                    修改密码
-                  </UiCommandItem>
-                </ModifyPasswordDialog>
-                <UiCommandItem value="logout" @select="logout">
-                  <span class="icon-[tabler--logout] mr-1" />
-                  登出
-                </UiCommandItem>
-              </UiCommandGroup>
-            </UiCommand>
-          </UiPopoverContent>
-        </UiPopover>
+                </UiCommandGroup>
+              </UiCommand>
+            </UiPopoverContent>
+          </UiPopover>
+        </client-only>
       </UiCardContent>
     </UiCard>
     <UiCard class="basis-1/2 relative pt-4">
