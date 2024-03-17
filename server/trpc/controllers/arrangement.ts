@@ -62,11 +62,14 @@ export class ArrangementController {
         ? (await db.select().from(arrangements).where(
             and(
               eq(arrangements.isPublic, true),
+              // one month
               gt(arrangements.date, getDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))),
             ),
           ))
         : (await db.select().from(arrangements).where(
-          gt(arrangements.date, getDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))),));
+          // one month
+            gt(arrangements.date, getDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))),
+          ));
       const res = await Promise.all(
         arr.map(async (item) => {
           const songs: TRawSong[] = [];
