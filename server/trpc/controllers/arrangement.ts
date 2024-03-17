@@ -1,9 +1,10 @@
 import { LibsqlError } from '@libsql/client';
-import { eq } from 'drizzle-orm';
+import { and, eq, gt } from 'drizzle-orm';
 import type { TNewArrangement, TRawSong } from '../../db/db';
 import { db } from '../../db/db';
 import { SongController } from './song';
 import { arrangements } from '~/server/db/schema';
+import { getDateString } from '~/lib/utils';
 
 export class ArrangementController {
   sc = new SongController();
@@ -57,7 +58,15 @@ export class ArrangementController {
 
   async getList(isPublic: boolean) {
     try {
-      const arr = isPublic ? (await db.select().from(arrangements).where(eq(arrangements.isPublic, true))) : (await db.select().from(arrangements));
+      const arr = isPublic
+        ? (await db.select().from(arrangements).where(
+            and(
+              eq(arrangements.isPublic, true),
+              gt(arrangements.date, getDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))),
+            ),
+          ))
+        : (await db.select().from(arrangements).where(
+          gt(arrangements.date, getDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))),));
       const res = await Promise.all(
         arr.map(async (item) => {
           const songs: TRawSong[] = [];
