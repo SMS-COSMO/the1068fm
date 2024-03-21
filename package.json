@@ -15,7 +15,6 @@
     "db:push": "drizzle-kit push:sqlite"
   },
   "dependencies": {
-    "@libsql/client": "^0.5.3",
     "@nuxt/image": "^1.4.0",
     "@pinia/nuxt": "^0.5.1",
     "@trpc/client": "^10.45.0",

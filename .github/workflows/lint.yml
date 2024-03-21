@@ -16,4 +16,4 @@ jobs:
         run: bun install
 
       - name: Run Lint
-        run: NITRO_PRESET="bun" bun run eslint . --no-fix
+        run: bun run eslint . --no-fix
