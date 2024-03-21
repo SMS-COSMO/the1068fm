@@ -357,16 +357,16 @@ function copySongInfo() {
   });
 }
 
+try {
+  await $api.user.tokenValidity.query();
+} catch (err) {
+  onMounted(() => navigateTo('/manage/login'));
+}
+
 onMounted(async () => {
   // @ts-expect-error window
   isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
   try {
-    try {
-      await $api.user.tokenValidity.query();
-    } catch (err) {
-      navigateTo('/manage/login');
-    }
-
     songList.value = await $api.song.listUnused.query();
     listLoading.value = false;
     arrangementList.value = await $api.arrangement.list.query();

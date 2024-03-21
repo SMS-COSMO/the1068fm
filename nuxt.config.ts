@@ -4,10 +4,10 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@nuxtjs/tailwindcss',
     '@vee-validate/nuxt',
     '@vueuse/nuxt',
     '@nuxt/image',
+    '@nuxtjs/tailwindcss',
   ],
   veeValidate: {
     autoImports: true,
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     },
   },
   tailwindcss: {
-    cssPath: '~/styles/tailwind.css',
+    cssPath: './styles/tailwind.css',
   },
   pinia: {
     storesDirs: ['./stores/**'],

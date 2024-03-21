@@ -1,9 +1,5 @@
-import process from 'node:process';
-import * as dotenv from 'dotenv';
 import { z } from 'zod';
 
-dotenv.config();
-dotenv.config({ path: '.env.local', override: true });
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']),
   SIGN_PUBLIC_KEY: z.string(),
@@ -13,6 +9,7 @@ const envSchema = z.object({
   SIGN_KID: z.string(),
   ENC_KID: z.string(),
   SERVER_URL: z.string(),
+  TOKEN_EXPIRATION_TIME: z.string().optional().default('24h'),
 });
 
 const envParse = envSchema.safeParse(process.env);

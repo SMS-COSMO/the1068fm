@@ -16,7 +16,7 @@ export class Auth {
     const jwt = await new jose.SignJWT({})
       .setSubject(id.toString())
       .setIssuedAt()
-      .setExpirationTime('24h')
+      .setExpirationTime(env.TOKEN_EXPIRATION_TIME)
       .setIssuer('the1068fm')
       .setJti(nanoid(32))
       .setProtectedHeader({
