@@ -1,18 +1,10 @@
-import { drizzle } from 'drizzle-orm/libsql';
-import { createClient } from '@libsql/client';
-import { env } from '../env';
+import { drizzle } from 'drizzle-orm/bun-sqlite';
+import { Database } from 'bun:sqlite';
 import type { arrangements, refreshTokens, songs, users } from './schema';
 import type { times } from './schema/time';
 
-const options = (() => {
-  switch (env.DATABASE_CONNECTION_TYPE) {
-    case 'local': return { url: 'file:local.sqlite' };
-    case 'remote': return { url: env.DATABASE_URL, authToken: env.DATABASE_AUTH_TOKEN };
-  }
-})();
-
-const client = createClient(options);
-export const db = drizzle(client);
+const sqlite = new Database('local.sqlite');
+export const db = drizzle(sqlite);
 
 export type TRawUser = typeof users.$inferSelect;
 export type TNewUser = typeof users.$inferInsert;
