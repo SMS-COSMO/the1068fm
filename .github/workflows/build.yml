@@ -1,9 +1,9 @@
-name: ESLint Check
+name: Build
 
 on: [workflow_dispatch, push]
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
 
     steps:
