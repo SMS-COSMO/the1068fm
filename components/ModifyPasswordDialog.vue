@@ -2,12 +2,16 @@
 import { useForm } from 'vee-validate';
 import { Loader2 } from 'lucide-vue-next';
 import z from 'zod';
+import { passwordRegex } from '~/constants';
 
 const { $api, $toast } = useNuxtApp();
 
 const formSchema = toTypedSchema(z.object({
   oldPassword: z.string({ required_error: '请输入密码' }).min(8, { message: '用户密码长度应至少为8' }),
-  newPassword: z.string({ required_error: '请输入密码' }).min(8, { message: '用户密码长度应至少为8' }),
+  newPassword: z
+    .string({ required_error: '请输入密码' })
+    .min(8, { message: '用户密码长度应至少为8' })
+    .regex(passwordRegex, '密码必须包含大小写字母、数字与特殊符号'),
 }));
 
 const { handleSubmit, resetForm } = useForm({

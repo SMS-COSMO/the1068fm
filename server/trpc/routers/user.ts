@@ -42,7 +42,12 @@ export const userRouter = router({
     }),
 
   modifyPassword: protectedProcedure
-    .input(z.object({ oldPassword: z.string(), newPassword: z.string().min(8, { message: '用户密码长度应至少为8' }) }))
+    .input(z.object({
+      oldPassword: z.string(),
+      newPassword: z
+        .string().min(8, { message: '用户密码长度应至少为8' })
+        .regex(passwordRegex, '密码必须包含大小写字母、数字与特殊符号'),
+    }))
     .mutation(async ({ ctx, input }) => {
       const res = await ctx.userController.modifyPassword(ctx.user, input.oldPassword, input.newPassword);
       if (!res.success)
