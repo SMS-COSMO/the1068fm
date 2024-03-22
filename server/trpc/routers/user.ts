@@ -1,11 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { loggedProcedure, protectedProcedure, publicProcedure, router } from '../trpc';
 import { passwordRegex } from '~/constants/index';
 
 export const userRouter = router({
 
-  register: protectedProcedure
+  register: loggedProcedure
     .input(z.object({
       id: z.string().min(4, { message: '用户ID长度应至少为4' }).max(24, { message: '用户ID超出长度范围' }),
       password: z.string().min(8, { message: '用户密码长度应至少为8' }).regex(passwordRegex, '密码必须包含大小写字母、数字与特殊符号'),
@@ -41,7 +41,7 @@ export const userRouter = router({
       return res;
     }),
 
-  modifyPassword: protectedProcedure
+  modifyPassword: loggedProcedure
     .input(z.object({
       oldPassword: z.string(),
       newPassword: z

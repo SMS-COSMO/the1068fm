@@ -1,9 +1,9 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { loggedProcedure, publicProcedure, router } from '../trpc';
 
 export const timeRouter = router({
-  create: protectedProcedure
+  create: loggedProcedure
     .input(z.object({
       name: z.string().max(50, '时间段名不能大于50'),
       startAt: z.date(),
@@ -17,7 +17,7 @@ export const timeRouter = router({
       else return res.res;
     }),
 
-  remove: protectedProcedure
+  remove: loggedProcedure
     .input(z.object({ id: z.string().min(1, '时间段不存在') }))
     .mutation(async ({ ctx, input }) => {
       const res = await ctx.timeController.remove(input.id);
@@ -41,7 +41,7 @@ export const timeRouter = router({
       return res;
     }),
 
-  modify: protectedProcedure
+  modify: loggedProcedure
     .input(z.object({
       id: z.string().min(1, '时间段不存在'),
       name: z.string(),
@@ -57,7 +57,7 @@ export const timeRouter = router({
       else return res;
     }),
 
-  modifyActive: protectedProcedure
+  modifyActive: loggedProcedure
     .input(z.object({
       id: z.string().min(1, '时间段不存在'),
       isActive: z.boolean(),

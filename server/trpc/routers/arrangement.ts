@@ -1,13 +1,13 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { loggedProcedure, protectedProcedure, publicProcedure, router } from '../trpc';
 import { serializeSong } from '../utils/serializer';
 
 const dateRegExp = /(202[3-9]|20[3-9]\d)-[01]\d-[0-3]\d/;
 const dateZod = z.string().min(1, '排歌表日期不能为空').refine(val => dateRegExp.test(val), '日期格式不正确');
 
 export const arrangementRouter = router({
-  create: protectedProcedure
+  create: loggedProcedure
     .input(z.object({
       date: dateZod,
       songIds: z.array(z.string()).optional(),
@@ -19,7 +19,7 @@ export const arrangementRouter = router({
       else return res;
     }),
 
-  remove: protectedProcedure
+  remove: loggedProcedure
     .input(z.object({ date: dateZod }))
     .mutation(async ({ ctx, input }) => {
       const res = await ctx.arrangementController.remove(input.date);
@@ -37,7 +37,7 @@ export const arrangementRouter = router({
       else return res.res;
     }),
 
-  modifySongList: protectedProcedure
+  modifySongList: loggedProcedure
     .input(z.object({
       date: dateZod,
       newSongList: z.array(z.string()),
@@ -49,7 +49,7 @@ export const arrangementRouter = router({
       else return res;
     }),
 
-  modifyVisibility: protectedProcedure
+  modifyVisibility: loggedProcedure
     .input(z.object({
       date: dateZod,
       isPublic: z.boolean(),

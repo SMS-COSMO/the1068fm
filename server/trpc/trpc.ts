@@ -1,4 +1,5 @@
 import { TRPCError, initTRPC } from '@trpc/server';
+import { Roarr as log } from 'roarr';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 import type { Context } from '~/server/trpc/context';
@@ -35,3 +36,14 @@ export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 export const router = t.router;
 export const middleware = t.middleware;
+
+export const loggedProcedure = protectedProcedure.use(async (opts) => {
+  const result = await opts.next();
+  const meta = { path: opts.path, type: opts.type, operator: opts.ctx.user.id };
+
+  result.ok
+    ? log.info(JSON.stringify(meta))
+    : log.error(JSON.stringify(meta));
+
+  return result;
+});
