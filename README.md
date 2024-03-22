@@ -30,12 +30,14 @@ A simple yet powerful song request system
 
 ## Stack
 
+- [Bun](https://bun.sh/) - Bun is a fast JavaScript
+all-in-one toolkit
 - [Vite](https://vitejs.dev/) - Next Generation Frontend Tooling
 - [Nuxt](https://nuxt.com/) - The Intuitive Web Framework
 - [Vue](https://vuejs.org/) - The Progressive JavaScript Framework
 - [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
 - [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
-- [shadcn-vue](https://www.shadcn-vue.com/) - Re-usable components built with Radix Vue, and Tailwind CSS. An unofficial, community-led Vue port of shadcn/ui.
+- [shadcn-vue](https://tailwindcss.com/) - Re-usable components built with Radix Vue, and Tailwind CSS. An unofficial, community-led Vue port of shadcn/ui.
 - [TailwindCSS](https://uno.antfu.me/) - Rapidly build modern websites without ever leaving your HTML
 - [Iconify](https://github.com/iconify/icon-sets#iconify-icon-sets-in-json-format) - Iconify icon sets in JSON format
 - [Drizzle ORM](https://orm.drizzle.team/) - Next Generation TypeScript ORM
@@ -50,7 +52,7 @@ Clone the repository and run on the root folder:
 
 ```
 bun i
-bun run dev
+bun --bun dev
 ```
 
 #### Scripts available:
@@ -58,7 +60,7 @@ bun run dev
 Run the scrips with `bun run xxx`.
 
 1. `dev`: Start dev server
-2. `build`: Build for production
+2. `build`: Build for production (make sure `NITRO_PRESET="bun"` is set in `.env`)
 3. `lint`: Lint code
 4. `lint:fix`: Lint code with auto fixing
 5. `db:studio`: Start database management panel
