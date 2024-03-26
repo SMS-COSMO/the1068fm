@@ -3,5 +3,5 @@ module.exports = {
   script: './.output/server/index.mjs', // Entry point of your application
   interpreter: 'bun', // Path to the Bun interpreter
   port: '3000',
-  instances: 'max',
+  instances: '1',
 };

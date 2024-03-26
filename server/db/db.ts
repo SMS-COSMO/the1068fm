@@ -4,6 +4,8 @@ import type { arrangements, refreshTokens, songs, users } from './schema';
 import type { times } from './schema/time';
 
 const sqlite = new Database('local.sqlite');
+sqlite.exec('PRAGMA journal_mode = WAL;');
+
 export const db = drizzle(sqlite);
 
 export type TRawUser = typeof users.$inferSelect;
