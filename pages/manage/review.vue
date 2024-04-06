@@ -63,7 +63,7 @@ async function getSearchList(song?: TSong) {
   const formData = new FormData();
   formData.append('input', name);
   formData.append('filter', 'name');
-  formData.append('type', 'qq');
+  formData.append('type', 'netease');
 
   const res: any = (await useFetch('/liuzhijin', {
     method: 'post',
