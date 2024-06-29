@@ -1,12 +1,18 @@
+<script setup lang="ts">
+import { ConfigProvider } from 'radix-vue';
+
+const useIdFunction = () => useId();
+</script>
+
 <template>
-  <div>
+  <ConfigProvider :use-id="useIdFunction">
     <ClientOnly>
       <Toaster position="top-center" rich-colors />
     </ClientOnly>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-  </div>
+  </ConfigProvider>
 </template>
 
 <style>

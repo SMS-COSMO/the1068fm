@@ -42,7 +42,17 @@ useHead({
 const userStore = useUserStore();
 const isDesktop = ref(true);
 const accountOpen = ref(false);
+
+const songList = ref<TSongList>([]);
 const arrangementList = ref<TArrangementList>([]);
+
+try {
+  await $api.user.tokenValidity.query();
+  songList.value = await $api.song.listUnused.query() ?? [];
+  arrangementList.value = await $api.arrangement.list.query() ?? [];
+} catch (err) {
+  navigateTo('/manage/login');
+}
 
 type TArrange = 'day' | 'week';
 const autoArrangeScopeText = {
@@ -80,7 +90,6 @@ const arrangeScope = computed(() => {
 
 const arrangeLoading = ref(false);
 
-const songList = ref<TSongList>([]);
 const unsetList = computed(
   () => songList.value.filter(s => (s.status === 'unset'))
     .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
@@ -309,7 +318,7 @@ async function createEmptyArrangement() {
     await $api.arrangement.create.mutate({ date: dateString.value, songIds: [] });
     arrangementList.value.push({
       date: dateString.value,
-      isPublic: false,
+      isPublic: true,
       songs: [],
     });
   } catch (err) {
@@ -329,9 +338,6 @@ function logout() {
   userStore.logout();
   navigateTo('/manage/login');
 }
-
-const listLoading = ref(true);
-const arrangementLoading = ref(true);
 
 const { copy: useCopy } = useClipboard({ legacy: true });
 const [songInfoOpen, toggleSongInfoOpen] = useToggle(false);
@@ -366,11 +372,6 @@ onMounted(async () => {
     } catch (err) {
       navigateTo('/manage/login');
     }
-
-    songList.value = await $api.song.listUnused.query();
-    listLoading.value = false;
-    arrangementList.value = await $api.arrangement.list.query();
-    arrangementLoading.value = false;
   } catch (err) {
     useErrorHandler(err);
   }
@@ -579,8 +580,7 @@ onMounted(async () => {
         </div>
       </UiCardHeader>
       <UiCardContent class="px-4 lg:px-6">
-        <ContentLoading v-if="arrangementLoading" />
-        <UiTooltipProvider v-else-if="arrangement === undefined">
+        <UiTooltipProvider v-if="arrangement === undefined">
           <UiTooltip>
             <UiTooltipTrigger as-child>
               <UiButton variant="outline" class="w-full h-24" @click="createEmptyArrangement">
@@ -702,8 +702,7 @@ onMounted(async () => {
             </UiTabsTrigger>
           </UiTabsList>
           <UiTabsContent value="approved">
-            <ContentLoading v-if="listLoading" />
-            <UiScrollArea v-else class="lg:h-[calc(100vh-14rem)]">
+            <UiScrollArea class="lg:h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in approvedList.slice(0, showLength.approved)" :key="song.id">
                   <UiContextMenu>
@@ -763,8 +762,7 @@ onMounted(async () => {
             </UiScrollArea>
           </UiTabsContent>
           <UiTabsContent value="unset">
-            <ContentLoading v-if="listLoading" />
-            <UiScrollArea v-else class="lg:h-[calc(100vh-17rem)]">
+            <UiScrollArea class="lg:h-[calc(100vh-17rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in unsetList.slice(0, showLength.unset)" :key="song.id">
                   <UiContextMenu>
@@ -845,8 +843,7 @@ onMounted(async () => {
             </div>
           </UiTabsContent>
           <UiTabsContent value="rejected">
-            <ContentLoading v-if="listLoading" />
-            <UiScrollArea v-else class="lg:h-[calc(100vh-14rem)]">
+            <UiScrollArea class="lg:h-[calc(100vh-14rem)]">
               <TransitionGroup name="list" tag="ul">
                 <li v-for="song in rejectedList.slice(0, showLength.rejected)" :key="song.id">
                   <UiContextMenu>

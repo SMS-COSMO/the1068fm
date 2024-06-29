@@ -18,7 +18,7 @@
           <p>
             这个项目的代码是开源的，你可以在
             <NuxtLink to="https://github.com/SMS-COSMO/the1068fm" class="font-bold">
-              这里
+              <span>这里</span>
             </NuxtLink>
             查看源代码。期待各位同学的反馈！
           </p>
@@ -39,6 +39,9 @@
             <NuxtLink to="https://github.com/SMS-COSMO/" class="text-gray-600 flex justify-center items-center gap-1">
               <span class="icon-[radix-icons--github-logo]" />
               GitHub
+            </NuxtLink>
+            <NuxtLink to="https://the1068.pictures/" class="text-gray-600 flex justify-center items-center gap-1 font-serif">
+              the1068
             </NuxtLink>
           </section>
         </section>

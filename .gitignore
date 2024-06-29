@@ -28,4 +28,4 @@ logs
 
 # db
 drizzle
-local.sqlite
+local.sqlite*

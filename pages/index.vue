@@ -4,21 +4,41 @@ import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import { useDrag } from '@vueuse/gesture';
+import { useWindowFocus } from '@vueuse/core';
 import { getDateString } from '~/lib/utils';
-import type { TSafeArrangementList, TSafeSongList } from '~/types';
 
 const { $api } = useNuxtApp();
 
-const isDesktop = ref(false);
 const [isSubmitOpen, toggleSubmit] = useToggle(false);
 
-const songList = ref<TSafeSongList>([]);
+const { data: rawSongList } = await $api.song.listSafe.useQuery();
+const songList = ref(
+  (rawSongList.value ?? []).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
+);
+const { data: arrangementList } = await $api.arrangement.listSafe.useQuery();
+
 const songListInfo = ref(0);
-const selectedTab = ref('songList');
-const isSongListLoading = ref(true);
-const isArrangementLoading = ref(true);
 const timeCanSubmit = ref(true);
+try {
+  songListInfo.value = await $api.song.info.query();
+  timeCanSubmit.value = await $api.time.currently.query();
+} catch (err) {
+  useErrorHandler(err);
+}
+
+const isDesktop = ref(false);
+onMounted(() => {
+  // @ts-expect-error window
+  isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
+});
+
 const canSubmit = ref(false);
+onMounted(() => {
+  const userStore = useUserStore();
+  canSubmit.value = userStore.canSubmit();
+});
+
+const selectedTab = ref('songList');
 
 const tabShift = ref(0);
 const dragLeft = ref();
@@ -84,18 +104,16 @@ const fuseOptions = {
   matchAllWhenSearchEmpty: true,
 };
 const fuse = useFuse(searchContent, songList, fuseOptions);
-
 const processedListData = computed(() => fuse.results.value.map(s => s.item));
-const showLength = ref(100);
+const showLength = 100;
 
 const selectedDate = ref(new Date());
-const arrangementList = ref<TSafeArrangementList>([]);
 const arrangement = computed(
-  () => arrangementList.value.find(e => e.date === getDateString(selectedDate.value))?.songs,
+  () => arrangementList.value?.find(e => e.date === getDateString(selectedDate.value))?.songs,
 );
 const calendarAttr = computed(() => {
   const res = [];
-  for (const arrangement of arrangementList.value) {
+  for (const arrangement of arrangementList.value ?? []) {
     res.push({
       dot: true,
       dates: new Date(arrangement.date),
@@ -105,9 +123,14 @@ const calendarAttr = computed(() => {
   return res;
 });
 
+onMounted(() => {
+  useTimeoutPoll(useRefreshData, 5000, { immediate: true });
+});
+const focused = useWindowFocus();
 async function useRefreshData() {
-  if (isSubmitOpen.value)
-    return; // pause refresh data when submit dialog is open
+  // pause refresh data when submit dialog is open or page is out of focus
+  if (isSubmitOpen.value || !focused.value)
+    return;
   try {
     const res = await Promise.all([
       $api.song.info.query(),
@@ -122,35 +145,11 @@ async function useRefreshData() {
     // swallow the errors
   }
 }
-
-try {
-  songListInfo.value = await $api.song.info.query();
-  timeCanSubmit.value = await $api.time.currently.query();
-} catch (err) {
-  useErrorHandler(err);
-}
-
-onMounted(async () => {
-  // @ts-expect-error window
-  isDesktop.value = window.innerWidth > 800 && window.innerHeight > 600;
-  const userStore = useUserStore();
-  canSubmit.value = userStore.canSubmit();
-
-  try {
-    songList.value = (await $api.song.listSafe.query()).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-    isSongListLoading.value = false;
-    arrangementList.value = await $api.arrangement.listSafe.query();
-    isArrangementLoading.value = false;
-  } catch (err) {
-    useErrorHandler(err);
-  }
-  useTimeoutPoll(useRefreshData, 5000, { immediate: true });
-});
 </script>
 
 <template>
-  <div :class="`${isDesktop ? 'max-w-[1200px]' : 'max-w-[600px]'} mx-auto`">
-    <div :class="`mx-5 ${isDesktop ? 'grid grid-cols-2 gap-8' : ''}`">
+  <div class="max-w-[600px] lg:max-w-[1200px] mx-auto">
+    <div class="mx-5 grid lg:grid-cols-2 lg:gap-8">
       <div>
         <div class="mb-4 mt-8 flex justify-start">
           <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]" />
@@ -197,7 +196,7 @@ onMounted(async () => {
           </div>
         </section>
 
-        <UiCard v-if="!isDesktop" class="my-4 shadow">
+        <UiCard class="lg:hidden my-4 shadow">
           <UiCardContent class="p-4">
             <UiTabs v-model="selectedTab" class="overflow-x-hidden">
               <UiTabsList class="grid grid-cols-2">
@@ -213,60 +212,7 @@ onMounted(async () => {
                 :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / -150 - 0.2}`"
                 class="duration-100"
               >
-                <template v-if="!isSongListLoading">
-                  <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
-                  <TransitionGroup name="list" tag="ul">
-                    <li v-for="song in processedListData.slice(0, showLength)" :key="song.id">
-                      <MusicCard :song="song" show-mine />
-                    </li>
-                  </TransitionGroup>
-                  <UiAlert v-if="showLength < processedListData.length">
-                    <UiAlertDescription class="flex flex-row">
-                      <span class="self-center">
-                        出于性能考虑，仅加载前 {{ showLength }} 首歌
-                      </span>
-                      <UiButton variant="secondary" class="ml-auto w-[100px]" @click="showLength += 50">
-                        加载更多
-                      </UiButton>
-                    </UiAlertDescription>
-                  </UiAlert>
-                </template>
-                <ContentLoading v-else />
-              </UiTabsContent>
-              <UiTabsContent
-                ref="dragRight" v-drag="dragRightHandler" value="arrangement"
-                :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
-                class="duration-100"
-              >
-                <template v-if="!isArrangementLoading">
-                  <DatePicker
-                    v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-                    borderless :attributes="calendarAttr" class="mb-2" is-required
-                  />
-                  <TransitionGroup name="list" tag="ul">
-                    <li v-for="song in arrangement" :key="song.id">
-                      <MusicCard :song="song" show-mine />
-                    </li>
-                  </TransitionGroup>
-                  <p v-if="!arrangement" class="text-sm text-center">
-                    今日无排歌哦~
-                  </p>
-                </template>
-                <ContentLoading v-else />
-              </UiTabsContent>
-            </UiTabs>
-          </UiCardContent>
-        </UiCard>
-        <UiCard v-else>
-          <UiCardHeader class="pb-4">
-            <UiCardTitle class="mb-2">
-              已收集投稿
-            </UiCardTitle>
-            <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md" />
-          </UiCardHeader>
-          <UiCardContent>
-            <UiScrollArea class="h-[calc(100svh-29rem)]">
-              <template v-if="!isSongListLoading">
+                <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md mb-2" />
                 <TransitionGroup name="list" tag="ul">
                   <li v-for="song in processedListData.slice(0, showLength)" :key="song.id">
                     <MusicCard :song="song" show-mine />
@@ -282,36 +228,77 @@ onMounted(async () => {
                     </UiButton>
                   </UiAlertDescription>
                 </UiAlert>
-              </template>
-              <ContentLoading v-else />
+              </UiTabsContent>
+              <UiTabsContent
+                ref="dragRight" v-drag="dragRightHandler" value="arrangement"
+                :style="`transform: translate(${tabShift}px, 0); opacity: ${1 - tabShift / 150 - 0.2}`"
+                class="duration-100"
+              >
+                <DatePicker
+                  v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                  borderless :attributes="calendarAttr" class="mb-2" is-required
+                />
+                <TransitionGroup name="list" tag="ul">
+                  <li v-for="song in arrangement" :key="song.id">
+                    <MusicCard :song="song" show-mine />
+                  </li>
+                </TransitionGroup>
+                <p v-if="!arrangement" class="text-sm text-center">
+                  今日无排歌哦~
+                </p>
+              </UiTabsContent>
+            </UiTabs>
+          </UiCardContent>
+        </UiCard>
+        <UiCard class="hidden lg:block">
+          <UiCardHeader class="pb-4">
+            <UiCardTitle class="mb-2">
+              已收集投稿
+            </UiCardTitle>
+            <UiInput v-model="searchContent" placeholder="搜索歌曲" class="text-md" />
+          </UiCardHeader>
+          <UiCardContent>
+            <UiScrollArea class="h-[calc(100svh-29rem)]">
+              <TransitionGroup name="list" tag="ul">
+                <li v-for="song in processedListData.slice(0, showLength)" :key="song.id">
+                  <MusicCard :song="song" show-mine />
+                </li>
+              </TransitionGroup>
+              <UiAlert v-if="showLength < processedListData.length">
+                <UiAlertDescription class="flex flex-row">
+                  <span class="self-center">
+                    出于性能考虑，仅加载前 {{ showLength }} 首歌
+                  </span>
+                  <UiButton variant="secondary" class="ml-auto w-[100px]" @click="showLength += 50">
+                    加载更多
+                  </UiButton>
+                </UiAlertDescription>
+              </UiAlert>
             </UiScrollArea>
           </UiCardContent>
         </UiCard>
       </div>
-      <UiCard v-if="isDesktop" class="mt-10">
+      <UiCard class="hidden lg:block mt-10">
         <UiCardHeader>
           <UiCardTitle>
             歌单
           </UiCardTitle>
         </UiCardHeader>
         <UiCardContent>
-          <template v-if="!isArrangementLoading">
-            <DatePicker
-              v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
-              borderless :attributes="calendarAttr" class="mb-2" is-required
-            />
-            <UiScrollArea class="h-[calc(100svh-19rem)]">
-              <TransitionGroup name="list" tag="ul">
-                <li v-for="song in arrangement" :key="song.id">
-                  <MusicCard :song="song" show-mine />
-                </li>
-              </TransitionGroup>
-              <p v-if="!arrangement" class="text-sm text-center">
-                今日无排歌哦~
-              </p>
-            </UiScrollArea>
-          </template>
-          <ContentLoading v-else />
+          <DatePicker
+            v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+            borderless :attributes="calendarAttr" class="mb-2" is-required
+          />
+          <UiScrollArea class="h-[calc(100svh-19rem)]">
+            <TransitionGroup name="list" tag="ul">
+              <li v-for="song in arrangement" :key="song.id">
+                <MusicCard :song="song" show-mine />
+              </li>
+            </TransitionGroup>
+            <p v-if="!arrangement" class="text-sm text-center">
+              今日无排歌哦~
+            </p>
+          </UiScrollArea>
         </UiCardContent>
       </UiCard>
     </div>

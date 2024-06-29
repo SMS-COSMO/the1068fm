@@ -18,6 +18,9 @@ export const useSongStore = defineStore('song', () => {
   };
 }, {
   persist: {
-    storage: persistedState.localStorage,
+    storage: persistedState.cookiesWithOptions({
+      // One month
+      maxAge: 30 * 24 * 60 * 60,
+    }),
   },
 });

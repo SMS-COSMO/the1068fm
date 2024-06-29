@@ -2,6 +2,9 @@
 import { useForm } from 'vee-validate';
 import { Loader2 } from 'lucide-vue-next';
 
+import { toTypedSchema } from '@vee-validate/zod';
+import * as z from 'zod';
+
 const { $api, $toast } = useNuxtApp();
 
 definePageMeta({
@@ -18,7 +21,14 @@ useHead({
   ],
 });
 
-const form = useForm();
+const formSchema = toTypedSchema(z.object({
+  username: z.string().min(2).max(50),
+  password: z.string(),
+}));
+
+const form = useForm({
+  validationSchema: formSchema,
+});
 const buttonLoading = ref(false);
 
 const onSubmit = form.handleSubmit(async (values) => {
@@ -33,10 +43,9 @@ const onSubmit = form.handleSubmit(async (values) => {
       refreshToken: res.refreshToken,
       userId: res.userId,
     });
-
-    const router = useRouter();
-    router.back();
     buttonLoading.value = false;
+
+    navigateTo('/manage');
   } catch (err) {
     if (useIsTRPCClientError(err)) {
       $toast.error(err.message);
