@@ -24,7 +24,7 @@ export class ArrangementController {
     try {
       await db.delete(arrangements).where(eq(arrangements.date, date));
       return { success: true, message: '删除成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '排歌表不存在' };
     }
   }
@@ -33,7 +33,7 @@ export class ArrangementController {
     try {
       const res = (await db.select().from(arrangements).where(eq(arrangements.date, date)))[0];
       return { success: true, res, message: '获取成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '排歌表不存在' };
     }
   }
@@ -42,7 +42,7 @@ export class ArrangementController {
     try {
       await db.update(arrangements).set({ songIds: newSongList }).where(eq(arrangements.date, date));
       return { success: true, message: '修改成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '服务器内部错误' };
     }
   }
@@ -51,7 +51,7 @@ export class ArrangementController {
     try {
       await db.update(arrangements).set({ isPublic }).where(eq(arrangements.date, date));
       return { success: true, message: '修改成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '服务器内部错误' };
     }
   }
@@ -87,7 +87,7 @@ export class ArrangementController {
         }),
       );
       return { success: true, res, message: '获取成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '服务器内部错误' };
     }
   }

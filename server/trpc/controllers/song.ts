@@ -50,7 +50,7 @@ export class SongController {
     try {
       await db.delete(songs).where(eq(songs.id, id));
       return { success: true, message: '删除成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '歌曲不存在' };
     }
   }
@@ -59,7 +59,7 @@ export class SongController {
     try {
       const res = (await db.select().from(songs).where(eq(songs.id, id)))[0];
       return { success: true, res, message: '获取成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '歌曲不存在' };
     }
   }
@@ -68,7 +68,7 @@ export class SongController {
     try {
       await db.update(songs).set({ status }).where(eq(songs.id, id));
       return { success: true, message: '修改成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '歌曲不存在' };
     }
   }
@@ -77,7 +77,7 @@ export class SongController {
     try {
       await db.update(songs).set({ status }).where(inArray(songs.id, ids));
       return { success: true, message: '修改成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '歌曲不存在' };
     }
   }
@@ -86,7 +86,7 @@ export class SongController {
     try {
       const res = await db.select().from(songs).where(gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000)));
       return { success: true, res, message: '获取成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '服务器内部错误' };
     }
   }

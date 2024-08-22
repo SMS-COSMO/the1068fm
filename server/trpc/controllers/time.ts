@@ -19,7 +19,7 @@ export class TimeController {
     try {
       await db.delete(times).where(eq(times.id, id));
       return { success: true, message: '删除成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '歌曲不存在' };
     }
   }
@@ -28,7 +28,7 @@ export class TimeController {
     try {
       const res = (await db.select().from(times).where(eq(times.id, id)))[0];
       return { success: true, res, message: '获取成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '时间段不存在' };
     }
   }
@@ -44,7 +44,7 @@ export class TimeController {
     try {
       await db.update(times).set({ ...newTime }).where(eq(times.id, newTime.id));
       return { success: true, message: '修改成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '时间段不存在' };
     }
   }
@@ -53,7 +53,7 @@ export class TimeController {
     try {
       await db.update(times).set({ isActive: newIsActive }).where(eq(times.id, id));
       return { success: true, message: '修改成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '时间段不存在' };
     }
   }
@@ -62,7 +62,7 @@ export class TimeController {
     try {
       const res = await db.select().from(times);
       return { success: true, res, message: '获取成功' };
-    } catch (err) {
+    } catch {
       return { success: false, message: '时间段不存在' };
     }
   }

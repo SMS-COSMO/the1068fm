@@ -50,7 +50,7 @@ try {
   await $api.user.tokenValidity.query();
   songList.value = await $api.song.listUnused.query() ?? [];
   arrangementList.value = await $api.arrangement.list.query() ?? [];
-} catch (err) {
+} catch {
   navigateTo('/manage/login');
 }
 
@@ -369,7 +369,7 @@ onMounted(async () => {
   try {
     try {
       await $api.user.tokenValidity.query();
-    } catch (err) {
+    } catch {
       navigateTo('/manage/login');
     }
   } catch (err) {

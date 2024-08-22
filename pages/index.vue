@@ -141,7 +141,7 @@ async function useRefreshData() {
     songListInfo.value = res[0];
     timeCanSubmit.value = res[1];
     songList.value = res[2].sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  } catch (err) {
+  } catch {
     // swallow the errors
   }
 }

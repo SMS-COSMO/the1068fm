@@ -53,7 +53,7 @@ function createSuccess(time: TTime) {
 onMounted(async () => {
   try {
     await $api.user.tokenValidity.query();
-  } catch (err) {
+  } catch {
     navigateTo('/manage/login');
   }
   try {

@@ -3,7 +3,7 @@ import { Minus, Plus } from 'lucide-vue-next';
 
 defineProps<{
   value: Date;
-  handleChange: Function;
+  handleChange: any;
 }>();
 
 const dayString = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];

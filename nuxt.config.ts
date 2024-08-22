@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   modules: [
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
@@ -9,18 +10,22 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/image',
   ],
+
   veeValidate: {
     autoImports: true,
     componentNames: {
       Field: 'UiFormField',
     },
   },
+
   tailwindcss: {
     cssPath: '~/styles/tailwind.css',
   },
+
   pinia: {
     storesDirs: ['./stores/**'],
   },
+
   hooks: {
     'components:dirs': (dirs) => {
       dirs.unshift({
@@ -31,9 +36,11 @@ export default defineNuxtConfig({
       });
     },
   },
+
   build: {
     transpile: ['trpc-nuxt', 'vue-sonner'],
   },
+
   nitro: {
     esbuild: {
       options: {
@@ -46,4 +53,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  compatibilityDate: '2024-08-22',
 });
