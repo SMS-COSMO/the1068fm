@@ -52,7 +52,7 @@ onMounted(() => {
         <div class="space-y-1 w-full">
           <UiCardTitle>
             <span :class="`${compact ? 'text-lg' : ''}`">
-              {{ song.title }}
+              {{ song.name }}
             </span>
             <div class="float-right">
               <UiTooltipProvider v-if="isError">
@@ -78,7 +78,7 @@ onMounted(() => {
             </div>
           </UiCardTitle>
           <UiCardDescription>
-            {{ song.author }}
+            {{ song.singer }}
             <audio ref="audio" />
             <div class="flex align-middle">
               <UiButton variant="ghost" size="icon" class="h-8 ml-[-8px] mr-1 text-slate-950" @click="playing = !playing">

@@ -60,22 +60,15 @@ async function getSearchList(song?: TSong) {
   if (mapVal)
     return mapVal;
 
-  const formData = new FormData();
-  formData.append('input', name);
-  formData.append('filter', 'name');
-  formData.append('type', 'netease');
-
-  const res: any = (await useFetch('/liuzhijin', {
-    method: 'post',
-    body: formData,
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest',
+  const res: any = (await useFetch('/api/search/song', {
+    method: 'get',
+    params: {
+      key: name,
     },
-    mode: 'cors',
-  })).data;
+  }));
 
   // Store cache
-  const data = JSON.parse(res.value).data;
+  const data = res.data.value;
   searchListCache.value.set(name, data);
   return data;
 };
