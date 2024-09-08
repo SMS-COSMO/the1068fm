@@ -1,8 +1,8 @@
 import { LibsqlError } from '@libsql/client';
 import { and, eq, gt, inArray, or } from 'drizzle-orm';
-import { type TNewSong, db } from '../../db/db';
 import { songs } from '~/server/db/schema';
 import type { TStatus } from '~/types';
+import { db, type TNewSong } from '../../db/db';
 
 export class SongController {
   async create(newSong: TNewSong) {

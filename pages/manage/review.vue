@@ -25,16 +25,13 @@ useHead({
 
 const songList = ref<TSongList>([]);
 const unsetList = computed(
-  () => songList.value.filter(s => (s.status === 'unset'))
-    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
+  () => songList.value.filter(s => (s.status === 'unset')).sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
 );
 const approvedList = computed(
-  () => songList.value.filter(s => (s.status === 'approved'))
-    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
+  () => songList.value.filter(s => (s.status === 'approved')).sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
 );
 const rejectedList = computed(
-  () => songList.value.filter(s => (s.status === 'rejected'))
-    .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // Newest first
+  () => songList.value.filter(s => (s.status === 'rejected')).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // Newest first
 );
 const isDesktop = ref(true);
 

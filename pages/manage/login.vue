@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
 import { Loader2 } from 'lucide-vue-next';
 
-import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
 import * as z from 'zod';
 
 const { $api, $toast } = useNuxtApp();

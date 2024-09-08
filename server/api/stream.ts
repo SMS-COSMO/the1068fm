@@ -1,5 +1,5 @@
-import { getMusicURL } from '~/server/lib/song';
 import { streamSchema } from '~~/types/stream';
+import { getMusicURL } from '~/server/lib/song';
 
 export default eventHandler(async (event) => {
   const paramsParse = await getValidatedQuery(event, params => streamSchema.safeParse(params));

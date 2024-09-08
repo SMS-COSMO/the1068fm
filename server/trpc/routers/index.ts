@@ -1,8 +1,8 @@
 import { router } from '../trpc';
-import { userRouter } from './user';
+import { arrangementRouter } from './arrangement';
 import { songRouter } from './song';
 import { timeRouter } from './time';
-import { arrangementRouter } from './arrangement';
+import { userRouter } from './user';
 
 export const appRouter = router({
   user: userRouter,

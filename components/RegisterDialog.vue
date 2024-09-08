@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
 import { Loader2 } from 'lucide-vue-next';
+import { useForm } from 'vee-validate';
 import { z } from 'zod';
 import { passwordRegex } from '~/constants/index';
 
@@ -8,7 +8,8 @@ const { $api, $toast } = useNuxtApp();
 
 const formSchema = toTypedSchema(z.object({
   username: z.string({ required_error: '用户名长度应至少为4' })
-    .min(4, { message: '用户名长度应至少为4' }).max(24, { message: '用户名超出长度范围' }),
+    .min(4, { message: '用户名长度应至少为4' })
+    .max(24, { message: '用户名超出长度范围' }),
   password: z
     .string({ required_error: '请输入密码' })
     .min(8, { message: '用户密码长度应至少为8' })

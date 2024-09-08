@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
 import { passwordRegex } from '~/constants/index';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 export const userRouter = router({
 
@@ -45,7 +45,8 @@ export const userRouter = router({
     .input(z.object({
       oldPassword: z.string(),
       newPassword: z
-        .string().min(8, { message: '用户密码长度应至少为8' })
+        .string()
+        .min(8, { message: '用户密码长度应至少为8' })
         .regex(passwordRegex, '密码必须包含大小写字母、数字与特殊符号'),
     }))
     .mutation(async ({ ctx, input }) => {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { toTypedSchema } from '@vee-validate/zod';
 import { Loader2 } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
-import 'v-calendar/style.css';
 import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
 import type { TTime } from '~/types';
+import 'v-calendar/style.css';
 
 const props = defineProps<{ time: TTime }>();
 

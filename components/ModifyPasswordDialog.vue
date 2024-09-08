@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
 import { Loader2 } from 'lucide-vue-next';
+import { useForm } from 'vee-validate';
 import z from 'zod';
 import { passwordRegex } from '~/constants';
 
