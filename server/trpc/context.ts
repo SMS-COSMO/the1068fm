@@ -2,12 +2,12 @@ import process from 'node:process';
 import type { inferAsyncReturnType } from '@trpc/server';
 import type { H3Event } from 'h3';
 import { db } from '../db/db';
-import { ArrangementController } from './controllers/arrangement';
-
-import { SongController } from './controllers/song';
-import { TimeController } from './controllers/time';
-import { UserController } from './controllers/user';
 import type { TRawArrangement, TRawSong, TRawTime, TRawUser } from '../db/db';
+
+import { UserController } from './controllers/user';
+import { SongController } from './controllers/song';
+import { ArrangementController } from './controllers/arrangement';
+import { TimeController } from './controllers/time';
 
 const newGlobal = globalThis as unknown as {
   userController: UserController | undefined;

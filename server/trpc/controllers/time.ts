@@ -1,7 +1,7 @@
 import { LibsqlError } from '@libsql/client';
 import { eq } from 'drizzle-orm';
+import { type TNewTime, db } from '../../db/db';
 import { times } from '~/server/db/schema/time';
-import { db, type TNewTime } from '../../db/db';
 
 export class TimeController {
   async create(newTime: TNewTime) {

@@ -13,7 +13,7 @@ WORKDIR /app
 ENV NODE_ENV="production"
 
 # Install bun
-RUN npm install -g bun@1.1.27
+RUN npm install -g bun@1.0.30
 
 # Throw-away build stage to reduce size of final image
 FROM base as build

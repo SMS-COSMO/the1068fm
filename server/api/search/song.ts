@@ -1,6 +1,6 @@
-import { searchSchema } from '~~/types';
-import type { TSearchResponse } from '~~/types';
 import { getMusicURL } from '~/server/lib/song';
+import type { TSearchResponse } from '~~/types';
+import { searchSchema } from '~~/types';
 
 export default eventHandler(async (event) => {
   const paramsParse = await getValidatedQuery(event, params => searchSchema.safeParse(params));

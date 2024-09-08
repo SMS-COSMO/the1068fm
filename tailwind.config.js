@@ -1,6 +1,6 @@
+import animate from 'tailwindcss-animate';
 import { addDynamicIconSelectors } from '@iconify/tailwind';
 import typography from '@tailwindcss/typography';
-import animate from 'tailwindcss-animate';
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

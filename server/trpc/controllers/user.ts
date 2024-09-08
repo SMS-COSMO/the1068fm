@@ -1,7 +1,7 @@
-import { LibsqlError } from '@libsql/client';
 import bcrypt from 'bcrypt';
 import { and, eq } from 'drizzle-orm';
-import { db, type TNewUser, type TRawUser } from '../../db/db';
+import { LibsqlError } from '@libsql/client';
+import { type TNewUser, type TRawUser, db } from '../../db/db';
 import { refreshTokens, users } from '../../db/schema/';
 import { Auth } from '../utils/auth';
 

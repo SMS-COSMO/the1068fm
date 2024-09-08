@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import dayjs from 'dayjs';
 import {
   ArrowDown,
   ArrowDownRight,
@@ -18,10 +17,11 @@ import {
   X,
 } from 'lucide-vue-next';
 import { DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
+import dayjs from 'dayjs';
 import { VueDraggable } from 'vue-draggable-plus';
 import { getDateString } from '~/lib/utils';
 import type { TArrangementList, TSong, TSongList, TStatus } from '~/types';
-import 'v-calendar/style.css';
 
 const { $api, $toast } = useNuxtApp();
 
@@ -91,13 +91,16 @@ const arrangeScope = computed(() => {
 const arrangeLoading = ref(false);
 
 const unsetList = computed(
-  () => songList.value.filter(s => (s.status === 'unset')).sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
+  () => songList.value.filter(s => (s.status === 'unset'))
+    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
 );
 const approvedList = computed(
-  () => songList.value.filter(s => (s.status === 'approved')).sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
+  () => songList.value.filter(s => (s.status === 'approved'))
+    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)), // Oldest first
 );
 const rejectedList = computed(
-  () => songList.value.filter(s => (s.status === 'rejected')).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // Newest first
+  () => songList.value.filter(s => (s.status === 'rejected'))
+    .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // Newest first
 );
 
 const showLength = reactive({

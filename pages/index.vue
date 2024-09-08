@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useWindowFocus } from '@vueuse/core';
-import { useDrag } from '@vueuse/gesture';
-import { useFuse } from '@vueuse/integrations/useFuse';
 import { Music4 } from 'lucide-vue-next';
+import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from 'v-calendar';
-import { getDateString } from '~/lib/utils';
 import 'v-calendar/style.css';
+import { useDrag } from '@vueuse/gesture';
+import { useWindowFocus } from '@vueuse/core';
+import { getDateString } from '~/lib/utils';
 
 const { $api } = useNuxtApp();
 

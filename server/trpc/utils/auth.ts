@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
 import * as jose from 'jose';
 import { nanoid } from 'nanoid';
+import { eq } from 'drizzle-orm';
 import { db } from '../../db/db';
 import { refreshTokens, users } from '../../db/schema/user';
 import { env } from '../../env';
