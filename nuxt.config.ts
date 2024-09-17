@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process';
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
@@ -47,10 +48,11 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
-    routeRules: {
-      '/liuzhijin': {
-        proxy: 'https://music.liuzhijin.cn',
-      },
+  },
+
+  runtimeConfig: {
+    public: {
+      MUSIC_API: process.env.MUSIC_API,
     },
   },
 
