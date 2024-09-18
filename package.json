@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "auth:genKey": "tsx ./scripts/createKeyPairs.ts",
     "db:createAdmin": "tsx ./scripts/createDefaultUser.ts",
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push:sqlite"
