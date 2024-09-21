@@ -1,5 +1,5 @@
-import { LibsqlError } from '@libsql/client';
 import { and, eq, gt } from 'drizzle-orm';
+import postgres from 'postgres';
 import type { TNewArrangement, TRawSong } from '../../db/db';
 import { db } from '../../db/db';
 import { SongController } from './song';
@@ -14,7 +14,7 @@ export class ArrangementController {
       await db.insert(arrangements).values(newArrangement);
       return { success: true, message: '创建成功！' };
     } catch (err) {
-      if (err instanceof LibsqlError && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY')
+      if (err instanceof postgres.PostgresError && err.code === '23505')
         return { success: false, message: '排歌表ID出现重复' };
       else return { success: false, message: '服务器内部错误' };
     }

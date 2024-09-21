@@ -6,8 +6,8 @@ dotenv.config();
 dotenv.config({ path: '.env.local', override: true });
 const envSchema = z.object({
   DATABASE_URL: z.string().url(),
-  DATABASE_CONNECTION_TYPE: z.enum(['remote', 'local']),
-  DATABASE_AUTH_TOKEN: z.string(),
+  // DATABASE_CONNECTION_TYPE: z.enum(['remote', 'local']),
+  // DATABASE_AUTH_TOKEN: z.string(),
   NODE_ENV: z.enum(['development', 'production']),
   SIGN_PUBLIC_KEY: z.string(),
   SIGN_PRIVATE_KEY: z.string(),

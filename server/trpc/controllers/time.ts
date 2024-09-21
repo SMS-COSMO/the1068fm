@@ -1,5 +1,5 @@
-import { LibsqlError } from '@libsql/client';
 import { eq } from 'drizzle-orm';
+import postgres from 'postgres';
 import { type TNewTime, db } from '../../db/db';
 import { times } from '~/server/db/schema/time';
 
@@ -9,7 +9,7 @@ export class TimeController {
       const id = (await db.insert(times).values(newTime).returning({ id: times.id }))[0].id;
       return { success: true, res: id, message: '创建成功！' };
     } catch (err) {
-      if (err instanceof LibsqlError && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY')
+      if (err instanceof postgres.PostgresError && err.code === '23505')
         return { success: false, message: '时间段ID出现重复' };
       else return { success: false, message: '服务器内部错误' };
     }

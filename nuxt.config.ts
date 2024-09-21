@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: true, componentInspector: false },
 
   modules: [
     '@pinia/nuxt',

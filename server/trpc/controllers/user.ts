@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { and, eq } from 'drizzle-orm';
-import { LibsqlError } from '@libsql/client';
+import postgres from 'postgres';
 import { type TNewUser, type TRawUser, db } from '../../db/db';
 import { refreshTokens, users } from '../../db/schema/';
 import { Auth } from '../utils/auth';
@@ -20,7 +20,7 @@ export class UserController {
       await db.insert(users).values(user);
       return { success: true, message: '注册成功！' };
     } catch (err) {
-      if (err instanceof LibsqlError)
+      if (err instanceof postgres.PostgresError && err.code === '23505')
         return { success: false, message: '用户名出现重复' };
       else return { success: false, message: '服务器内部错误' };
     }
