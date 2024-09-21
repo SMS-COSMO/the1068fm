@@ -8,3 +8,4 @@ console.log(`Created default admin user. \nUserID: 'admin' \nPassword: '${passwo
 const admin = await userController.login('admin', password);
 console.log('Admin AccessToken:');
 console.log(admin?.accessToken);
+process.exit(0);
