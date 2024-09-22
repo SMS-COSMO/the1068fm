@@ -105,7 +105,7 @@ const fuseOptions = {
 };
 const fuse = useFuse(searchContent, songList, fuseOptions);
 const processedListData = computed(() => fuse.results.value.map(s => s.item));
-const showLength = 100;
+const showLength = ref(100);
 
 const selectedDate = ref(new Date());
 const arrangement = computed(
