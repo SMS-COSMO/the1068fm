@@ -10,6 +10,7 @@ export class ArrangementController {
   sc = new SongController();
 
   async create(newArrangement: TNewArrangement) {
+    newArrangement.isPublic = true;
     try {
       await db.insert(arrangements).values(newArrangement);
       return { success: true, message: '创建成功！' };

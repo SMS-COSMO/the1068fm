@@ -192,7 +192,7 @@ async function arrange() {
     await $api.arrangement.create.mutate({ date: getDateString(i.toDate()), songIds: songs.map(item => item.id) });
     arrangementList.value.push({
       date: getDateString(i.toDate()),
-      isPublic: false,
+      isPublic: true,
       songs,
     });
     await batchUpdateSong(songs, 'used');
