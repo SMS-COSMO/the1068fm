@@ -39,7 +39,7 @@ try {
           <template v-for="time in timeList" :key="time.id">
             <li>{{ getTimeDescription(time) }}</li>
           </template>
-          <span v-if="!timeList.length">
+          <span v-if="!timeList?.length">
             暂无开放时间段～
           </span>
         </ol>

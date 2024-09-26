@@ -12,9 +12,7 @@ const { $api } = useNuxtApp();
 const [isSubmitOpen, toggleSubmit] = useToggle(false);
 
 const { data: rawSongList } = await $api.song.listSafe.useQuery();
-const songList = ref(
-  (rawSongList.value ?? []).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
-);
+const songList = ref(rawSongList.value ?? []);
 const { data: arrangementList } = await $api.arrangement.listSafe.useQuery();
 
 const songListInfo = ref(0);
@@ -124,25 +122,29 @@ const calendarAttr = computed(() => {
 });
 
 onMounted(() => {
-  useTimeoutPoll(useRefreshData, 5000, { immediate: true });
+  useTimeoutPoll(refreshData, 5000, { immediate: true });
 });
 const focused = useWindowFocus();
-async function useRefreshData() {
+async function refreshData() {
   // pause refresh data when submit dialog is open or page is out of focus
   if (isSubmitOpen.value || !focused.value)
     return;
-  try {
-    const res = await Promise.all([
-      $api.song.info.query(),
-      $api.time.currently.query(),
-      $api.song.listSafe.query(),
-    ]);
+  if (timeCanSubmit.value) {
+    try {
+      const res = await Promise.all([
+        $api.song.info.query(),
+        $api.time.currently.query(),
+        $api.song.listSafe.query(),
+      ]);
 
-    songListInfo.value = res[0];
-    timeCanSubmit.value = res[1];
-    songList.value = res[2].sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  } catch {
-    // swallow the errors
+      songListInfo.value = res[0];
+      timeCanSubmit.value = res[1];
+      songList.value = res[2];
+    } catch { } // swallow the errors
+  } else {
+    try {
+      timeCanSubmit.value = await $api.time.currently.query();
+    } catch { } // swallow the errors
   }
 }
 </script>

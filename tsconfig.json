@@ -10,7 +10,7 @@
     "module": "ESNext", // allow importing `.js` from `.ts`
 
     // Bundler mode
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true, // support JSX
     "allowJs": true,
 
