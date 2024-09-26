@@ -89,7 +89,7 @@ useHead({
   },
 });
 
-await preloadComponents(['SubmitDialog', 'SubmissionRulesDialog', 'AboutUsDialog']);
+await preloadComponents(['SubmitDialog', 'SubmissionRulesDialog']);
 
 const searchContent = ref('');
 const fuseOptions = {
@@ -153,8 +153,8 @@ async function refreshData() {
   <div class="max-w-[600px] lg:max-w-[1200px] mx-auto">
     <div class="mx-5 grid lg:grid-cols-2 lg:gap-8">
       <div>
-        <div class="mb-4 mt-8 flex justify-start">
-          <NuxtImg preload src="/combined-logo.svg" class="w-[72vw]" />
+        <div class="lg:mb-4 mt-4 mx-1 lg:mt-8 flex justify-start">
+          <LogosCombined class="w-full" />
         </div>
         <section class="my-4 grid grid-cols-1 gap-4 font-shuhei">
           <div class="grid grid-cols-2 gap-2">
@@ -237,7 +237,7 @@ async function refreshData() {
                 class="duration-100"
               >
                 <DatePicker
-                  v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+                  v-model="selectedDate" mode="date" view="weekly" expanded title-position="left"
                   borderless :attributes="calendarAttr" class="mb-2" is-required
                 />
                 <TransitionGroup name="list" tag="ul">

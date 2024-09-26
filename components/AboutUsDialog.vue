@@ -10,7 +10,7 @@
         </UiDialogTitle>
       </UiDialogHeader>
       <div class="flex flex-col my-2">
-        <NuxtImg src="/logo.svg" class="mx-auto mb-4 w-[50%]" />
+        <LogosThe1068fm class="mx-auto mb-4 w-[50%]" />
         <section class="prose">
           <p>
             <em>the1068fm</em> 是由<b>COSMO智慧校园平台运研中心</b>为<b>风华子衿广播站</b>声声慢点歌节目开发的一体化系统，包含歌曲投稿，歌曲审核，一键排歌，导出歌单等功能。
@@ -23,7 +23,7 @@
             查看源代码。期待各位同学的反馈！
           </p>
         </section>
-        <NuxtImg src="/cosmo-logo.svg" class="mx-auto my-0 w-[80%]" />
+        <LogosCosmo class="mx-auto my-0 w-[80%]" />
         <section class="prose">
           <p>
             <b>COSMO智慧校园平台运研中心</b>是深圳中学七大校级学生组织之一，也是最年轻的校级学生组织。欢迎大家通过下方链接关注我们！
