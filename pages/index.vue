@@ -288,7 +288,7 @@ async function refreshData() {
         </UiCardHeader>
         <UiCardContent>
           <DatePicker
-            v-model="selectedDate" mode="date" view="weekly" expanded title-position="left" locale="zh"
+            v-model="selectedDate" mode="date" view="weekly" expanded title-position="left"
             borderless :attributes="calendarAttr" class="mb-2" is-required
           />
           <UiScrollArea class="h-[calc(100svh-19rem)]">
