@@ -474,7 +474,7 @@ onMounted(async () => {
     <UiCard v-if="isDesktop" class="lg:w-[600px] w-full relative hidden lg:block">
       <UiCardHeader>
         <UiCardTitle class="my-[-0.5rem]">
-          <NuxtImg src="/logo.svg" class="h-14 mx-auto" />
+          <LogosThe1068fm class="h-14 mx-auto" />
         </UiCardTitle>
       </UiCardHeader>
       <UiCardContent>
@@ -484,9 +484,9 @@ onMounted(async () => {
             :masks="{ title: 'YYYY MMM' }" class="rounded-lg border pb-3" expanded trim-weeks borderless is-required
           />
           <template #fallback>
-            <UiAspectRatio :ratio="1 / 0.95">
+            <div class="h-[380px] w-full flex">
               <Loader2 class="w-8 h-8 mx-auto mt-[150px] animate-spin" />
-            </UiAspectRatio>
+            </div>
           </template>
         </client-only>
         <div class="flex flex-row items-center space-x-1 rounded-md text-secondary-foreground mt-4">
