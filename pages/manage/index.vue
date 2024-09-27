@@ -593,7 +593,7 @@ onMounted(async () => {
           </UiTooltip>
         </UiTooltipProvider>
         <div v-else>
-          <UiScrollArea class="lg:h-[calc(100vh-12rem)]">
+          <UiScrollArea class="lg:h-[calc(100vh-10rem)]">
             <VueDraggable
               v-model="arrangement.songs"
               :delay="isDesktop ? 0 : 150" target=".sort-target" :animation="400"
