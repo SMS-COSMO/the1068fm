@@ -1,10 +1,13 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=22.9.0
-FROM node:${NODE_VERSION}-slim as base
 
-LABEL fly_launch_runtime="Node.js"
+# ARG NODE_VERSION=22.9.0
+# FROM node:${NODE_VERSION}-slim as base
+FROM oven/bun:slim as base
+
+# LABEL fly_launch_runtime="Node.js"
+LABEL fly_launch_runtime="Bun"
 
 # Node.js app lives here
 WORKDIR /app
@@ -12,9 +15,11 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV="production"
 
+ENV NITRO_PRESET="bun"
+
 # Install bun
-# RUN npm install -g bun@1.0.30
-RUN curl -fsSL https://bun.sh/install | bash
+RUN npm install -g bun
+# RUN curl -fsSL https://bun.sh/install | bash
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
