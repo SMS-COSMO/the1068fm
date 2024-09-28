@@ -25,20 +25,18 @@ ENV NITRO_PRESET="bun"
 FROM base as build
 
 # Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install -y build-essential pkg-config python-is-python3
+# RUN apt-get update -qq && \
+#     apt-get install -y build-essential pkg-config python-is-python3
 
 COPY . ./
 
 # Install node modules
 COPY --link .npmrc package.json bun.lockb ./
-RUN ls
-RUN bun -v
+
 RUN bun i --frozen-lockfile
 
 # Build application
 RUN bun run build
-
 
 # Final stage for app image
 FROM base
