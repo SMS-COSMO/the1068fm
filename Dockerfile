@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=18.18.0
+ARG NODE_VERSION=22.9.0
 FROM node:${NODE_VERSION}-slim as base
 
 LABEL fly_launch_runtime="Node.js"
@@ -13,7 +13,8 @@ WORKDIR /app
 ENV NODE_ENV="production"
 
 # Install bun
-RUN npm install -g bun@1.0.30
+# RUN npm install -g bun@1.0.30
+RUN curl -fsSL https://bun.sh/install | bash
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
