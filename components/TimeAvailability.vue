@@ -50,10 +50,8 @@ const stateColor = {
   },
 };
 
-onMounted(async () => {
-  if (!props.isCard)
-    state.value = await $api.time.currently.query() ? 'can' : 'cannot';
-});
+if (!props.isCard)
+  state.value = await $api.time.currently.query() ? 'can' : 'cannot';
 </script>
 
 <template>

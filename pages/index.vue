@@ -14,13 +14,7 @@ const [isSubmitOpen, toggleSubmit] = useToggle(false);
 const { data: rawSongList } = await $api.song.listSafe.useQuery();
 const songList = ref(rawSongList.value ?? []);
 const { data: arrangementList } = await $api.arrangement.listSafe.useQuery();
-
-const timeCanSubmit = ref(true);
-try {
-  timeCanSubmit.value = await $api.time.currently.query();
-} catch (err) {
-  useErrorHandler(err);
-}
+const { data: timeCanSubmit } = await $api.time.currently.useQuery();
 
 const isDesktop = ref(false);
 onMounted(() => {
