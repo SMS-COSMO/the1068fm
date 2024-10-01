@@ -101,10 +101,13 @@ export const songRouter = router({
     }),
 
   info: publicProcedure
-    .query(async ({ ctx }) => {
-      const res = await ctx.songController.getList();
+    .input(z.object({
+      getAll: z.boolean(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const res = await ctx.songController.count(input.getAll);
       if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res.length;
+      else return res.res;
     }),
 });

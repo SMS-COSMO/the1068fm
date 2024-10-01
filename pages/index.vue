@@ -18,7 +18,7 @@ const { data: arrangementList } = await $api.arrangement.listSafe.useQuery();
 const songListInfo = ref(0);
 const timeCanSubmit = ref(true);
 try {
-  songListInfo.value = await $api.song.info.query();
+  songListInfo.value = await $api.song.info.query({ getAll: false });
   timeCanSubmit.value = await $api.time.currently.query();
 } catch (err) {
   useErrorHandler(err);
@@ -132,7 +132,7 @@ async function refreshData() {
   if (timeCanSubmit.value) {
     try {
       const res = await Promise.all([
-        $api.song.info.query(),
+        $api.song.info.query({ getAll: false }),
         $api.time.currently.query(),
         $api.song.listSafe.query(),
       ]);
