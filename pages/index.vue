@@ -15,10 +15,8 @@ const { data: rawSongList } = await $api.song.listSafe.useQuery();
 const songList = ref(rawSongList.value ?? []);
 const { data: arrangementList } = await $api.arrangement.listSafe.useQuery();
 
-const songListInfo = ref(0);
 const timeCanSubmit = ref(true);
 try {
-  songListInfo.value = await $api.song.info.query({ getAll: false });
   timeCanSubmit.value = await $api.time.currently.query();
 } catch (err) {
   useErrorHandler(err);
@@ -132,14 +130,12 @@ async function refreshData() {
   if (timeCanSubmit.value) {
     try {
       const res = await Promise.all([
-        $api.song.info.query({ getAll: false }),
         $api.time.currently.query(),
         $api.song.listSafe.query(),
       ]);
 
-      songListInfo.value = res[0];
-      timeCanSubmit.value = res[1];
-      songList.value = res[2];
+      timeCanSubmit.value = res[0];
+      songList.value = res[1];
     } catch { } // swallow the errors
   } else {
     try {
@@ -160,7 +156,7 @@ async function refreshData() {
           <div class="grid grid-cols-2 gap-2">
             <UiCard class="shadow p-0 pt-1 pb-2">
               <UiCardHeader class="pt-1 pb-0 text-3xl font-bold">
-                {{ songListInfo }}
+                {{ songList.length }}
               </UiCardHeader>
               <UiCardContent class="pt-0 pb-0">
                 <span class="text-md">已收集歌曲</span>
