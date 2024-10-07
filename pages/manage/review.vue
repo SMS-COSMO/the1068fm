@@ -55,7 +55,7 @@ async function setSearchList() {
 }
 async function getSearchList(song?: TSong) {
   // Use cache
-  const name = `${song?.name ?? ''} ${song?.creator ?? ''}`;
+  const name = `${song?.name ?? ''}`;
   const mapVal = searchListCache.value.get(name);
   if (mapVal)
     return mapVal;
