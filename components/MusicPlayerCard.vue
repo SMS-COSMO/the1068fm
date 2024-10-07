@@ -28,7 +28,7 @@ function getTime(seconds: number) {
 const isError = ref(false);
 const { start } = useTimeoutFn(() => {
   isError.value = duration.value === 0;
-}, 5000);
+}, 2000);
 
 onMounted(() => {
   volume.value = 0.5;
@@ -68,7 +68,7 @@ onMounted(() => {
               <UiTooltipProvider>
                 <UiTooltip>
                   <UiTooltipTrigger as-child>
-                    <a :href="song.link" class="icon-[tabler--link] text-base lg:text-lg cursor-pointer ml-2" />
+                    <NuxtLink :to="`https://y.qq.com/n/ryqq/songDetail/${song.mid}`" target="_blank" class="icon-[tabler--link] text-base lg:text-lg cursor-pointer ml-2" />
                   </UiTooltipTrigger>
                   <UiTooltipContent>
                     <p>跳转到原链接</p>
