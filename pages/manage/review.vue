@@ -60,13 +60,7 @@ async function getSearchList(song?: TSong) {
   if (mapVal)
     return mapVal;
 
-  // const res: any = (await useFetch('/api/search/song', {
-  //   method: 'get',
-  //   params: {
-  //     key: name,
-  //   },
-  // }));
-  const res: any = (await useFetch('https://372f-218-19-27-148.ngrok-free.app/api/search/song', {
+  const res: any = (await useFetch('/api/search/song', {
     method: 'get',
     params: {
       key: name,

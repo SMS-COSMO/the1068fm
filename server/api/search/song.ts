@@ -1,4 +1,4 @@
-import { getMusicURL, getMusicURL_v2 } from '~/server/lib/song';
+import { getMusicURL_v2 } from '~/server/lib/song';
 import type { TSearchResponse } from '~~/types';
 import { searchSchema } from '~~/types';
 
