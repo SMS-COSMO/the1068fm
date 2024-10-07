@@ -56,11 +56,19 @@ async function setSearchList() {
 async function getSearchList(song?: TSong) {
   // Use cache
   const name = `${song?.name ?? ''}`;
-  const mapVal = searchListCache.value.get(name);
+  const nameWithCreator = `${song?.name ?? ''} ${song?.creator ?? ''}`;
+  const mapVal = searchListCache.value.get(nameWithCreator);
   if (mapVal)
     return mapVal;
 
-  const res: any = (await useFetch('/api/search/song', {
+  const res0: any = (await useFetch('/api/search/song', {
+    method: 'get',
+    params: {
+      key: nameWithCreator,
+    },
+  }));
+
+  const res1: any = (await useFetch('/api/search/song', {
     method: 'get',
     params: {
       key: name,
@@ -68,8 +76,8 @@ async function getSearchList(song?: TSong) {
   }));
 
   // Store cache
-  const data = res.data.value;
-  searchListCache.value.set(name, data);
+  const data = res0.data.value.concat(res1.data.value);
+  searchListCache.value.set(nameWithCreator, data);
   return data;
 };
 
