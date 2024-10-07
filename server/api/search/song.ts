@@ -1,4 +1,4 @@
-import { getMusicURL } from '~/server/lib/song';
+import { getMusicURL, getMusicURL_v2 } from '~/server/lib/song';
 import type { TSearchResponse } from '~~/types';
 import { searchSchema } from '~~/types';
 
@@ -37,7 +37,14 @@ export default eventHandler(async (event) => {
     },
   });
   const songMidArray = res.data.song.itemlist.map(item => item.mid);
-  const urls = await getMusicURL(songMidArray);
+  const urls: Record<string, string> = {};
+
+  for (const mid of songMidArray) {
+    const b = await getMusicURL_v2(mid);
+    urls[mid] = b;
+  }
+
+  // const urls = await getMusicURL(songMidArray);
   const songList = res.data.song.itemlist.map(item => ({
     mid: item.mid,
     name: item.name,
