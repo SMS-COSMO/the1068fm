@@ -10,24 +10,20 @@ export interface TItem {
   mid: string;
   name: string;
   singer: string;
-  pic?: string;
 }
 
 export interface TSearchDataItem {
-  count: number;
-  itemlist: TItem[];
-  name: string;
-  order: number;
-  type: number;
+  albummid: string;
+  singer: { name: string }[];
+  songmid: string;
+  songname: string;
 }
 
 export interface TSearchResponse {
   code: number;
   data: {
-    album: TSearchDataItem;
-    mv: TSearchDataItem;
-    singer: TSearchDataItem;
-    song: TSearchDataItem;
+    song: {
+      list: TSearchDataItem[];
+    };
   };
-  subcode: number;
 }

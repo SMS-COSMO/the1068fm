@@ -1,4 +1,4 @@
-import { getMusicURL_v2 } from '~/server/lib/song';
+import { getMusicURL } from '~/server/lib/song';
 import type { TSearchResponse } from '~~/types';
 import { searchSchema } from '~~/types';
 
@@ -7,26 +7,14 @@ export default eventHandler(async (event) => {
   if (!paramsParse.success)
     throw createError({ message: 'Invalid params', status: 400 });
 
-  const searchBaseURL = 'https://c6.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg';
+  const searchBaseURL = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp';
 
   const res = await $fetch<TSearchResponse>(searchBaseURL, {
     method: 'GET',
     params: {
-      _: Date.now(),
-      cv: '4747474',
-      ct: '24',
+      w: paramsParse.data.key,
+      n: 5,
       format: 'json',
-      inCharset: 'utf-8',
-      outCharset: 'utf-8',
-      notice: '0',
-      platform: 'yqq.json',
-      needNewCode: '1',
-      uin: '0',
-      g_tk_new_20200303: '5381',
-      g_tk: '5381',
-      hostUin: '0',
-      is_xml: '0',
-      key: paramsParse.data.key,
     },
     parseResponse(responseText) {
       try {
@@ -36,20 +24,14 @@ export default eventHandler(async (event) => {
       }
     },
   });
-  const songMidArray = res.data.song.itemlist.map(item => item.mid);
-  const urls: Record<string, string> = {};
-
-  for (const mid of songMidArray) {
-    const b = await getMusicURL_v2(mid);
-    urls[mid] = b;
-  }
-
-  // const urls = await getMusicURL(songMidArray);
-  const songList = res.data.song.itemlist.map(item => ({
-    mid: item.mid,
-    name: item.name,
-    singer: item.singer,
-    url: urls[item.mid],
+  const songMidArray = res.data.song.list.map(item => item.songmid).filter(item => item !== '');
+  const urls = await getMusicURL(songMidArray);
+  const songList = res.data.song.list.map(item => ({
+    mid: item.songmid,
+    name: item.songname,
+    singer: item.singer.map(singer => singer.name).join(', ').trim(),
+    url: urls[item.songmid],
+    pic: `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
   }));
   return songList;
 });
