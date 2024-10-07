@@ -14,6 +14,8 @@ export interface TStreamResponse {
   req_1: {
     code: number;
     data: {
+      testfilewifi: string;
+      testfile2g: string;
       midurlinfo: TMidUrlInfoItem[];
     };
   };
