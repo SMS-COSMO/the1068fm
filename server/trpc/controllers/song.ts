@@ -84,7 +84,8 @@ export class SongController {
 
   async getList() {
     try {
-      const res = await db.select().from(songs).where(gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000))).orderBy(desc(songs.createdAt));
+      const res = await db.select().from(songs).orderBy(desc(songs.createdAt));
+      // const res = await db.select().from(songs).where(gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000))).orderBy(desc(songs.createdAt));
       return { success: true, res, message: '获取成功' };
     } catch {
       return { success: false, message: '服务器内部错误' };

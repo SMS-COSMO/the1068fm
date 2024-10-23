@@ -50,6 +50,8 @@ try {
   await $api.user.tokenValidity.query();
   songList.value = await $api.song.listUnused.query() ?? [];
   arrangementList.value = await $api.arrangement.list.query() ?? [];
+  const test = await $api.song.list.query() ?? [];
+  console.log(test);
 } catch {
   navigateTo('/manage/login');
 }
