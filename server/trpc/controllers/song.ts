@@ -1,5 +1,5 @@
 import { LibsqlError } from '@libsql/client';
-import { and, count, desc, eq, gt, inArray, or } from 'drizzle-orm';
+import { and, count, desc, eq, gt, inArray, ne, or } from 'drizzle-orm';
 import { type TNewSong, db } from '../../db/db';
 import { songs } from '~/server/db/schema';
 import type { TStatus } from '~/types';
@@ -85,6 +85,20 @@ export class SongController {
   async getList() {
     try {
       const res = await db.select().from(songs).where(gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000))).orderBy(desc(songs.createdAt));
+      return { success: true, res, message: '获取成功' };
+    } catch {
+      return { success: false, message: '服务器内部错误' };
+    }
+  }
+
+  async getListSafe() {
+    try {
+      const res = await db.select().from(songs).where(
+        and(
+          ne(songs.status, 'rejected'),
+          gt(songs.createdAt, new Date(Date.now() - 4 * 24 * 60 * 60 * 1000)),
+        ),
+      ).orderBy(desc(songs.createdAt));
       return { success: true, res, message: '获取成功' };
     } catch {
       return { success: false, message: '服务器内部错误' };

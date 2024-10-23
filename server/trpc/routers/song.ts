@@ -76,7 +76,7 @@ export const songRouter = router({
 
   listSafe: publicProcedure
     .query(async ({ ctx }) => {
-      const res = await ctx.songController.getList();
+      const res = await ctx.songController.getListSafe();
       if (!res.success || !res.res)
         throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
       else
