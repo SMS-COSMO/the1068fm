@@ -1,113 +1,73 @@
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
-import { serializeSong } from '../utils/serializer';
+import { desc, eq } from 'drizzle-orm';
+import { TRPCError } from '@trpc/server';
+import { protectedProcedure, router } from '../trpc';
+import { db } from '~~/server/db';
+import { songs } from '~~/server/db/schema';
+import type { TPermission } from '~~/types';
+
+async function checkCanSubmit(userId: string, userPermission: TPermission[]) {
+  if (userPermission.includes('admin'))
+    return true;
+
+  const latestSubmission = await db.query.songs.findFirst({
+    where: eq(songs.ownerId, userId),
+    orderBy: desc(songs.createdAt),
+  });
+
+  // no submission
+  if (!latestSubmission)
+    return true;
+
+  // more than one day
+  if (Date.now() - latestSubmission.createdAt.getTime() >= 24 * 60 * 60 * 1000)
+    return true;
+  return false;
+}
 
 export const songRouter = router({
-  create: publicProcedure
+  create: protectedProcedure
     .input(z.object({
-      name: z.string({ required_error: '歌名长度至少为1' }).min(1, '歌名长度至少为1').max(50, '歌名长度最大为50'),
-      creator: z.string({ required_error: '歌手名长度至少为1' }).min(1, '歌手名长度至少为1').max(50, '歌手长度最大为50'),
-      submitterName: z.string({ required_error: '提交者名字长度至少为2' }).min(2, '提交者名字长度至少为2').max(15, '提交者名字长度最大为15'),
-      submitterGrade: z.coerce.number({ invalid_type_error: '请填一个数字' }).int('请填一个整数').min(1, '年级为1~5').max(5, '年级为1~5'),
-      submitterClass: z.coerce.number({ invalid_type_error: '请填一个数字' }).min(0, '班级号应大于0').max(100, '班级号应小于100'),
-      type: z.enum(['normal', 'withMsg'], { errorMap: () => ({ message: '提交了不存在的歌曲类型' }) }),
-      message: z.string().nullish(),
+      name: z.string()
+        .min(1, '请输入歌名')
+        .max(50, '歌名长度最大为50'),
+      creator: z.string()
+        .min(1, '请输入歌手名')
+        .max(20, '歌手长度最大为20'),
+      message: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      if (!await ctx.timeController.fitsInTime(new Date()))
-        throw new TRPCError({ code: 'BAD_REQUEST', message: '不在投稿时段内' });
-      const res = await ctx.songController.create(input);
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
-    }),
+      if (!(await checkCanSubmit(ctx.user.id, ctx.user.permissions)))
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '一天只能提交一首歌曲' });
 
-  remove: protectedProcedure
-    .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.songController.remove(input.id);
-      if (!res.success)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res;
-    }),
-
-  contentSafe: publicProcedure
-    .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
-    .query(async ({ ctx, input }) => {
-      const res = await ctx.songController.getContent(input.id);
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return serializeSong(res.res);
-    }),
-
-  content: protectedProcedure
-    .input(z.object({ id: z.string().min(1, '歌曲不存在') }))
-    .query(async ({ ctx, input }) => {
-      const res = await ctx.songController.getContent(input.id);
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
-    }),
-
-  modifyStatus: protectedProcedure
-    .input(z.object({
-      id: z.string().min(1, '歌曲不存在'),
-      status: z.enum(['unset', 'approved', 'rejected', 'used']),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.songController.modifyStatus(input.id, input.status);
-      if (!res.success)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res;
-    }),
-
-  batchModifyStatus: protectedProcedure
-    .input(z.object({
-      ids: z.array(z.string().min(1, '歌曲不存在')),
-      status: z.enum(['unset', 'approved', 'rejected', 'used']),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.songController.batchModifyStatus(input.ids, input.status);
-      if (!res.success)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res;
-    }),
-
-  listSafe: publicProcedure
-    .query(async ({ ctx }) => {
-      const res = await ctx.songController.getListSafe();
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else
-        return res.res.map(song => serializeSong(song));
-    }),
-
-  listUnused: protectedProcedure
-    .query(async ({ ctx }) => {
-      const res = await ctx.songController.getList();
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else
-        return res.res.filter(item => item.status !== 'used');
+      await db.insert(songs).values({
+        ...input,
+        ownerId: ctx.user.id,
+      });
     }),
 
   list: protectedProcedure
-    .query(async ({ ctx }) => {
-      const res = await ctx.songController.getList();
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
+    .query(async () => {
+      return await db.query.songs.findMany({
+        columns: {
+          id: true,
+          name: true,
+          creator: true,
+          message: true,
+          createdAt: true,
+        },
+      });
     }),
 
-  info: publicProcedure
-    .input(z.object({
-      getAll: z.boolean(),
-    }))
-    .query(async ({ ctx, input }) => {
-      const res = await ctx.songController.count(input.getAll);
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
+  listMine: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await db.query.songs.findMany({
+        where: eq(songs.ownerId, ctx.user.id),
+      });
+    }),
+
+  canSubmit: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await checkCanSubmit(ctx.user.id, ctx.user.permissions);
     }),
 });

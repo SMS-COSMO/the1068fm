@@ -1,43 +1,50 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
-    '@nuxtjs/tailwindcss',
-    '@vee-validate/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
     '@vueuse/nuxt',
     '@nuxt/image',
+    '@nuxt/icon',
+    '@nuxtjs/tailwindcss',
+    'shadcn-nuxt',
+    '@vee-validate/nuxt',
   ],
 
-  veeValidate: {
-    autoImports: true,
-    componentNames: {
-      Field: 'UiFormField',
+  future: {
+    compatibilityVersion: 4,
+  },
+
+  icon: {
+    clientBundle: {
+      scan: true,
+      sizeLimitKb: 512,
     },
   },
 
-  tailwindcss: {
-    cssPath: '~/styles/tailwind.css',
+  imports: {
+    dirs: ['types', 'constants'],
+    presets: [
+      {
+        from: '@tanstack/vue-query',
+        imports: ['useMutation', 'useQuery', 'useQueryClient', 'skipToken'],
+      },
+      {
+        from: 'vue-sonner',
+        imports: ['toast'],
+      },
+    ],
   },
 
-  pinia: {
-    storesDirs: ['./stores/**'],
-  },
-
-  hooks: {
-    'components:dirs': (dirs) => {
-      dirs.unshift({
-        path: '~/components/ui',
-        extensions: ['.vue'],
-        prefix: 'Ui',
-        pathPrefix: false,
-      });
-    },
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
   },
 
   build: {
-    transpile: ['trpc-nuxt', 'vue-sonner'],
+    transpile: ['trpc-nuxt'],
   },
 
   nitro: {
@@ -48,5 +55,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2024-08-22',
+  compatibilityDate: '2024-10-03',
 });
