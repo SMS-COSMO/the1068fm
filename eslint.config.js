@@ -10,6 +10,7 @@ export default antfu({
     semi: true,
   },
   ignores: ['public/**'],
+  regexp: false,
 }, {
   rules: {
     'vue/block-order': ['error', {

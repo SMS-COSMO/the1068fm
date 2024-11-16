@@ -39,14 +39,9 @@
         <SidebarGroup>
           <SidebarGroupLabel>开放时间</SidebarGroupLabel>
           <SidebarMenu>
+            <TimeAvailability />
             <SidebarMenuItem>
-              <SidebarMenuButton>
-                <Icon name="lucide:music-4" />
-                <span>当前开放状态：</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
+              <SidebarMenuButton @click="navigate('/admin/time')">
                 <Icon name="lucide:clock" />
                 <span>设置开放时间</span>
               </SidebarMenuButton>
@@ -154,9 +149,10 @@ function generateBreadcrumb(url: string): Item[] {
   // Construct breadcrumb for each segment
   let href = '';
   for (let i = 0; i < segments.length; i++) {
-    const segment = breadCrumb[segments[i]!.replace('.html', '')] ?? '';
+    const segment = segments[i]!.replace('.html', '');
+    const segmentName = breadCrumb[segment] ?? '';
     href += `/${segment}`;
-    breadcrumbItems.push({ title: segment, href });
+    breadcrumbItems.push({ title: segmentName, href });
   }
   return breadcrumbItems;
 }

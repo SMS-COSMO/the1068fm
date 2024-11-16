@@ -11,7 +11,7 @@ export function cookiesParser(cookies: string[]) {
     const [content, ..._options] = cookie.split(';');
     const [name, value] = content!.split('=');
     if (name)
-      parsedCookies[name] = value;
+      parsedCookies[name] = value!;
   }
   return parsedCookies;
 }

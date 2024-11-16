@@ -1,19 +1,3 @@
-<script lang="ts" setup>
-import { cn } from '@/lib/utils'
-import { CalendarGrid, type CalendarGridProps, useForwardProps } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
-
-const props = defineProps<CalendarGridProps & { class?: HTMLAttributes['class'] }>()
-
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
-
-  return delegated
-})
-
-const forwardedProps = useForwardProps(delegatedProps)
-</script>
-
 <template>
   <CalendarGrid
     :class="cn('w-full border-collapse space-y-1', props.class)"
@@ -22,3 +6,19 @@ const forwardedProps = useForwardProps(delegatedProps)
     <slot />
   </CalendarGrid>
 </template>
+
+<script lang="ts" setup>
+import { CalendarGrid, type CalendarGridProps, useForwardProps } from 'radix-vue';
+import { type HTMLAttributes, computed } from 'vue';
+import { cn } from '@/lib/utils';
+
+const props = defineProps<CalendarGridProps & { class?: HTMLAttributes['class'] }>();
+
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props;
+
+  return delegated;
+});
+
+const forwardedProps = useForwardProps(delegatedProps);
+</script>

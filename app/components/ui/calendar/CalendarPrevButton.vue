@@ -1,21 +1,3 @@
-<script lang="ts" setup>
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { ChevronLeftIcon } from '@radix-icons/vue'
-import { CalendarPrev, type CalendarPrevProps, useForwardProps } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
-
-const props = defineProps<CalendarPrevProps & { class?: HTMLAttributes['class'] }>()
-
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
-
-  return delegated
-})
-
-const forwardedProps = useForwardProps(delegatedProps)
-</script>
-
 <template>
   <CalendarPrev
     :class="cn(
@@ -30,3 +12,21 @@ const forwardedProps = useForwardProps(delegatedProps)
     </slot>
   </CalendarPrev>
 </template>
+
+<script lang="ts" setup>
+import { ChevronLeftIcon } from '@radix-icons/vue';
+import { CalendarPrev, type CalendarPrevProps, useForwardProps } from 'radix-vue';
+import { type HTMLAttributes, computed } from 'vue';
+import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/components/ui/button';
+
+const props = defineProps<CalendarPrevProps & { class?: HTMLAttributes['class'] }>();
+
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props;
+
+  return delegated;
+});
+
+const forwardedProps = useForwardProps(delegatedProps);
+</script>

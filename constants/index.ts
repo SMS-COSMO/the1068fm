@@ -6,6 +6,7 @@ export const permissionNames: ({ value: TPermission; label: string; icon: string
   { value: 'arrange', label: '排歌', icon: 'lucide:arrow-down-wide-narrow' },
   { value: 'manageUser', label: '管理用户', icon: 'lucide:user-cog' },
   { value: 'review', label: '审核歌曲', icon: 'lucide:music-4' },
+  { value: 'time', label: '开放时间', icon: 'lucide:clock' },
 ];
 
 export const breadCrumb: Record<string, string> = {
@@ -13,4 +14,5 @@ export const breadCrumb: Record<string, string> = {
   user: '用户管理',
   review: '歌曲审核',
   arrange: '排歌',
+  time: '开放时间',
 };

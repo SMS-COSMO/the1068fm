@@ -4,7 +4,6 @@ import { TRPCError } from '@trpc/server';
 import { adminProcedure, protectedProcedure, publicProcedure, requirePermission, router } from '../trpc';
 import { db } from '~~/server/db';
 import { users } from '~~/server/db/schema';
-import type { TPermission } from '~~/types';
 
 export const userRouter = router({
   login: publicProcedure
@@ -79,7 +78,7 @@ export const userRouter = router({
   editPermission: adminProcedure
     .input(z.object({
       id: z.string(),
-      permissions: z.enum(['login', 'admin', 'review', 'arrange', 'manageUser']).array(),
+      permissions: z.enum(['login', 'admin', 'review', 'arrange', 'manageUser', 'time']).array(),
     }))
     .use(requirePermission(['manageUser']))
     .mutation(async ({ input }) => {

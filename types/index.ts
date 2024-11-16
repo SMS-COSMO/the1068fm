@@ -9,6 +9,7 @@ export type TPermission =
   'admin' | // visit the admin page
   'review' | // review songs
   'arrange' | // arrange songs
+  'time' | // set opening time
   'manageUser'; // manage users (listing, banning, ...)
 
 // Seiue
