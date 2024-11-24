@@ -6,9 +6,9 @@
 
 <script lang="ts" setup>
 import type { DrawerDescriptionProps } from 'vaul-vue';
-import { DrawerDescription } from 'vaul-vue';
-import { type HtmlHTMLAttributes, computed } from 'vue';
 import { cn } from '@/lib/utils';
+import { DrawerDescription } from 'vaul-vue';
+import { computed, type HtmlHTMLAttributes } from 'vue';
 
 const props = defineProps<DrawerDescriptionProps & { class?: HtmlHTMLAttributes['class'] }>();
 

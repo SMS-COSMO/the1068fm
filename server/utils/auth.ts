@@ -1,17 +1,17 @@
-import * as jose from 'jose';
 import { eq } from 'drizzle-orm';
+import * as jose from 'jose';
 import { nanoid } from 'nanoid';
-import { env } from '../env';
 import { db } from '../db';
 import { users } from '../db/schema';
+import { env } from '../env';
 
 const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
 const decode = TextDecoder.prototype.decode.bind(new TextDecoder());
 
-const encPublicKey = await jose.importSPKI(env.ENC_PUBLIC_KEY, 'RSA-OAEP-256');
-const signPrivateKey = await jose.importPKCS8(env.SIGN_PRIVATE_KEY, 'RS512');
-
 export async function produceAccessToken(id: string) {
+  const encPublicKey = await jose.importSPKI(env.ENC_PUBLIC_KEY, 'RSA-OAEP-256');
+  const signPrivateKey = await jose.importPKCS8(env.SIGN_PRIVATE_KEY, 'RS512');
+
   const jwt = await new jose.SignJWT({})
     .setSubject(id.toString())
     .setIssuedAt()

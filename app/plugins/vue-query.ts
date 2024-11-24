@@ -3,11 +3,11 @@ import type {
   VueQueryPluginOptions,
 } from '@tanstack/vue-query';
 import {
+  dehydrate,
+  hydrate,
   QueryCache,
   QueryClient,
   VueQueryPlugin,
-  dehydrate,
-  hydrate,
 } from '@tanstack/vue-query';
 // Nuxt 3 app aliases
 

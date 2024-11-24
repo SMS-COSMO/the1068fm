@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { desc, eq } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
-import { adminProcedure, protectedProcedure, publicProcedure, requirePermission, router } from '../trpc';
 import { db } from '~~/server/db';
 import { users } from '~~/server/db/schema';
+import { desc, eq } from 'drizzle-orm';
+import { z } from 'zod';
+import { adminProcedure, protectedProcedure, publicProcedure, requirePermission, router } from '../trpc';
 
 export const userRouter = router({
   login: publicProcedure
@@ -35,7 +35,8 @@ export const userRouter = router({
               id: input.id,
               name: me.name,
               permissions: ['login'],
-            }).returning()
+            })
+            .returning()
         )[0];
       }
 

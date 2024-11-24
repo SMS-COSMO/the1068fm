@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <ScrollArea class="h-[calc(100svh-4rem)] py-4 pr-4">
     <div class="flex items-center py-4">
       <Input
         class="max-w-sm"
@@ -63,7 +63,7 @@
         下一页
       </Button>
     </div>
-  </div>
+  </ScrollArea>
 </template>
 
 <script setup lang="ts">
@@ -75,6 +75,7 @@ import type {
   VisibilityState,
 } from '@tanstack/vue-table';
 
+import type { RouterOutput } from '~~/types';
 import {
   FlexRender,
   getCoreRowModel,
@@ -85,11 +86,10 @@ import {
   useVueTable,
 } from '@tanstack/vue-table';
 import TablePermission from '~/components/admin/user/TablePermission.vue';
-import SongHistorySheet from '~/components/SongHistorySheet.vue';
 
+import SongHistorySheet from '~/components/SongHistorySheet.vue';
 import Button from '~/components/ui/button/Button.vue';
 import { valueUpdater } from '~/lib/utils';
-import type { RouterOutput } from '~~/types';
 
 definePageMeta({
   layout: 'admin',

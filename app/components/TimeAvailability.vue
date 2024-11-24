@@ -1,24 +1,27 @@
 <template>
   <div>
-    <Card
+    <Button
       v-if="isCard"
-      :class="`flex flex-col justify-center items-start shadow p-0 pt-1 pb-2 ${stateColor.from[status]} from-[-10%] ${stateColor.via[status]} via-30% to-white to-80%`" style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
+      variant="outline"
+      class="block w-full items-center gap-2 h-full"
+      :class="`${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`"
+      style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
     >
-      <CardHeader :class="`pt-1 pb-0 text-3xl font-bold ${stateColor.text[status]}`">
-        {{ stateText[status] }}
-      </CardHeader>
-      <CardContent class="pt-0 pb-0">
-        <span class="text-md">目前投稿状态</span>
-      </CardContent>
-    </Card>
+      <div class="text-xs">
+        目前投稿状态
+      </div>
+      <div class="text-2xl font-bold" :class="stateColor.text[state]">
+        {{ stateText[state] }}
+      </div>
+    </Button>
     <div v-else>
-      <CardContent class="flex flex-row p-2 items-center">
+      <div class="flex flex-row p-2 items-center">
         <div
           class="h-3.5 w-3.5 rounded-full border-2" :class="[stateColor.bg[state], stateColor.border[state]]"
         />
         <span class="ml-2 text-sm">目前投稿状态</span>
         <span class="font-bold ml-2 text-sm" :class="stateColor.text[state]">{{ stateText[state] }}</span>
-      </CardContent>
+      </div>
     </div>
   </div>
 </template>
@@ -28,11 +31,9 @@ type TState = 'unknown' | 'can' | 'cannot';
 
 const {
   isCard = false,
-  status = 'unknown',
 } = defineProps<{
   showButton?: boolean;
   isCard?: boolean;
-  status?: TState;
 }>();
 
 const { $trpc } = useNuxtApp();

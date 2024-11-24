@@ -1,8 +1,8 @@
-import { TRPCError, initTRPC } from '@trpc/server';
+import type { TPermission } from '~~/types';
+import type { Context } from './context';
+import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
-import type { Context } from './context';
-import type { TPermission } from '~~/types';
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,

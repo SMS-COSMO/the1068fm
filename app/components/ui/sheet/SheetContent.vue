@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+import { cn } from '@/lib/utils';
 import { Cross2Icon } from '@radix-icons/vue';
 import {
   DialogClose,
@@ -29,9 +30,8 @@ import {
   DialogPortal,
   useForwardPropsEmits,
 } from 'radix-vue';
-import { type HTMLAttributes, computed } from 'vue';
+import { computed, type HTMLAttributes } from 'vue';
 import { type SheetVariants, sheetVariants } from '.';
-import { cn } from '@/lib/utils';
 
 interface SheetContentProps extends DialogContentProps {
   class?: HTMLAttributes['class'];

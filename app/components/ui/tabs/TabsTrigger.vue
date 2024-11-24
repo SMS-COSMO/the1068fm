@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'radix-vue';
-import { type HTMLAttributes, computed } from 'vue';
 import { cn } from '@/lib/utils';
+import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'radix-vue';
+import { computed, type HTMLAttributes } from 'vue';
 
 const props = defineProps<TabsTriggerProps & { class?: HTMLAttributes['class'] }>();
 

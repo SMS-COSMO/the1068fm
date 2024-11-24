@@ -12,19 +12,27 @@
               本周已收集歌曲
             </div>
             <div class="text-2xl font-bold">
-              100
+              {{ songList?.length || 0 }}
             </div>
           </Button>
-          <Button class="h-full" variant="outline">
-            Time availability
-          </Button>
+          <TimeAvailabilityDialog>
+            <TimeAvailability is-card />
+          </TimeAvailabilityDialog>
         </div>
-        <SubmitDialog>
-          <Button class="w-full text-xl h-full font-bold" :disabled="!canSubmit">
-            <Icon name="lucide:music-4" size="26" class="mr-2" />
-            投稿
-          </Button>
-        </SubmitDialog>
+        <ClientOnly>
+          <template #fallback>
+            <Button class="w-full text-xl h-full font-bold" :disabled="!canSubmit">
+              <Icon name="lucide:music-4" size="26" class="mr-2" />
+              投稿
+            </Button>
+          </template>
+          <SubmitDialog>
+            <Button class="w-full text-xl h-full font-bold" :disabled="!canSubmit">
+              <Icon name="lucide:music-4" size="26" class="mr-2" />
+              投稿
+            </Button>
+          </SubmitDialog>
+        </ClientOnly>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
@@ -100,8 +108,8 @@ const userStore = useUserStore();
 const { $trpc } = useNuxtApp();
 
 const { data: songList, suspense: songListSuspense } = useQuery({
-  queryFn: () => $trpc.song.list.query(),
-  queryKey: ['song.list'],
+  queryFn: () => $trpc.song.listSafe.query(),
+  queryKey: ['song.listSafe'],
   refetchInterval: 10000,
   refetchIntervalInBackground: false,
 });
@@ -114,7 +122,8 @@ const { data: mySongList, suspense: mySongListSuspense } = useQuery({
 const { data: canSubmit, suspense: canSubmitSuspense } = useQuery({
   queryFn: () => $trpc.song.canSubmit.query(),
   queryKey: ['song.canSubmit'],
-  refetchOnWindowFocus: false,
+  refetchInterval: 10000,
+  refetchIntervalInBackground: false,
 });
 
 if (!userStore.loggedIn) {

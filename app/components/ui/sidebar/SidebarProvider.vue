@@ -13,11 +13,11 @@
 </template>
 
 <script setup lang="ts">
+import { cn } from '@/lib/utils';
 import { useEventListener, useVModel } from '@vueuse/core';
 import { TooltipProvider } from 'radix-vue';
-import { type HTMLAttributes, type Ref, computed, ref } from 'vue';
-import { SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, provideSidebarContext } from './utils';
-import { cn } from '@/lib/utils';
+import { computed, type HTMLAttributes, type Ref, ref } from 'vue';
+import { provideSidebarContext, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from './utils';
 
 const props = withDefaults(defineProps<{
   defaultOpen?: boolean;

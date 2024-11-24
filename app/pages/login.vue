@@ -7,7 +7,7 @@
             登录
           </h1>
           <p class="text-balance text-muted-foreground">
-            使用希悦账号登录 the1068fm
+            使用希悦账号登录 <span class="font-mono">the1068fm</span>
           </p>
         </div>
         <div class="grid gap-4">

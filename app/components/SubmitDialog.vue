@@ -113,7 +113,7 @@ const { mutate, isPending } = useMutation({
   mutationFn: $trpc.song.create.mutate,
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['song.canSubmit'] });
-    queryClient.invalidateQueries({ queryKey: ['song.list'] });
+    queryClient.invalidateQueries({ queryKey: ['song.listSafe'] });
     queryClient.invalidateQueries({ queryKey: ['song.listMine'] });
     isOpen.value = false;
   },

@@ -1,6 +1,6 @@
+import type { TPermission } from '~~/types';
 import { relations } from 'drizzle-orm';
 import { boolean, integer, json, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import type { TPermission } from '~~/types';
 
 export const users = pgTable('users', {
   id: text().primaryKey(),

@@ -118,9 +118,9 @@
 </template>
 
 <script setup lang="ts">
-import * as z from 'zod';
-import { DatePicker } from 'v-calendar';
 import type { RouterOutput } from '~~/types';
+import { DatePicker } from 'v-calendar';
+import * as z from 'zod';
 
 const { time } = defineProps<{
   time: RouterOutput['time']['list'][0];

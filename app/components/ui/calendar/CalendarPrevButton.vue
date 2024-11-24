@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts" setup>
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { ChevronLeftIcon } from '@radix-icons/vue';
 import { CalendarPrev, type CalendarPrevProps, useForwardProps } from 'radix-vue';
-import { type HTMLAttributes, computed } from 'vue';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
+import { computed, type HTMLAttributes } from 'vue';
 
 const props = defineProps<CalendarPrevProps & { class?: HTMLAttributes['class'] }>();
 

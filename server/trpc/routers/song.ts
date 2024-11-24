@@ -1,14 +1,14 @@
-import { z } from 'zod';
-import { desc, eq } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
-import { protectedProcedure, router } from '../trpc';
 import { db } from '~~/server/db';
 import { songs } from '~~/server/db/schema';
-import type { TPermission } from '~~/types';
+import { desc, eq } from 'drizzle-orm';
+import { z } from 'zod';
+import { adminProcedure, protectedProcedure, router } from '../trpc';
+import { fitsInTime } from './time';
 
-async function checkCanSubmit(userId: string, userPermission: TPermission[]) {
-  if (userPermission.includes('admin'))
-    return true;
+async function checkCanSubmit(userId: string) {
+  if (!(await fitsInTime(new Date())))
+    return false;
 
   const latestSubmission = await db.query.songs.findFirst({
     where: eq(songs.ownerId, userId),
@@ -37,7 +37,7 @@ export const songRouter = router({
       message: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      if (!(await checkCanSubmit(ctx.user.id, ctx.user.permissions)))
+      if (!(await checkCanSubmit(ctx.user.id)))
         throw new TRPCError({ code: 'BAD_REQUEST', message: '一天只能提交一首歌曲' });
 
       await db.insert(songs).values({
@@ -46,9 +46,24 @@ export const songRouter = router({
       });
     }),
 
-  list: protectedProcedure
+  list: adminProcedure
     .query(async () => {
       return await db.query.songs.findMany({
+        orderBy: desc(songs.createdAt),
+        columns: {
+          id: true,
+          name: true,
+          creator: true,
+          message: true,
+          createdAt: true,
+        },
+      });
+    }),
+
+  listSafe: protectedProcedure
+    .query(async () => {
+      return await db.query.songs.findMany({
+        orderBy: desc(songs.createdAt),
         columns: {
           id: true,
           name: true,
@@ -62,12 +77,13 @@ export const songRouter = router({
   listMine: protectedProcedure
     .query(async ({ ctx }) => {
       return await db.query.songs.findMany({
+        orderBy: desc(songs.createdAt),
         where: eq(songs.ownerId, ctx.user.id),
       });
     }),
 
   canSubmit: protectedProcedure
     .query(async ({ ctx }) => {
-      return await checkCanSubmit(ctx.user.id, ctx.user.permissions);
+      return await checkCanSubmit(ctx.user.id);
     }),
 });

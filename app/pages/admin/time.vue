@@ -1,28 +1,34 @@
 <template>
-  <ResizablePanelGroup direction="horizontal" class="min-h-[calc(100svh-4rem)]">
-    <ResizablePanel :default-size="35" class="py-4 gap-4 flex flex-col">
-      <TransitionGroup name="list" tag="ul" class="gap-4 flex flex-col">
-        <li v-for="time in timeList" :key="time.id">
-          <AdminTimeCard
-            :time
-            :selected="selectedTime === time"
-            @click="rightPanel = 'edit'; selectedTime = time;"
-          />
-        </li>
-      </TransitionGroup>
+  <ResizablePanelGroup id="time-resizable" direction="horizontal">
+    <ResizablePanel :default-size="35">
+      <ScrollArea class="h-[calc(100svh-4rem)] py-4 pr-4">
+        <div class="gap-4 flex flex-col">
+          <TransitionGroup name="list" tag="ul" class="gap-4 flex flex-col">
+            <li v-for="time in timeList" :key="time.id">
+              <AdminTimeCard
+                :time
+                :selected="selectedTime === time"
+                @click="rightPanel = 'edit'; selectedTime = time;"
+              />
+            </li>
+          </TransitionGroup>
 
-      <Button variant="outline" class="h-20 rounded-lg w-full" @click="rightPanel = 'create'">
-        <Icon name="lucide:plus" size="18" />
-      </Button>
+          <Button variant="outline" class="h-20 rounded-lg w-full" @click="rightPanel = 'create'">
+            <Icon name="lucide:plus" size="18" />
+          </Button>
+        </div>
+      </ScrollArea>
     </ResizablePanel>
-    <ResizableHandle class="mx-4" with-handle />
-    <ResizablePanel :default-size="65" class="py-4">
-      <AdminTimeCreateForm v-if="rightPanel === 'create'" />
-      <AdminTimeEditForm
-        v-for="time in timeList?.filter(x => rightPanel === 'edit' && selectedTime?.id === x.id)"
-        :key="time.id"
-        :time
-      />
+    <ResizableHandle with-handle />
+    <ResizablePanel :default-size="65">
+      <ScrollArea class="h-[calc(100svh-4rem)] py-4 pl-4">
+        <AdminTimeCreateForm v-if="rightPanel === 'create'" />
+        <AdminTimeEditForm
+          v-for="time in timeList?.filter(x => rightPanel === 'edit' && selectedTime?.id === x.id)"
+          :key="time.id"
+          :time
+        />
+      </ScrollArea>
     </ResizablePanel>
   </ResizablePanelGroup>
 </template>

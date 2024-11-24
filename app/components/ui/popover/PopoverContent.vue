@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { cn } from '@/lib/utils';
 import {
   PopoverContent,
   type PopoverContentEmits,
@@ -22,8 +23,7 @@ import {
   PopoverPortal,
   useForwardPropsEmits,
 } from 'radix-vue';
-import { type HTMLAttributes, computed } from 'vue';
-import { cn } from '@/lib/utils';
+import { computed, type HTMLAttributes } from 'vue';
 
 defineOptions({
   inheritAttrs: false,

@@ -22,9 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import { Separator, type SeparatorProps } from 'radix-vue';
-import { type HTMLAttributes, computed } from 'vue';
 import { cn } from '@/lib/utils';
+import { Separator, type SeparatorProps } from 'radix-vue';
+import { computed, type HTMLAttributes } from 'vue';
 
 const props = defineProps<
   SeparatorProps & { class?: HTMLAttributes['class']; label?: string }

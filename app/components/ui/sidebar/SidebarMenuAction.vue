@@ -22,8 +22,8 @@
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import { Primitive, type PrimitiveProps } from 'radix-vue';
 import { cn } from '@/lib/utils';
+import { Primitive, type PrimitiveProps } from 'radix-vue';
 
 const props = withDefaults(defineProps<PrimitiveProps & {
   showOnHover?: boolean;
