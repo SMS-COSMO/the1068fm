@@ -7,11 +7,11 @@
       <CardDescription>
         {{ song.creator }}
       </CardDescription>
-      <div class="flex gap-1">
+      <div v-if="song.message" class="flex gap-1">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
-              <Badge v-if="song.message" variant="outline" size="sm">
+              <Badge variant="outline" size="sm">
                 留言
               </Badge>
             </TooltipTrigger>

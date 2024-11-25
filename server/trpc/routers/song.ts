@@ -60,7 +60,7 @@ export const songRouter = router({
       });
     }),
 
-  listSafe: protectedProcedure
+  listReview: adminProcedure
     .query(async () => {
       return await db.query.songs.findMany({
         orderBy: desc(songs.createdAt),
@@ -69,6 +69,19 @@ export const songRouter = router({
           name: true,
           creator: true,
           message: true,
+          createdAt: true,
+        },
+      });
+    }),
+
+  listSafe: protectedProcedure
+    .query(async () => {
+      return await db.query.songs.findMany({
+        orderBy: desc(songs.createdAt),
+        columns: {
+          id: true,
+          name: true,
+          creator: true,
           createdAt: true,
         },
       });

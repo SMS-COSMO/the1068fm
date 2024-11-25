@@ -1,6 +1,5 @@
 <template>
   <div
-    variant="outline"
     class="h-auto p-4 w-full border rounded-lg shadow-sm hover:bg-muted transition-colors cursor-pointer"
     :class="{ 'bg-muted/60': selected }"
   >

@@ -4,7 +4,7 @@
       <SidebarHeader class="border-b h-16">
         <SidebarMenu>
           <SidebarMenuItem>
-            <LogosThe1068fm class="h-full w-full px-8" />
+            <LogosThe1068fm class="h-full w-full px-8 cursor-pointer" @click="navigate('/')" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -12,11 +12,10 @@
         <SidebarGroup class="border-b">
           <Calendar weekday-format="short" />
         </SidebarGroup>
-
-        <SidebarGroup class="border-b">
+        <SidebarGroup>
           <SidebarGroupLabel>管理</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuItem>
+            <SidebarMenuItem v-if="userStore.permissions.includes('manageUser')">
               <SidebarMenuButton @click="navigate('/admin/user')">
                 <Icon name="lucide:users" />
                 <span>用户管理</span>
@@ -36,7 +35,7 @@
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarGroup>
+        <SidebarGroup v-if="userStore.permissions.includes('time')" class="border-t">
           <SidebarGroupLabel>开放时间</SidebarGroupLabel>
           <SidebarMenu>
             <TimeAvailability />
@@ -113,7 +112,7 @@
           </Breadcrumb>
         </div>
       </header>
-      <main class="px-4">
+      <main>
         <slot />
       </main>
     </SidebarInset>

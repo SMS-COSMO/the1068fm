@@ -1,6 +1,6 @@
 <template>
-  <ScrollArea class="h-[calc(100svh-4rem)] py-4 pr-4">
-    <div class="flex items-center py-4">
+  <ScrollArea class="h-[calc(100svh-4rem)] p-4">
+    <div class="flex items-center pb-4">
       <Input
         class="max-w-sm"
         placeholder="搜索学号"

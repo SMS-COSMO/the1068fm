@@ -1,7 +1,7 @@
 <template>
-  <ResizablePanelGroup id="time-resizable" direction="horizontal">
-    <ResizablePanel :default-size="35">
-      <ScrollArea class="h-[calc(100svh-4rem)] py-4 pr-4">
+  <ResizablePanelGroup id="time-resizable" direction="horizontal" @layout="layout = $event">
+    <ResizablePanel id="time-resizable-panel-1" :default-size="layout[0]">
+      <ScrollArea class="h-[calc(100svh-4rem)] p-4">
         <div class="gap-4 flex flex-col">
           <TransitionGroup name="list" tag="ul" class="gap-4 flex flex-col">
             <li v-for="time in timeList" :key="time.id">
@@ -19,9 +19,9 @@
         </div>
       </ScrollArea>
     </ResizablePanel>
-    <ResizableHandle with-handle />
-    <ResizablePanel :default-size="65">
-      <ScrollArea class="h-[calc(100svh-4rem)] py-4 pl-4">
+    <ResizableHandle id="time-resizable-resize-1" with-handle />
+    <ResizablePanel id="time-resizable-panel-2" :default-size="layout[1]">
+      <ScrollArea class="h-[calc(100svh-4rem)] p-4">
         <AdminTimeCreateForm v-if="rightPanel === 'create'" />
         <AdminTimeEditForm
           v-for="time in timeList?.filter(x => rightPanel === 'edit' && selectedTime?.id === x.id)"
@@ -41,6 +41,9 @@ definePageMeta({
 });
 
 const { $trpc } = useNuxtApp();
+const layout = useCookie<number[]>('time-resizable:layout', {
+  default: () => [35, 65],
+});
 
 const rightPanel = ref<'unset' | 'create' | 'edit'>('unset');
 
