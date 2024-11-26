@@ -21,7 +21,7 @@
                 <span>用户管理</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
+            <SidebarMenuItem v-if="userStore.permissions.includes('review')">
               <SidebarMenuButton @click="navigate('/admin/review')">
                 <Icon name="lucide:music-4" />
                 <span>歌曲审核</span>

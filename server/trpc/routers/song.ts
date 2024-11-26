@@ -3,7 +3,7 @@ import { db } from '~~/server/db';
 import { songs } from '~~/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { adminProcedure, protectedProcedure, router } from '../trpc';
+import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
 import { fitsInTime } from './time';
 
 async function checkCanSubmit(userId: string) {
@@ -98,5 +98,54 @@ export const songRouter = router({
   canSubmit: protectedProcedure
     .query(async ({ ctx }) => {
       return await checkCanSubmit(ctx.user.id);
+    }),
+
+  qqSearch: adminProcedure
+    .input(z.object({
+      key: z.string(),
+    }))
+    .use(requirePermission(['review']))
+    .query(async ({ input }) => {
+      const searchBaseURL = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp';
+
+      interface TSearchDataItem {
+        albummid: string;
+        singer: { name: string }[];
+        songmid: string;
+        songname: string;
+      }
+
+      interface TSearchResponse {
+        code: number;
+        data: {
+          song: {
+            list: TSearchDataItem[];
+          };
+        };
+      }
+
+      const res = await $fetch<TSearchResponse>(searchBaseURL, {
+        method: 'GET',
+        params: {
+          w: input.key,
+          n: 5,
+          format: 'json',
+        },
+        parseResponse(responseText) {
+          try {
+            return JSON.parse(responseText);
+          } catch {
+            return responseText;
+          }
+        },
+      });
+
+      const songList = res.data.song.list.map(item => ({
+        mid: item.songmid,
+        name: item.songname,
+        singer: item.singer.map(singer => singer.name).join(', ').trim(),
+        pic: `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
+      }));
+      return songList;
     }),
 });
