@@ -12,6 +12,8 @@ export type TPermission =
   'time' | // set opening time
   'manageUser'; // manage users (listing, banning, ...)
 
+export type TSongState = 'pending' | 'approved' | 'rejected';
+
 // Seiue
 export interface TCredentials { schoolId: string; password: string };
 export interface TDirectCredentials { accessToken: string; activeReflectionId: number }

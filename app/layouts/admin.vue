@@ -15,12 +15,6 @@
         <SidebarGroup>
           <SidebarGroupLabel>管理</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuItem v-if="userStore.permissions.includes('manageUser')">
-              <SidebarMenuButton @click="navigate('/admin/user')">
-                <Icon name="lucide:users" />
-                <span>用户管理</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
             <SidebarMenuItem v-if="userStore.permissions.includes('review')">
               <SidebarMenuButton @click="navigate('/admin/review')">
                 <Icon name="lucide:music-4" />
@@ -30,7 +24,13 @@
             <SidebarMenuItem>
               <SidebarMenuButton @click="navigate('/admin/arrange')">
                 <Icon name="lucide:arrow-down-wide-narrow" />
-                <span>排歌</span>
+                <span>排歌管理</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem v-if="userStore.permissions.includes('manageUser')">
+              <SidebarMenuButton @click="navigate('/admin/user')">
+                <Icon name="lucide:users" />
+                <span>用户管理</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

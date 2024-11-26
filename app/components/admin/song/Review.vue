@@ -1,12 +1,22 @@
 <template>
   <div class="h-16 px-4 border-b sticky top-0 bg-background flex gap-2 items-center">
-    <Button variant="outline">
+    <Button
+      variant="outline"
+      :disable="approvePending"
+      @click="approve({ id: song.id })"
+    >
+      <Icon v-if="approvePending" name="lucide:loader-circle" class="mr-2 animate-spin" />
       <Icon name="lucide:check" size="17" />
     </Button>
-    <Button variant="outline">
+    <Button
+      variant="outline"
+      :disable="rejectPending"
+      @click="reject({ id: song.id, rejectMessage: rejectMessage.trim() })"
+    >
+      <Icon v-if="rejectPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
       <Icon name="lucide:x" size="17" />
     </Button>
-    <Input placeholder="拒绝理由" />
+    <Input v-model="rejectMessage" placeholder="拒绝理由（≥ 4个字符）" />
   </div>
   <div v-if="!isFetching">
     <div v-if="previewList && previewList.length" class="p-4 flex flex-col gap-3">
@@ -62,7 +72,27 @@ const { isFetching, data: previewList } = useQuery({
   refetchOnWindowFocus: false,
 });
 
+const rejectMessage = ref('');
+
+// new song selected
 watch(() => song, () => {
   queryClient.invalidateQueries({ queryKey: ['song.qqSearch'] });
+  rejectMessage.value = '';
+});
+
+const { mutate: approve, isPending: approvePending } = useMutation({
+  mutationFn: $trpc.song.review.approve.mutate,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['song.listReview'] });
+  },
+  onError: err => useErrorHandler(err),
+});
+
+const { mutate: reject, isPending: rejectPending } = useMutation({
+  mutationFn: $trpc.song.review.reject.mutate,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['song.listReview'] });
+  },
+  onError: err => useErrorHandler(err),
 });
 </script>

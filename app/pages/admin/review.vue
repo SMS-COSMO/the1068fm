@@ -8,9 +8,10 @@
         </div>
         <TransitionGroup name="list" tag="ul" class="gap-3 flex flex-col p-4">
           <li v-for="song in songList" :key="song.id">
-            <AdminSongCard
+            <SongCard
+              type="review"
               :song
-              :selected="selectedSong === song"
+              :selected="selectedSong?.id === song.id"
               @click="selectedSong = song"
             />
           </li>
@@ -45,5 +46,8 @@ const { data: songList, suspense } = useQuery({
 });
 await suspense();
 
-const selectedSong = ref<RouterOutput['song']['listReview'][0] | undefined>();
+const selectedSong = ref<RouterOutput['song']['listReview'][0] | undefined>(songList.value?.[0]);
+watch(songList, () => {
+  selectedSong.value = songList.value?.[0];
+});
 </script>

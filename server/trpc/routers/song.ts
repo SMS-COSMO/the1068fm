@@ -56,6 +56,8 @@ export const songRouter = router({
           creator: true,
           message: true,
           createdAt: true,
+          state: true,
+          rejectMessage: true,
         },
       });
     }),
@@ -63,6 +65,7 @@ export const songRouter = router({
   listReview: adminProcedure
     .query(async () => {
       return await db.query.songs.findMany({
+        where: eq(songs.state, 'pending'),
         orderBy: desc(songs.createdAt),
         columns: {
           id: true,
@@ -70,6 +73,8 @@ export const songRouter = router({
           creator: true,
           message: true,
           createdAt: true,
+          state: true,
+          rejectMessage: true,
         },
       });
     }),
@@ -83,6 +88,8 @@ export const songRouter = router({
           name: true,
           creator: true,
           createdAt: true,
+          state: true,
+          rejectMessage: true,
         },
       });
     }),
@@ -99,6 +106,36 @@ export const songRouter = router({
     .query(async ({ ctx }) => {
       return await checkCanSubmit(ctx.user.id);
     }),
+
+  review: router({
+    approve: adminProcedure
+      .input(z.object({
+        id: z.number(),
+      }))
+      .use(requirePermission(['review']))
+      .mutation(async ({ input }) => {
+        await db
+          .update(songs)
+          .set({ state: 'approved' })
+          .where(eq(songs.id, input.id));
+      }),
+
+    reject: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        rejectMessage: z.string().min(4, '拒绝理由不得小于4个字符'),
+      }))
+      .use(requirePermission(['review']))
+      .mutation(async ({ input }) => {
+        await db
+          .update(songs)
+          .set({
+            state: 'rejected',
+            rejectMessage: input.rejectMessage,
+          })
+          .where(eq(songs.id, input.id));
+      }),
+  }),
 
   qqSearch: adminProcedure
     .input(z.object({

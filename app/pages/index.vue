@@ -26,12 +26,12 @@
               投稿
             </Button>
           </template>
-          <SubmitDialog>
+          <SongSubmitDialog>
             <Button class="w-full text-xl h-full font-bold" :disabled="!canSubmit">
               <Icon name="lucide:music-4" size="26" class="mr-2" />
               投稿
             </Button>
-          </SubmitDialog>
+          </SongSubmitDialog>
         </ClientOnly>
       </div>
 
@@ -75,7 +75,7 @@
 
     <section class="lg:overflow-scroll lg:px-4">
       <Tabs default-value="list">
-        <div class="sticky top-4 lg:top-0 bg-white">
+        <div class="sticky top-4 lg:top-0 bg-white z-50">
           <TabsList class="grid grid-cols-3">
             <TabsTrigger value="list">
               已收集投稿
@@ -89,7 +89,13 @@
           </TabsList>
         </div>
         <TabsContent value="list" class="space-y-3">
-          <Input placeholder="搜索歌曲" class="mt-1" />
+          <div class="relative w-full items-center mt-1">
+            <Input id="search" type="text" placeholder="搜索歌曲" class="pl-8" />
+            <span class="absolute start-0 inset-y-0 flex items-center justify-center pl-3">
+              <Icon name="lucide:search" class="text-muted-foreground" />
+            </span>
+          </div>
+
           <SongCard v-for="song in songList" :key="song.id" :song />
         </TabsContent>
         <TabsContent value="arrangement">
