@@ -87,9 +87,10 @@ export const songRouter = router({
           id: true,
           name: true,
           creator: true,
-          createdAt: true,
           state: true,
           rejectMessage: true,
+          arrangementDate: true,
+          createdAt: true,
         },
       });
     }),

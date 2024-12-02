@@ -87,7 +87,7 @@ import {
 } from '@tanstack/vue-table';
 import TablePermission from '~/components/admin/user/TablePermission.vue';
 
-import SongHistorySheet from '~/components/SongHistorySheet.vue';
+import HistorySheet from '~/components/song/HistorySheet.vue';
 import Button from '~/components/ui/button/Button.vue';
 import { valueUpdater } from '~/lib/utils';
 
@@ -120,7 +120,7 @@ const columns: ColumnDef<a>[] = [
     accessorKey: 'songs',
     header: '点歌记录',
     cell: ({ row }) => h(
-      SongHistorySheet,
+      HistorySheet,
       { songs: row.original.songs },
     ),
   },

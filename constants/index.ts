@@ -13,6 +13,6 @@ export const breadCrumb: Record<string, string> = {
   admin: '管理',
   user: '用户管理',
   review: '歌曲审核',
-  arrange: '排歌',
+  arrange: '排歌管理',
   time: '开放时间',
 };

@@ -11,7 +11,6 @@ export const users = pgTable('users', {
 
 export const arrangements = pgTable('arrangements', {
   date: text().primaryKey(),
-  isPublic: boolean().notNull().default(false),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 });
 

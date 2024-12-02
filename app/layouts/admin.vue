@@ -21,7 +21,7 @@
                 <span>歌曲审核</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
+            <SidebarMenuItem v-if="userStore.permissions.includes('arrange')">
               <SidebarMenuButton @click="navigate('/admin/arrange')">
                 <Icon name="lucide:arrow-down-wide-narrow" />
                 <span>排歌管理</span>

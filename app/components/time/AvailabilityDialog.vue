@@ -21,13 +21,6 @@
             暂无开放时间段～
           </span>
         </ol>
-        <DialogFooter>
-          <DialogClose as-child>
-            <Button type="button" variant="secondary" class="ml-auto px-6">
-              好的
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   </ClientOnly>

@@ -1,18 +1,17 @@
 <template>
-  <div v-if="state">
-    <Badge variant="outline" class="flex items-center" :class="state.className">
-      <Icon :name="state.icon" class="mr-1" />
-      <span>{{ state.label }}</span>
-      <span v-if="song.rejectMessage">: {{ song.rejectMessage }}</span>
-    </Badge>
-  </div>
+  <Badge v-if="state" variant="outline" class="flex items-center" :class="state.className">
+    <Icon :name="state.icon" class="mr-1" />
+    <span>{{ state.label }}</span>
+    <span v-if="song.rejectMessage && !hideReason" class="text-[10px] font-normal max-w-16 truncate">&nbsp;{{ song.rejectMessage }}</span>
+  </Badge>
 </template>
 
 <script setup lang="ts">
 import type { RouterOutput, TSongState } from '~~/types';
 
-const { song } = defineProps<{
+const { song, hideReason = false } = defineProps<{
   song: Partial<RouterOutput['song']['listMine'][0]>;
+  hideReason?: boolean;
 }>();
 
 const states: Record<
