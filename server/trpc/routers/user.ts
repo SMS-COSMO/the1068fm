@@ -70,6 +70,7 @@ export const userRouter = router({
               name: true,
               creator: true,
               message: true,
+              state: true,
             },
           },
         },

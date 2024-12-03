@@ -1,5 +1,5 @@
 <template>
-  <Card v-if="type === 'public'" @click="isOpen = true">
+  <Card v-if="type === 'public'" class="hover:cursor-pointer" @click="isOpen = true">
     <CardHeader>
       <div class="flex flex-row">
         <div>
@@ -47,6 +47,10 @@
         <li v-if="song.arrangementDate" class="flex justify-between">
           <span class="text-muted-foreground text-sm min-w-20">播放时间</span>
           <span class="font-mono">{{ song.arrangementDate }}</span>
+        </li>
+        <li v-if="song.message" class="flex justify-between">
+          <span class="text-muted-foreground text-sm min-w-20">留言</span>
+          <span>{{ song.message }}</span>
         </li>
         <li v-if="song.createdAt" class="flex justify-between">
           <span class="text-muted-foreground text-sm min-w-20">投稿时间</span>

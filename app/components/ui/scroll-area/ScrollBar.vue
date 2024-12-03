@@ -1,19 +1,3 @@
-<script setup lang="ts">
-import { cn } from '@/lib/utils'
-import { ScrollAreaScrollbar, type ScrollAreaScrollbarProps, ScrollAreaThumb } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
-
-const props = withDefaults(defineProps<ScrollAreaScrollbarProps & { class?: HTMLAttributes['class'] }>(), {
-  orientation: 'vertical',
-})
-
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
-
-  return delegated
-})
-</script>
-
 <template>
   <ScrollAreaScrollbar
     v-bind="delegatedProps"
@@ -28,3 +12,19 @@ const delegatedProps = computed(() => {
     <ScrollAreaThumb class="relative flex-1 rounded-full bg-border" />
   </ScrollAreaScrollbar>
 </template>
+
+<script setup lang="ts">
+import { cn } from '@/lib/utils';
+import { ScrollAreaScrollbar, type ScrollAreaScrollbarProps, ScrollAreaThumb } from 'radix-vue';
+import { computed, type HTMLAttributes } from 'vue';
+
+const props = withDefaults(defineProps<ScrollAreaScrollbarProps & { class?: HTMLAttributes['class'] }>(), {
+  orientation: 'vertical',
+});
+
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props;
+
+  return delegated;
+});
+</script>
