@@ -1,24 +1,20 @@
 import type { Config } from 'tailwindcss';
-import { addDynamicIconSelectors } from '@iconify/tailwind';
 import animate from 'tailwindcss-animate';
-import typography from '@tailwindcss/typography';
 
-export default <Partial<Config>>{
+export default {
   darkMode: 'class',
   safelist: ['dark'],
   prefix: '',
+  content: [],
   theme: {
-    screens: {
-      lg: '800px',
-    },
     container: {
       center: true,
       padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
     },
     extend: {
-      fontFamily: {
-        shuhei: ['AlimamaShuHeiTi', 'sans-serif'],
-      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -52,6 +48,16 @@ export default <Partial<Config>>{
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
+        },
+        sidebar: {
+          'DEFAULT': 'hsl(var(--sidebar-background))',
+          'foreground': 'hsl(var(--sidebar-foreground))',
+          'primary': 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          'accent': 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          'border': 'hsl(var(--sidebar-border))',
+          'ring': 'hsl(var(--sidebar-ring))',
         },
       },
       borderRadius: {
@@ -87,9 +93,5 @@ export default <Partial<Config>>{
     },
   },
 
-  plugins: [
-    animate,
-    addDynamicIconSelectors(),
-    typography(),
-  ],
-};
+  plugins: [animate],
+} satisfies Config;
