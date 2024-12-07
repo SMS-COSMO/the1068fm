@@ -2,7 +2,7 @@
   <Badge v-if="state" variant="outline" class="flex items-center" :class="state.className">
     <Icon :name="state.icon" class="mr-1" />
     <span>{{ state.label }}</span>
-    <span v-if="song.rejectMessage && !hideReason" class="text-[10px] font-normal max-w-16 truncate">&nbsp;{{ song.rejectMessage }}</span>
+    <span v-if="song.state === 'rejected' && song.rejectMessage && !hideReason" class="text-[10px] font-normal max-w-16 truncate">&nbsp;{{ song.rejectMessage }}</span>
   </Badge>
 </template>
 
@@ -28,14 +28,24 @@ const states: Record<
     className: 'bg-amber-50 border-amber-100 text-amber-700',
   },
   approved: {
-    label: '通过',
-    icon: 'lucide:check',
+    label: '审核通过',
+    icon: 'lucide:thumbs-up',
     className: 'bg-green-50 border-green-100 text-green-700',
   },
   rejected: {
-    label: '未通过',
-    icon: 'lucide:x',
+    label: '审核未通过',
+    icon: 'lucide:thumbs-down',
     className: 'bg-red-50 border-red-100 text-red-700',
+  },
+  used: {
+    label: '入选',
+    icon: 'lucide:check',
+    className: 'bg-green-50 border-green-100 text-green-700',
+  },
+  dropped: {
+    label: '落选',
+    icon: 'lucide:x',
+    className: 'bg-amber-50 border-amber-100 text-amber-700',
   },
 };
 

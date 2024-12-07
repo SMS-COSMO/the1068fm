@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { db } from '~~/server/db';
 import { songs } from '~~/server/db/schema';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, gt } from 'drizzle-orm';
 import { z } from 'zod';
 import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
 import { fitsInTime } from './time';
@@ -82,6 +82,7 @@ export const songRouter = router({
   listSafe: protectedProcedure
     .query(async () => {
       return await db.query.songs.findMany({
+        where: gt(songs.createdAt, new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)), // One week
         orderBy: desc(songs.createdAt),
         columns: {
           id: true,

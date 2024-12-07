@@ -9,9 +9,6 @@
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup class="border-b">
-          <Calendar weekday-format="short" />
-        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>管理</SidebarGroupLabel>
           <SidebarMenu>
@@ -24,7 +21,7 @@
             <SidebarMenuItem v-if="userStore.permissions.includes('arrange')">
               <SidebarMenuButton @click="navigate('/admin/arrange')">
                 <Icon name="lucide:arrow-down-wide-narrow" />
-                <span>排歌管理</span>
+                <span>排歌列表</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem v-if="userStore.permissions.includes('manageUser')">

@@ -20,7 +20,7 @@ export const songs = pgTable('songs', {
   creator: text().notNull(),
   ownerId: text().references(() => users.id),
   arrangementDate: text().references(() => arrangements.date),
-  state: text({ enum: ['pending', 'approved', 'rejected'] }).notNull().default('pending'),
+  state: text({ enum: ['pending', 'approved', 'rejected', 'used', 'dropped'] }).notNull().default('pending'),
   rejectMessage: text(),
   message: text(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),

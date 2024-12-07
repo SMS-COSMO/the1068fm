@@ -1,15 +1,67 @@
 <template>
   <div class="w-[calc(100vw-16rem)] overflow-x-auto">
     <div class="flex w-max">
+      <div class="h-[calc(100svh-4rem)] w-min bg-sidebar border-r sticky left-0 z-50 flex flex-col justify-between p-4">
+        <div>
+          <RangeCalendar
+            v-model="calendarValue"
+            :is-date-unavailable="isDateUnavailable"
+            locale="zh"
+            class="p-0"
+          />
+          <div v-if="calendarValue.start && calendarValue.end" class="flex justify-between mt-4 items-center">
+            <Badge variant="outline">
+              {{ calendarValue.start }}
+            </Badge>
+            <Icon name="lucide:arrow-right" size="14" />
+            <Badge variant="outline">
+              {{ calendarValue.end }}
+            </Badge>
+          </div>
+        </div>
+        <div class="p-4 grid gap-3 border bg-background rounded-lg">
+          <div class="grid gap-1">
+            <div v-for="requirement in requirementList" :key="requirement.label" class="flex items-center gap-2">
+              <Icon v-if="requirement.value" name="lucide:check" class="text-green-500" />
+              <Icon v-else name="lucide:x" class="text-red-500" />
+              <span class="font-medium text-sm">
+                {{ requirement.label }}
+              </span>
+            </div>
+          </div>
+
+          <NumberField id="songCount" v-model="songCount" :default-value="10" :min="0">
+            <Label for="songCount" class="text-xs font-medium">每日歌曲数目：</Label>
+            <NumberFieldContent class="bg-background">
+              <NumberFieldDecrement />
+              <NumberFieldInput />
+              <NumberFieldIncrement />
+            </NumberFieldContent>
+          </NumberField>
+
+          <Button
+            :disabled="!canArrange || isPending"
+            class="transition-all" @click="arrange({
+              start: calendarValue.start!.toString(),
+              end: calendarValue.end!.toString(),
+              songCount,
+            })"
+          >
+            <Icon v-if="isPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
+            <Icon name="lucide:play" class="mr-2" />
+            自动排歌
+          </Button>
+        </div>
+      </div>
       <div
         v-for="day in arrangementList"
         :key="day.date"
-        class="w-[400px] border-r"
+        class="w-[400px] flex-shrink-0 border-r"
       >
         <ScrollArea class="h-[calc(100svh-4rem)]">
-          <div class="h-16 px-4 border-b sticky top-0 bg-background flex items-center z-50">
+          <div class="h-16 px-4 border-b sticky top-0 bg-background flex items-center z-40 justify-between">
             <span class="font-semibold text-sm">{{ day.date }}</span>
-            <Button variant="outline" size="sm" class="ml-auto" @click="copySongInfo(day)">
+            <Button variant="outline" size="sm" @click="copySongInfo(day)">
               <Icon name="lucide:clipboard" class="mr-1" />
               复制
             </Button>
@@ -27,6 +79,9 @@
 
 <script setup lang="ts">
 import type { RouterOutput } from '~~/types';
+import type { DateRange } from 'radix-vue';
+import { RangeCalendar } from '@/components/ui/range-calendar';
+import { type DateValue, getLocalTimeZone, startOfWeek, today } from '@internationalized/date';
 
 definePageMeta({
   layout: 'admin',
@@ -38,6 +93,12 @@ const { data: arrangementList, suspense } = useQuery({
   queryKey: ['arrangements.list'],
 });
 await suspense();
+
+const { data: reviewAll, suspense: reviewAllSuspense } = useQuery({
+  queryFn: () => $trpc.arrangements.reviewAll.query(),
+  queryKey: ['arrangements.reviewAll'],
+});
+await reviewAllSuspense();
 
 const { copy: useCopy } = useClipboard({ legacy: true });
 async function copySongInfo(day: RouterOutput['arrangements']['list'][0]) {
@@ -60,4 +121,46 @@ async function copySongInfo(day: RouterOutput['arrangements']['list'][0]) {
       toast.error(e.toString());
   }
 }
+
+const _start = startOfWeek(today(getLocalTimeZone()).add({ weeks: 1 }), 'zh-CN');
+const _end = _start.add({ days: 4 });
+
+const calendarValue = ref({
+  start: _start,
+  end: _end,
+}) as Ref<DateRange>;
+
+const requirementList = computed<{
+  label: string;
+  value: boolean;
+}[]>(() => {
+  return [
+    {
+      label: '选择时间段',
+      value: calendarValue.value.start !== undefined && calendarValue.value.end !== undefined,
+    },
+    {
+      label: '审核全部歌曲',
+      value: reviewAll.value ?? true,
+    },
+  ];
+});
+
+const canArrange = computed(() => requirementList.value.every(x => x.value));
+
+const songCount = ref(10);
+
+function isDateUnavailable(date: DateValue) {
+  return arrangementList.value?.some(x => x.date === date.toString());
+}
+
+const queryClient = useQueryClient();
+const { mutate: arrange, isPending } = useMutation({
+  mutationFn: $trpc.arrangements.arrange.mutate,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['arrangements.list'] });
+    toast.success('排歌成功！');
+  },
+  onError: err => useErrorHandler(err),
+});
 </script>

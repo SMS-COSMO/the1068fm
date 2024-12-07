@@ -99,7 +99,22 @@
           <SongCard v-for="song in songList" :key="song.id" :song />
         </TabsContent>
         <TabsContent value="arrangement">
-          arrangement
+          <DatePicker
+            v-model="selectedDate"
+            mode="date"
+            view="weekly"
+            borderless
+            expanded
+            title-position="left"
+            is-required
+            :attributes="calendarAttr"
+            class="mb-4"
+          />
+          <ul class="gap-3 flex flex-col">
+            <li v-for="song in arrangementListSongs" :key="song.id">
+              <SongCard :song />
+            </li>
+          </ul>
         </TabsContent>
         <TabsContent value="mine" class="space-y-3">
           <SongCard v-for="song in mySongList" :key="song.id" :song />
@@ -110,8 +125,12 @@
 </template>
 
 <script setup lang="ts">
+import { DatePicker } from '@ztl-uwu/v-calendar';
+
 const userStore = useUserStore();
 const { $trpc } = useNuxtApp();
+
+const selectedDate = ref(new Date());
 
 const { data: songList, suspense: songListSuspense } = useQuery({
   queryFn: () => $trpc.song.listSafe.query(),
@@ -132,6 +151,32 @@ const { data: canSubmit, suspense: canSubmitSuspense } = useQuery({
   refetchIntervalInBackground: false,
 });
 
+const { data: arrangementList, suspense: arrangementListSuspense } = useQuery({
+  queryFn: () => $trpc.arrangements.listSafe.query(),
+  queryKey: ['arrangements.listSafe'],
+  refetchIntervalInBackground: false,
+});
+
+function getDateString(date: Date) {
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+}
+
+const arrangementListSongs = computed(
+  () => arrangementList.value?.find(e => e.date === getDateString(selectedDate.value))?.songs || [],
+);
+
+const calendarAttr = computed(() => {
+  const res = [];
+  for (const arrangement of arrangementList.value ?? []) {
+    res.push({
+      dot: true,
+      dates: new Date(arrangement.date),
+    });
+  }
+
+  return res;
+});
+
 if (!userStore.loggedIn) {
   navigateTo('/login');
 } else {
@@ -140,6 +185,7 @@ if (!userStore.loggedIn) {
     await songListSuspense();
     await canSubmitSuspense();
     await mySongListSuspense();
+    await arrangementListSuspense();
   } catch {
     navigateTo('/login');
   }
