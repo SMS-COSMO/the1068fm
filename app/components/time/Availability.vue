@@ -7,7 +7,7 @@
       :class="`${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`"
       style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
     >
-      <div class="text-xs">
+      <div class="text-xs text-zinc-950">
         目前投稿状态
       </div>
       <div class="text-2xl font-bold" :class="stateColor.text[state]">

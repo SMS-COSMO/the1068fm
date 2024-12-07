@@ -68,7 +68,7 @@
           </div>
           <ul class="p-4 gap-3 flex flex-col">
             <li v-for="song in day.songs" :key="song.id">
-              <SongCard :song />
+              <SongCard :song is-arrangement />
             </li>
           </ul>
         </ScrollArea>

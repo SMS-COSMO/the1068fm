@@ -37,8 +37,10 @@
             <DatePicker
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
-              is-required is24hr class="border rounded-lg shadow-sm"
+              title-position="left"
+              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
               expanded
+              :is-dark="isDark"
               @update:model-value="handleChange"
             />
             <FormMessage />
@@ -52,8 +54,10 @@
             <DatePicker
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
-              is-required is24hr class="border rounded-lg shadow-sm"
+              title-position="left"
+              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
               expanded
+              :is-dark="isDark"
               @update:model-value="handleChange"
             />
             <FormMessage />
@@ -70,7 +74,7 @@
               <AdminTimeDayPicker :handle-change="handleChange" :value="value" />
               <DatePicker
                 :model-value="value" mode="time" color="gray" locale="zh" hide-time-header
-                is-required is24hr style="border: none !important" @update:model-value="handleChange"
+                is-required is24hr style="border: none !important" class="!bg-background" @update:model-value="handleChange"
               />
             </FormControl>
             <FormMessage />
@@ -86,7 +90,8 @@
               <AdminTimeDayPicker :handle-change="handleChange" :value="value" />
               <DatePicker
                 :model-value="value" mode="time" color="gray" locale="zh" hide-time-header
-                is-required is24hr style="border: none !important" @update:model-value="handleChange"
+                is-required is24hr style="border: none !important" class="!bg-background"
+                @update:model-value="handleChange"
               />
             </FormControl>
             <FormMessage />
@@ -105,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { DatePicker } from 'v-calendar';
+import { DatePicker } from '@ztl-uwu/v-calendar';
 import * as z from 'zod';
 
 const { $trpc } = useNuxtApp();
@@ -125,6 +130,8 @@ const { handleSubmit, resetForm, values } = useForm({
     endAt: new Date(),
   },
 });
+
+const isDark = computed(() => useColorMode().preference === 'dark');
 
 const queryClient = useQueryClient();
 const { mutate, isPending } = useMutation({

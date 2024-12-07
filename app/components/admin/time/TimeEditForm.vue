@@ -47,7 +47,9 @@
             <DatePicker
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
-              is-required is24hr class="border rounded-lg shadow-sm"
+              title-position="left"
+              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
+              :is-dark="isDark"
               expanded
               @update:model-value="handleChange"
             />
@@ -62,7 +64,9 @@
             <DatePicker
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
-              is-required is24hr class="border rounded-lg shadow-sm"
+              title-position="left"
+              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
+              :is-dark="isDark"
               expanded
               @update:model-value="handleChange"
             />
@@ -119,7 +123,7 @@
 
 <script setup lang="ts">
 import type { RouterOutput } from '~~/types';
-import { DatePicker } from 'v-calendar';
+import { DatePicker } from '@ztl-uwu/v-calendar';
 import * as z from 'zod';
 
 const { time } = defineProps<{
@@ -142,6 +146,8 @@ const { handleSubmit, values } = useForm({
     ...time,
   },
 });
+
+const isDark = computed(() => useColorMode().preference === 'dark');
 
 const queryClient = useQueryClient();
 const { mutate: modify, isPending } = useMutation({

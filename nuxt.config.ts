@@ -11,10 +11,16 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'shadcn-nuxt',
     '@vee-validate/nuxt',
+    '@nuxtjs/color-mode',
   ],
 
   future: {
     compatibilityVersion: 4,
+  },
+
+  colorMode: {
+    classSuffix: '',
+    disableTransition: true,
   },
 
   icon: {

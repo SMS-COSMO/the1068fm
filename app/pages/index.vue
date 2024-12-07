@@ -42,10 +42,7 @@
             规则介绍
           </span>
         </Button>
-        <Button variant="outline">
-          <Icon name="lucide:info" class="mr-2" />
-          关于我们
-        </Button>
+        <HomeAboutUs />
       </div>
 
       <div class="flex items-center gap-4 mt-4">
@@ -61,6 +58,7 @@
         </div>
 
         <div class="ml-auto flex gap-2">
+          <DarkModeToggle />
           <Button v-if="userStore.permissions.includes('admin')" variant="outline" size="sm" @click="admin">
             <Icon name="lucide:user-cog" class="mr-1" />
             管理
@@ -75,7 +73,7 @@
 
     <section class="lg:overflow-scroll lg:px-4">
       <Tabs default-value="list">
-        <div class="sticky top-4 lg:top-0 bg-white z-50">
+        <div class="sticky top-4 lg:top-0 bg-background z-50">
           <TabsList class="grid grid-cols-3">
             <TabsTrigger value="list">
               已收集投稿
@@ -108,11 +106,12 @@
             title-position="left"
             is-required
             :attributes="calendarAttr"
-            class="mb-4"
+            :is-dark="isDark"
+            class="mb-4 !bg-background"
           />
           <ul class="gap-3 flex flex-col">
             <li v-for="song in arrangementListSongs" :key="song.id">
-              <SongCard :song />
+              <SongCard :song is-arrangement />
             </li>
           </ul>
         </TabsContent>
@@ -131,6 +130,7 @@ const userStore = useUserStore();
 const { $trpc } = useNuxtApp();
 
 const selectedDate = ref(new Date());
+const isDark = computed(() => useColorMode().preference === 'dark');
 
 const { data: songList, suspense: songListSuspense } = useQuery({
   queryFn: () => $trpc.song.listSafe.query(),

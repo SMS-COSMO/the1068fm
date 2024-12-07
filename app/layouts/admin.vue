@@ -4,7 +4,7 @@
       <SidebarHeader class="border-b h-16">
         <SidebarMenu>
           <SidebarMenuItem>
-            <LogosThe1068fm class="h-full w-full px-8 cursor-pointer" @click="navigate('/')" />
+            <LogosThe1068fm class="h-full w-full px-8 cursor-pointer" @click="navigateTo('/')" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -13,19 +13,19 @@
           <SidebarGroupLabel>管理</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem v-if="userStore.permissions.includes('review')">
-              <SidebarMenuButton @click="navigate('/admin/review')">
+              <SidebarMenuButton @click="navigateTo('/admin/review')">
                 <Icon name="lucide:music-4" />
                 <span>歌曲审核</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem v-if="userStore.permissions.includes('arrange')">
-              <SidebarMenuButton @click="navigate('/admin/arrange')">
+              <SidebarMenuButton @click="navigateTo('/admin/arrange')">
                 <Icon name="lucide:arrow-down-wide-narrow" />
                 <span>排歌列表</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem v-if="userStore.permissions.includes('manageUser')">
-              <SidebarMenuButton @click="navigate('/admin/user')">
+              <SidebarMenuButton @click="navigateTo('/admin/user')">
                 <Icon name="lucide:users" />
                 <span>用户管理</span>
               </SidebarMenuButton>
@@ -37,7 +37,7 @@
           <SidebarMenu>
             <TimeAvailability />
             <SidebarMenuItem>
-              <SidebarMenuButton @click="navigate('/admin/time')">
+              <SidebarMenuButton @click="navigateTo('/admin/time')">
                 <Icon name="lucide:clock" />
                 <span>设置开放时间</span>
               </SidebarMenuButton>
@@ -89,7 +89,7 @@
     </Sidebar>
     <SidebarInset>
       <header class="border-b flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4">
+        <div class="flex items-center gap-2 px-4 w-full">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 h-4" />
           <Breadcrumb>
@@ -107,6 +107,7 @@
               </template>
             </BreadcrumbList>
           </Breadcrumb>
+          <DarkModeToggle class="ml-auto" />
         </div>
       </header>
       <main>
@@ -125,10 +126,6 @@ function logout() {
   userStore.logout();
   toast.success('登出成功');
   navigateTo('/login');
-}
-
-function navigate(to: string) {
-  navigateTo(to);
 }
 
 interface Item {

@@ -11,13 +11,14 @@
           </CardDescription>
         </div>
         <div class="flex-grow" />
-        <div class="h-6">
-          <SongState :song />
-        </div>
+        <span v-if="song.createdAt" class="text-muted-foreground text-xs">
+          {{ useTimeAgo(song.createdAt) }}
+        </span>
       </div>
       <p v-if="song.message" class="text-xs text-muted-foreground">
         留言: {{ song.message }}
       </p>
+      <SongState v-if="!isArrangement" :song />
     </CardHeader>
 
     <ClientOnly>
@@ -95,10 +96,16 @@
 <script setup lang="ts">
 import type { RouterOutput } from '~~/types';
 
-const { song, type = 'public', selected = false } = defineProps<{
+const {
+  song,
+  type = 'public',
+  selected = false,
+  isArrangement = false,
+} = defineProps<{
   type?: 'public' | 'review';
   selected?: boolean;
   song: Partial<RouterOutput['song']['listMine'][0]>;
+  isArrangement?: boolean;
 }>();
 
 const isOpen = ref(false);
