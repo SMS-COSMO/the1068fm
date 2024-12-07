@@ -7,6 +7,7 @@ export const permissionNames: ({ value: TPermission; label: string; icon: string
   { value: 'manageUser', label: '管理用户', icon: 'lucide:user-cog' },
   { value: 'review', label: '审核歌曲', icon: 'lucide:music-4' },
   { value: 'time', label: '开放时间', icon: 'lucide:clock' },
+  { value: 'blockWords', label: '屏蔽词', icon: 'lucide:ban' },
 ];
 
 export const breadCrumb: Record<string, string> = {
@@ -15,4 +16,5 @@ export const breadCrumb: Record<string, string> = {
   review: '歌曲审核',
   arrange: '排歌列表',
   time: '开放时间',
+  words: '屏蔽词',
 };

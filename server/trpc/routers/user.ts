@@ -80,7 +80,7 @@ export const userRouter = router({
   editPermission: adminProcedure
     .input(z.object({
       id: z.string(),
-      permissions: z.enum(['login', 'admin', 'review', 'arrange', 'manageUser', 'time']).array(),
+      permissions: z.enum(['login', 'admin', 'review', 'arrange', 'manageUser', 'time', 'blockWords']).array(),
     }))
     .use(requirePermission(['manageUser']))
     .mutation(async ({ input }) => {

@@ -23,7 +23,7 @@
         h
 
         <div class="text-xs flex justify-between items-center">
-          <span class="text-muted-foreground">Made with ❤️ by <NuxtLink to="https://github.com/ZTL-UwU" class="underline underline-offset-4 font-semibold">@ZTL-UwU</NuxtLink></span>
+          <span class="text-muted-foreground">Made with ❤️ by <NuxtLink to="https://github.com/ZTL-UwU" class="underline underline-offset-4 font-semibold">@ZTL-UwU</NuxtLink> from COSMO</span>
           <div class="flex gap-2">
             <NuxtLink to="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Mzg2NzUzOTIyOA==&scene=124#wechat_redirect" target="_blank">
               <Button variant="outline" size="icon">

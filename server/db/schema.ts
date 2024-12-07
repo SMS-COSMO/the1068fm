@@ -54,3 +54,8 @@ export const songsRelations = relations(songs, ({ one }) => ({
     references: [arrangements.date],
   }),
 }));
+
+export const blockWords = pgTable('block-words', {
+  word: text().primaryKey(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});

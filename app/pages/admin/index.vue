@@ -28,6 +28,22 @@
         </CardContent>
       </Card>
     </div>
+    <Card class="mt-8 h-max">
+      <CardHeader>
+        <CardTitle>
+          投稿统计
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <BarChart
+          v-if="data?.chart"
+          index="date"
+          :data="data.chart"
+          :categories="['approved', 'dropped', 'pending', 'rejected', 'used']"
+          :rounded-corners="4"
+        />
+      </CardContent>
+    </Card>
   </div>
 </template>
 

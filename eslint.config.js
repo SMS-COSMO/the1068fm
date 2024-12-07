@@ -9,7 +9,7 @@ export default antfu({
     quotes: 'single',
     semi: true,
   },
-  ignores: ['public/**'],
+  ignores: ['public/**', 'app/components/ui/**'],
   regexp: false,
 }, {
   rules: {

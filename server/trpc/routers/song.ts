@@ -40,6 +40,15 @@ export const songRouter = router({
       if (!(await checkCanSubmit(ctx.user.id)))
         throw new TRPCError({ code: 'BAD_REQUEST', message: '一天只能提交一首歌曲' });
 
+      const chinese = `${input.name} ${input.creator} ${input.message}`.match(/[\u4E00-\u9FA5]+/g);
+      const english = `${input.name} ${input.creator} ${input.message}`.match(/[\da-zA-Z]+/g);
+
+      const blockWords = await db.query.blockWords.findMany();
+      if (chinese?.some(x => blockWords.some(y => x.includes(y.word))))
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '触发关键词 😠' });
+      if (english?.some(x => blockWords.some(y => x === y.word)))
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '触发关键词 😠' });
+
       await db.insert(songs).values({
         ...input,
         ownerId: ctx.user.id,

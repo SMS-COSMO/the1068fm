@@ -12,24 +12,46 @@
         <SidebarGroup>
           <SidebarGroupLabel>管理</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuItem v-if="userStore.permissions.includes('review')">
-              <SidebarMenuButton @click="navigateTo('/admin/review')">
-                <Icon name="lucide:music-4" />
-                <span>歌曲审核</span>
-              </SidebarMenuButton>
+            <SidebarMenuItem>
+              <NuxtLink to="/admin">
+                <SidebarMenuButton>
+                  <Icon name="lucide:chart-no-axes-column" />
+                  <span>数据统计</span>
+                </SidebarMenuButton>
+              </NuxtLink>
             </SidebarMenuItem>
-            <SidebarMenuItem v-if="userStore.permissions.includes('arrange')">
-              <SidebarMenuButton @click="navigateTo('/admin/arrange')">
-                <Icon name="lucide:arrow-down-wide-narrow" />
-                <span>排歌列表</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem v-if="userStore.permissions.includes('manageUser')">
-              <SidebarMenuButton @click="navigateTo('/admin/user')">
-                <Icon name="lucide:users" />
-                <span>用户管理</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <NuxtLink v-if="userStore.permissions.includes('review')" to="/admin/review">
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <Icon name="lucide:music-4" />
+                  <span>歌曲审核</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </NuxtLink>
+            <NuxtLink v-if="userStore.permissions.includes('arrange')" to="/admin/arrange">
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <Icon name="lucide:arrow-down-wide-narrow" />
+                  <span>排歌列表</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </NuxtLink>
+            <NuxtLink v-if="userStore.permissions.includes('manageUser')" to="/admin/user">
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <Icon name="lucide:users" />
+                  <span>用户管理</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </NuxtLink>
+            <NuxtLink v-if="userStore.permissions.includes('blockWords')" to="/admin/words">
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <Icon name="lucide:ban" />
+                  <span>屏蔽词</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </NuxtLink>
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup v-if="userStore.permissions.includes('time')" class="border-t">

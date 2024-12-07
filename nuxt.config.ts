@@ -21,6 +21,8 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: '',
     disableTransition: true,
+    fallback: 'light',
+    storage: 'cookie',
   },
 
   icon: {

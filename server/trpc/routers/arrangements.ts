@@ -105,7 +105,7 @@ export const arrangementsRouter = router({
                   arrangementDate: dateString,
                   state: 'used',
                 })
-                .where(eq(songs.id, approvedSongs[songIndex].id));
+                .where(eq(songs.id, approvedSongs[songIndex]!.id));
             }
 
             songIndex++;
@@ -117,7 +117,7 @@ export const arrangementsRouter = router({
           await tx
             .update(songs)
             .set({ state: 'dropped' })
-            .where(eq(songs.id, approvedSongs[songIndex].id));
+            .where(eq(songs.id, approvedSongs[songIndex]!.id));
 
           songIndex++;
         }

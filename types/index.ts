@@ -10,6 +10,7 @@ export type TPermission =
   'review' | // review songs
   'arrange' | // arrange songs
   'time' | // set opening time
+  'blockWords' | // manage block words
   'manageUser'; // manage users (listing, banning, ...)
 
 export type TSongState = 'pending' | 'approved' | 'rejected' | 'used' | 'dropped';
