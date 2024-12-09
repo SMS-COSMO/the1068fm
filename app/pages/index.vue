@@ -59,7 +59,7 @@
 
         <div class="ml-auto flex gap-2">
           <DarkModeToggle />
-          <Button v-if="userStore.permissions.includes('admin')" variant="outline" size="sm" @click="admin">
+          <Button v-if="userStore.permissions.includes('admin')" variant="outline" size="sm" @click="navigateTo('/admin')">
             <Icon name="lucide:user-cog" class="mr-1" />
             管理
           </Button>
@@ -88,13 +88,13 @@
         </div>
         <TabsContent value="list" class="space-y-3">
           <div class="relative w-full items-center mt-1">
-            <Input id="search" type="text" placeholder="搜索歌曲" class="pl-8" />
+            <Input id="search" v-model="searchPrompt" type="text" placeholder="搜索歌曲" class="pl-8" />
             <span class="absolute start-0 inset-y-0 flex items-center justify-center pl-3">
               <Icon name="lucide:search" class="text-muted-foreground" />
             </span>
           </div>
 
-          <SongCard v-for="song in songList" :key="song.id" :song />
+          <SongCard v-for="song in filteredList" :key="song.id" :song />
         </TabsContent>
         <TabsContent value="arrangement">
           <DatePicker
@@ -124,6 +124,8 @@
 </template>
 
 <script setup lang="ts">
+import type { RouterOutput } from '~~/types';
+import { useFuse, type UseFuseOptions } from '@vueuse/integrations/useFuse';
 import { DatePicker } from '@ztl-uwu/v-calendar';
 
 const userStore = useUserStore();
@@ -197,7 +199,20 @@ function logout() {
   navigateTo('/login');
 }
 
-function admin() {
-  navigateTo('/admin');
-}
+type TLists = RouterOutput['song']['listSafe'];
+
+const fuseOptions: UseFuseOptions<TLists[0]> = {
+  fuseOptions: {
+    keys: ['name', 'creator'],
+    shouldSort: true,
+  },
+  matchAllWhenSearchEmpty: true,
+};
+
+const searchPrompt = ref('');
+const fuse = songList.value === undefined
+  ? useFuse<TLists[0]>(searchPrompt, [], fuseOptions)
+  : useFuse<TLists[0]>(searchPrompt, songList, fuseOptions);
+
+const filteredList = computed<TLists>(() => fuse.results.value.map(e => e.item));
 </script>
