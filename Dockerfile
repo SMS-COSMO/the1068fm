@@ -14,7 +14,7 @@ WORKDIR /app
 ENV NODE_ENV="production"
 # ENV NITRO_PRESET="bun"
 
-RUN curl -fsSL https://bun.sh/install | bash
+RUN npm install -g bun@latest
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
