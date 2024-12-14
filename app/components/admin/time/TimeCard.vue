@@ -15,7 +15,7 @@
           {{ `${dayString[time.startAt.getDay()]}` }}
         </div>
         <div v-else class="text-2xl font-bold text-center">
-          {{ `${time.startAt.getMonth() + 1}-${time.startAt.getDate()}` }}
+          {{ time.startAt.toLocaleDateString('zh-CN').replaceAll('/', '-') }}
         </div>
         <div class="text-lg text-center">
           {{ `${time.startAt.getHours().toString().padStart(2, '0')}:${time.startAt.getMinutes().toString().padStart(2, '0')}` }}
@@ -29,7 +29,7 @@
           {{ `${dayString[time.endAt.getDay()]}` }}
         </div>
         <div v-else class="text-2xl font-bold text-center">
-          {{ `${time.endAt.getMonth() + 1}-${time.endAt.getDate()}` }}
+          {{ time.endAt.toLocaleDateString('zh-CN').replaceAll('/', '-') }}
         </div>
         <div class="text-lg text-center">
           {{ `${time.endAt.getHours().toString().padStart(2, '0')}:${time.endAt.getMinutes().toString().padStart(2, '0')}` }}

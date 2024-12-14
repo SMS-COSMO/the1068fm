@@ -1,29 +1,27 @@
 <template>
-  <div>
-    <Button
-      v-if="isCard"
-      variant="outline"
-      class="block w-full items-center gap-2 h-full"
-      :class="`${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`"
-      style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
-    >
-      <div class="text-xs text-zinc-950">
-        目前投稿状态
-      </div>
-      <div class="text-2xl font-bold" :class="stateColor.text[state]">
-        {{ stateText[state] }}
-      </div>
-    </Button>
-    <div v-else>
-      <div class="flex flex-row p-2 items-center">
-        <div
-          class="h-3.5 w-3.5 rounded-full border-2" :class="[stateColor.bg[state], stateColor.border[state]]"
-        />
-        <span class="ml-2 text-sm">目前投稿状态</span>
-        <span class="font-bold ml-2 text-sm" :class="stateColor.text[state]">{{ stateText[state] }}</span>
-      </div>
+  <Button
+    v-if="isCard"
+    variant="outline"
+    class="block w-full items-center gap-2 h-full"
+    :class="`${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`"
+    style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
+  >
+    <div class="text-xs text-zinc-950">
+      目前投稿状态
     </div>
-  </div>
+    <div class="text-2xl font-bold" :class="stateColor.text[state]">
+      {{ stateText[state] }}
+    </div>
+  </Button>
+  <template v-else>
+    <div class="flex flex-row p-2 items-center">
+      <div
+        class="h-3.5 w-3.5 rounded-full border-2" :class="[stateColor.bg[state], stateColor.border[state]]"
+      />
+      <span class="ml-2 text-sm">目前投稿状态</span>
+      <span class="font-bold ml-2 text-sm" :class="stateColor.text[state]">{{ stateText[state] }}</span>
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">

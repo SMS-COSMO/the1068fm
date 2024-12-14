@@ -1,6 +1,6 @@
 <template>
   <main
-    class="p-5 lg:p-10 flex flex-col lg:grid lg:grid-cols-2 max-w-screen-sm mx-auto lg:max-w-screen-xl lg:mx-auto lg:h-screen gap-8"
+    class="p-5 lg:p-10 flex flex-col lg:grid lg:grid-cols-2 max-w-screen-sm mx-auto lg:max-w-screen-xl lg:mx-auto lg:h-screen gap-4 lg:gap-8"
   >
     <section class="flex flex-col gap-3 lg:self-center">
       <LogosCombined class="w-full" />
@@ -72,8 +72,8 @@
     </section>
 
     <section class="lg:overflow-scroll lg:px-4">
-      <Tabs default-value="list">
-        <div class="sticky top-4 lg:top-0 bg-background z-50">
+      <Tabs v-model="selectedTab" default-value="list">
+        <div class="sticky pt-4 top-0 bg-background z-50 -mx-5 px-5 lg:p-0 lg:m-0">
           <TabsList class="grid grid-cols-3">
             <TabsTrigger value="list">
               已收集投稿
@@ -85,15 +85,14 @@
               我的投稿
             </TabsTrigger>
           </TabsList>
-        </div>
-        <TabsContent value="list" class="space-y-3">
-          <div class="relative w-full items-center mt-1">
+          <div v-if="selectedTab === 'list'" class="w-full items-center mt-1 relative bg-background">
             <Input id="search" v-model="searchPrompt" type="text" placeholder="搜索歌曲" class="pl-8" />
             <span class="absolute start-0 inset-y-0 flex items-center justify-center pl-3">
               <Icon name="lucide:search" class="text-muted-foreground" />
             </span>
           </div>
-
+        </div>
+        <TabsContent value="list" class="space-y-3">
           <SongCard v-for="song in filteredList" :key="song.id" :song />
         </TabsContent>
         <TabsContent value="arrangement">
@@ -215,4 +214,6 @@ const fuse = songList.value === undefined
   : useFuse<TLists[0]>(searchPrompt, songList, fuseOptions);
 
 const filteredList = computed<TLists>(() => fuse.results.value.map(e => e.item));
+
+const selectedTab = ref<'list' | 'arrangement' | 'mine'>('list');
 </script>

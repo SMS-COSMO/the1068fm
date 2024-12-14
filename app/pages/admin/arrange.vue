@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[calc(100vw-16rem)] overflow-x-auto">
+  <div class="md:w-[calc(100vw-16rem)] overflow-x-auto">
     <div class="flex w-max">
       <div class="h-[calc(100svh-4rem)] w-min bg-sidebar border-r sticky left-0 z-50 flex flex-col justify-between p-4">
         <div>

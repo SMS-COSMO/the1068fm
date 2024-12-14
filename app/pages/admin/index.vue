@@ -27,6 +27,19 @@
           </div>
         </CardContent>
       </Card>
+      <Card>
+        <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle class="text-sm font-medium">
+            投稿状态
+          </CardTitle>
+          <Icon name="lucide:clock" class="text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div class="text-2xl font-bold">
+            <TimeAvailability class="px-0" />
+          </div>
+        </CardContent>
+      </Card>
     </div>
     <Card class="mt-8 h-max">
       <CardHeader>

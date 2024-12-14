@@ -1,5 +1,5 @@
 <template>
-  <SidebarProvider>
+  <SidebarProvider class="w-[calc(100vw+16rem)] md:w-auto">
     <Sidebar>
       <SidebarHeader class="border-b h-16">
         <SidebarMenu>
