@@ -1,17 +1,12 @@
-import type { Config } from 'drizzle-kit';
+import { defineConfig } from 'drizzle-kit';
 import { env } from './server/env';
+import 'dotenv/config';
 
-const dbCredentials = (() => {
-  switch (env.DATABASE_CONNECTION_TYPE) {
-    case 'local': return { url: env.DATABASE_URL };
-    case 'remote': return { url: env.DATABASE_URL, authToken: env.DATABASE_AUTH_TOKEN };
-  }
-})();
-
-export default {
-  schema: './server/db/schema/index.ts',
+export default defineConfig({
   out: './drizzle',
-  driver: 'turso',
-  dbCredentials,
-  tablesFilter: ['!libsql_wasm_func_table'],
-} satisfies Config;
+  schema: './server/db/schema.ts',
+  dialect: 'postgresql',
+  dbCredentials: {
+    url: env.DATABASE_URL,
+  },
+});

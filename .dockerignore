@@ -15,7 +15,5 @@ logs
 .env.*
 !.env.example
 
-
 # db
 drizzle
-local.sqlite

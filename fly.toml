@@ -10,10 +10,8 @@ swap_size_mb = 512
 [build]
 
 [env]
-DATABASE_CONNECTION_TYPE = "remote"
 NODE_ENV = "production"
 PORT = "3000"
-SERVER_URL = "https://fm.the1068.pictures"
 
 [http_service]
 internal_port = 3000

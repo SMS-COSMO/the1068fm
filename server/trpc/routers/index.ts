@@ -1,14 +1,18 @@
 import { router } from '../trpc';
-import { userRouter } from './user';
+import { arrangementsRouter } from './arrangements';
 import { songRouter } from './song';
+import { statsRouter } from './stats';
 import { timeRouter } from './time';
-import { arrangementRouter } from './arrangement';
+import { userRouter } from './user';
+import { blockWordsRouter } from './words';
 
 export const appRouter = router({
   user: userRouter,
   song: songRouter,
   time: timeRouter,
-  arrangement: arrangementRouter,
+  stats: statsRouter,
+  arrangements: arrangementsRouter,
+  blockWords: blockWordsRouter,
 });
 
 export type AppRouter = typeof appRouter;

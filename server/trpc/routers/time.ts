@@ -1,79 +1,123 @@
-import { TRPCError } from '@trpc/server';
+import { db } from '~~/server/db';
+import { times } from '~~/server/db/schema';
+import { asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
+
+export async function fitsInTime(t: Date) {
+  const list = await db.query.times.findMany({
+    columns: {
+      isActive: true,
+      startAt: true,
+      endAt: true,
+      repeats: true,
+    },
+  });
+
+  for (const time of list) {
+    if (!time.isActive)
+      continue;
+    if (!time.repeats) {
+      if (t < time.startAt || time.endAt < t)
+        continue;
+    } else {
+      const dhms = (d: Date) => ({
+        d: d.getDay() === 0 ? 7 : d.getDay(),
+        h: d.getHours(),
+        m: d.getMinutes(),
+        s: d.getSeconds(),
+      });
+      const date2num = (d: ReturnType<typeof dhms>) => d.d * 1000000 + d.h * 10000 + d.m * 100 + d.s;
+
+      const start = dhms(time.startAt);
+      const end = dhms(time.endAt);
+      const current = dhms(t);
+
+      if ((start.d < end.d && (current.d < start.d || end.d < current.d)) || (start.d > end.d && current.d < start.d))
+        continue;
+      if (start.d === end.d && (date2num(current) < date2num(start) || date2num(current) > date2num(end)))
+        continue;
+      if (current.d === start.d && date2num(current) < date2num(start))
+        continue;
+      if (current.d === end.d && date2num(current) > date2num(end))
+        continue;
+    }
+    return true;
+  }
+  return false;
+}
 
 export const timeRouter = router({
-  create: protectedProcedure
+  create: adminProcedure
     .input(z.object({
-      name: z.string().max(50, '时间段名不能大于50'),
+      name: z.string(),
       startAt: z.date(),
       endAt: z.date(),
       repeats: z.boolean(),
     }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.timeController.create(input);
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
+    .use(requirePermission(['time']))
+    .mutation(async ({ input }) => {
+      const id = (
+        await db.insert(times).values(input).returning({ id: times.id })
+      )?.[0]?.id;
+      return id;
     }),
 
-  remove: protectedProcedure
-    .input(z.object({ id: z.string().min(1, '时间段不存在') }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.timeController.remove(input.id);
-      if (!res.success)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res;
+  remove: adminProcedure
+    .input(z.number().int())
+    .use(requirePermission(['time']))
+    .mutation(async ({ input }) => {
+      await db.delete(times).where(eq(times.id, input));
     }),
 
-  content: publicProcedure
-    .input(z.object({ id: z.string().min(1, '时间段不存在') }))
-    .query(async ({ ctx, input }) => {
-      const res = await ctx.timeController.getContent(input.id);
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
+  currently: protectedProcedure
+    .query(async () => {
+      return await fitsInTime(new Date());
     }),
 
-  currently: publicProcedure
-    .query(async ({ ctx }) => {
-      const res = await ctx.timeController.fitsInTime(new Date());
-      return res;
+  listSafe: protectedProcedure
+    .query(async () => {
+      return await db.query.times.findMany({
+        where: eq(times.isActive, true),
+        columns: {
+          isActive: true,
+          startAt: true,
+          endAt: true,
+          repeats: true,
+        },
+      });
     }),
 
-  modify: protectedProcedure
+  list: adminProcedure
+    .use(requirePermission(['time']))
+    .query(async () => {
+      return await db.query.times.findMany({
+        orderBy: asc(times.createdAt),
+      });
+    }),
+
+  modify: adminProcedure
     .input(z.object({
-      id: z.string().min(1, '时间段不存在'),
+      id: z.number().int(),
       name: z.string(),
       startAt: z.date(),
       endAt: z.date(),
       repeats: z.boolean(),
       isActive: z.boolean(),
     }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.timeController.modify(input);
-      if (!res.success)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res;
+    .use(requirePermission(['time']))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await db.update(times).set(data).where(eq(times.id, id));
     }),
 
-  modifyActive: protectedProcedure
+  modifyActive: adminProcedure
     .input(z.object({
-      id: z.string().min(1, '时间段不存在'),
+      id: z.number().int(),
       isActive: z.boolean(),
     }))
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.timeController.modifyActive(input.id, input.isActive);
-      if (!res.success)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res;
-    }),
-
-  list: publicProcedure
-    .query(async ({ ctx }) => {
-      const res = await ctx.timeController.getList();
-      if (!res.success || !res.res)
-        throw new TRPCError({ code: 'BAD_REQUEST', message: res.message });
-      else return res.res;
+    .use(requirePermission(['time']))
+    .mutation(async ({ input }) => {
+      await db.update(times).set({ isActive: input.isActive }).where(eq(times.id, input.id));
     }),
 });
