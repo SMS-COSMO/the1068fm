@@ -5,7 +5,7 @@
       <span class="text-xs">{{ state.label }}</span>
     </Badge>
     <Badge v-if="song.state === 'rejected' && song.rejectMessage && !hideReason" variant="secondary">
-      <span class="font-normal truncate">&nbsp;{{ song.rejectMessage }}</span>
+      <span class="truncate font-normal">&nbsp;{{ song.rejectMessage }}</span>
     </Badge>
   </div>
 </template>

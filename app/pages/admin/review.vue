@@ -2,11 +2,11 @@
   <ResizablePanelGroup id="review-resizable" direction="horizontal" @layout="layout = $event">
     <ResizablePanel id="review-resizable-panel-1" :default-size="layout[0]">
       <ScrollArea class="h-[calc(100svh-4rem)]">
-        <div class="h-16 px-4 border-b sticky top-0 bg-background flex items-center">
+        <div class="sticky top-0 flex h-16 items-center border-b bg-background px-4">
           <Icon name="lucide:list-music" size="17" class="mr-2" />
-          <span class="font-semibold text-sm">待审核歌曲</span>
+          <span class="text-sm font-semibold">待审核歌曲</span>
         </div>
-        <TransitionGroup name="list" tag="ul" class="gap-3 flex flex-col p-4">
+        <TransitionGroup name="list" tag="ul" class="flex flex-col gap-3 p-4">
           <li v-for="song in songList" :key="song.id">
             <SongCard
               type="review"

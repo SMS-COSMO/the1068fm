@@ -16,14 +16,14 @@
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle class="text-xl font-bold text-start">
+          <DialogTitle class="text-start text-xl font-bold">
             关于我们
           </DialogTitle>
         </DialogHeader>
         h
 
-        <div class="text-xs flex justify-between items-center">
-          <span class="text-muted-foreground">Made with ❤️ by <NuxtLink to="https://github.com/ZTL-UwU" class="underline underline-offset-4 font-semibold">@ZTL-UwU</NuxtLink> from COSMO</span>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-muted-foreground">Made with ❤️ by <NuxtLink to="https://github.com/ZTL-UwU" class="font-semibold underline underline-offset-4">@ZTL-UwU</NuxtLink> from COSMO</span>
           <div class="flex gap-2">
             <NuxtLink to="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Mzg2NzUzOTIyOA==&scene=124#wechat_redirect" target="_blank">
               <Button variant="outline" size="icon">
@@ -37,7 +37,7 @@
             </NuxtLink>
             <NuxtLink to="https://the1068.pictures/" target="_blank">
               <Button variant="outline" size="icon">
-                <span class="font-serif leading-[0.6rem] text-xs font-semibold">
+                <span class="font-serif text-xs font-semibold leading-[0.6rem]">
                   10<br>68
                 </span>
               </Button>

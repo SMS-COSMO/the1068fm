@@ -48,7 +48,7 @@
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
               title-position="left"
-              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
+              is-required is24hr class="rounded-lg border !bg-background shadow-sm"
               :is-dark="isDark"
               expanded
               @update:model-value="handleChange"
@@ -65,7 +65,7 @@
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
               title-position="left"
-              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
+              is-required is24hr class="rounded-lg border !bg-background shadow-sm"
               :is-dark="isDark"
               expanded
               @update:model-value="handleChange"
@@ -108,7 +108,7 @@
         </FormField>
       </div>
 
-      <div class="flex gap-4 mt-4">
+      <div class="mt-4 flex gap-4">
         <Button type="submit" :disabled="isPending">
           <Icon v-if="isPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
           修改

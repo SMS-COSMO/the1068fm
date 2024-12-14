@@ -2,8 +2,8 @@
   <ResizablePanelGroup id="time-resizable" direction="horizontal" @layout="layout = $event">
     <ResizablePanel id="time-resizable-panel-1" :default-size="layout[0]">
       <ScrollArea class="h-[calc(100svh-4rem)] p-4">
-        <div class="gap-4 flex flex-col">
-          <TransitionGroup name="list" tag="ul" class="gap-4 flex flex-col">
+        <div class="flex flex-col gap-4">
+          <TransitionGroup name="list" tag="ul" class="flex flex-col gap-4">
             <li v-for="time in timeList" :key="time.id">
               <AdminTimeCard
                 :time
@@ -13,7 +13,7 @@
             </li>
           </TransitionGroup>
 
-          <Button variant="outline" class="h-20 rounded-lg w-full" @click="rightPanel = 'create'">
+          <Button variant="outline" class="h-20 w-full rounded-lg" @click="rightPanel = 'create'">
             <Icon name="lucide:plus" size="18" />
           </Button>
         </div>

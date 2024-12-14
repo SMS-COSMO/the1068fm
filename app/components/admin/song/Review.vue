@@ -1,5 +1,5 @@
 <template>
-  <div class="h-16 px-4 border-b sticky top-0 bg-background flex gap-2 items-center">
+  <div class="sticky top-0 flex h-16 items-center gap-2 border-b bg-background px-4">
     <Button
       variant="outline"
       :disable="approvePending"
@@ -19,7 +19,7 @@
     <Input v-model="rejectMessage" placeholder="拒绝理由（≥ 4个字符）" />
   </div>
   <div v-if="!isFetching">
-    <div v-if="previewList && previewList.length" class="p-4 flex flex-col gap-3">
+    <div v-if="previewList && previewList.length" class="flex flex-col gap-3 p-4">
       <NuxtLink
         v-for="preview of previewList"
         :key="preview.mid"
@@ -27,8 +27,8 @@
         target="_blank"
         class="w-full"
       >
-        <button class="w-full h-auto p-4 border rounded-lg shadow-sm hover:bg-muted transition-colors cursor-pointer flex gap-4">
-          <Avatar class="rounded h-9 w-9">
+        <button class="flex h-auto w-full cursor-pointer gap-4 rounded-lg border p-4 shadow-sm transition-colors hover:bg-muted">
+          <Avatar class="size-9 rounded">
             <NuxtImg :src="preview.pic" />
             <Icon name="lucide:music" size="20" />
           </Avatar>
@@ -43,13 +43,13 @@
           </div>
         </button>
       </NuxtLink>
-      <span class="text-xs text-muted-foreground text-right mt-2">点击歌曲跳转到 QQ 音乐试听</span>
+      <span class="mt-2 text-right text-xs text-muted-foreground">点击歌曲跳转到 QQ 音乐试听</span>
     </div>
-    <div v-else class="h-[calc(100svh-10rem)] w-full flex flex-col items-center justify-center">
+    <div v-else class="flex h-[calc(100svh-10rem)] w-full flex-col items-center justify-center">
       无搜索结果。
     </div>
   </div>
-  <div v-else class="h-[calc(100svh-10rem)] w-full flex flex-col items-center justify-center">
+  <div v-else class="flex h-[calc(100svh-10rem)] w-full flex-col items-center justify-center">
     <Icon name="lucide:loader-circle" class="animate-spin" size="35" />
   </div>
 </template>

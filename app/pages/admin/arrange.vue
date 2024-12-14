@@ -1,7 +1,7 @@
 <template>
-  <div class="md:w-[calc(100vw-16rem)] overflow-x-auto">
+  <div class="overflow-x-auto md:w-[calc(100vw-16rem)]">
     <div class="flex w-max">
-      <div class="h-[calc(100svh-4rem)] w-min bg-sidebar border-r sticky left-0 z-50 flex flex-col justify-between p-4">
+      <div class="sticky left-0 z-50 flex h-[calc(100svh-4rem)] w-min flex-col justify-between border-r bg-sidebar p-4">
         <div>
           <RangeCalendar
             v-model="calendarValue"
@@ -9,7 +9,7 @@
             locale="zh"
             class="p-0"
           />
-          <div v-if="calendarValue.start && calendarValue.end" class="flex justify-between mt-4 items-center">
+          <div v-if="calendarValue.start && calendarValue.end" class="mt-4 flex items-center justify-between">
             <Badge variant="outline">
               {{ calendarValue.start }}
             </Badge>
@@ -19,12 +19,12 @@
             </Badge>
           </div>
         </div>
-        <div class="p-4 grid gap-3 border bg-background rounded-lg">
+        <div class="grid gap-3 rounded-lg border bg-background p-4">
           <div class="grid gap-1">
             <div v-for="requirement in requirementList" :key="requirement.label" class="flex items-center gap-2">
               <Icon v-if="requirement.value" name="lucide:check" class="text-green-500" />
               <Icon v-else name="lucide:x" class="text-red-500" />
-              <span class="font-medium text-sm">
+              <span class="text-sm font-medium">
                 {{ requirement.label }}
               </span>
             </div>
@@ -59,14 +59,14 @@
         class="w-[400px] flex-shrink-0 border-r"
       >
         <ScrollArea class="h-[calc(100svh-4rem)]">
-          <div class="h-16 px-4 border-b sticky top-0 bg-background flex items-center z-40 justify-between">
-            <span class="font-semibold text-sm">{{ day.date }}</span>
+          <div class="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-4">
+            <span class="text-sm font-semibold">{{ day.date }}</span>
             <Button variant="outline" size="sm" @click="copySongInfo(day)">
               <Icon name="lucide:clipboard" class="mr-1" />
               复制
             </Button>
           </div>
-          <ul class="p-4 gap-3 flex flex-col">
+          <ul class="flex flex-col gap-3 p-4">
             <li v-for="song in day.songs" :key="song.id">
               <SongCard :song is-arrangement />
             </li>

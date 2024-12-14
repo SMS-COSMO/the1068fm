@@ -2,7 +2,7 @@
   <Button
     v-if="isCard"
     variant="outline"
-    class="block w-full items-center gap-2 h-full"
+    class="block size-full items-center gap-2"
     :class="`${stateColor.from[state]} from-[-10%] ${stateColor.via[state]} via-30% to-white to-80%`"
     style="background: linear-gradient(310deg, var(--tw-gradient-stops))"
   >
@@ -14,12 +14,12 @@
     </div>
   </Button>
   <template v-else>
-    <div class="flex flex-row p-2 items-center">
+    <div class="flex flex-row items-center p-2">
       <div
-        class="h-3.5 w-3.5 rounded-full border-2" :class="[stateColor.bg[state], stateColor.border[state]]"
+        class="size-3.5 rounded-full border-2" :class="[stateColor.bg[state], stateColor.border[state]]"
       />
       <span class="ml-2 text-sm">目前投稿状态</span>
-      <span class="font-bold ml-2 text-sm" :class="stateColor.text[state]">{{ stateText[state] }}</span>
+      <span class="ml-2 text-sm font-bold" :class="stateColor.text[state]">{{ stateText[state] }}</span>
     </div>
   </template>
 </template>

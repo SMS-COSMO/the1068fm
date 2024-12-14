@@ -1,13 +1,13 @@
 <template>
   <main
-    class="p-5 lg:p-10 flex flex-col lg:grid lg:grid-cols-2 max-w-screen-sm mx-auto lg:max-w-screen-xl lg:mx-auto lg:h-screen gap-4 lg:gap-8"
+    class="mx-auto flex max-w-screen-sm flex-col gap-4 p-5 lg:mx-auto lg:grid lg:h-screen lg:max-w-screen-xl lg:grid-cols-2 lg:gap-8 lg:p-10"
   >
     <section class="flex flex-col gap-3 lg:self-center">
       <LogosCombined class="w-full" />
 
       <div class="grid grid-cols-2 gap-3">
         <div class="grid grid-rows-2 gap-3">
-          <Button class="block items-center gap-2 h-full" variant="outline">
+          <Button class="block h-full items-center gap-2" variant="outline">
             <div class="text-xs">
               本周已收集歌曲
             </div>
@@ -21,13 +21,13 @@
         </div>
         <ClientOnly>
           <template #fallback>
-            <Button class="w-full text-xl h-full font-bold" :disabled="!canSubmit">
+            <Button class="size-full text-xl font-bold" :disabled="!canSubmit">
               <Icon name="lucide:music-4" size="26" class="mr-2" />
               投稿
             </Button>
           </template>
           <SongSubmitDialog>
-            <Button class="w-full text-xl h-full font-bold" :disabled="!canSubmit">
+            <Button class="size-full text-xl font-bold" :disabled="!canSubmit">
               <Icon name="lucide:music-4" size="26" class="mr-2" />
               投稿
             </Button>
@@ -45,7 +45,7 @@
         <HomeAboutUs />
       </div>
 
-      <div class="flex items-center gap-4 mt-4">
+      <div class="mt-4 flex items-center gap-4">
         <Avatar>
           <Icon name="lucide:circle-user" size="20" />
         </Avatar>
@@ -73,7 +73,7 @@
 
     <section class="lg:overflow-scroll lg:px-4">
       <Tabs v-model="selectedTab" default-value="list">
-        <div class="sticky pt-4 top-0 bg-background z-50 -mx-5 px-5 lg:p-0 lg:m-0">
+        <div class="sticky top-0 z-50 -mx-5 bg-background px-5 pt-4 lg:m-0 lg:p-0">
           <TabsList class="grid grid-cols-3">
             <TabsTrigger value="list">
               已收集投稿
@@ -85,9 +85,9 @@
               我的投稿
             </TabsTrigger>
           </TabsList>
-          <div v-if="selectedTab === 'list'" class="w-full items-center mt-1 relative bg-background">
+          <div v-if="selectedTab === 'list'" class="relative mt-1 w-full items-center bg-background">
             <Input id="search" v-model="searchPrompt" type="text" placeholder="搜索歌曲" class="pl-8" />
-            <span class="absolute start-0 inset-y-0 flex items-center justify-center pl-3">
+            <span class="absolute inset-y-0 start-0 flex items-center justify-center pl-3">
               <Icon name="lucide:search" class="text-muted-foreground" />
             </span>
           </div>
@@ -108,7 +108,7 @@
             :is-dark="isDark"
             class="mb-4 !bg-background"
           />
-          <ul class="gap-3 flex flex-col">
+          <ul class="flex flex-col gap-3">
             <li v-for="song in arrangementListSongs" :key="song.id">
               <SongCard :song is-arrangement />
             </li>

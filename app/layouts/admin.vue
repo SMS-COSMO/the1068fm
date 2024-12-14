@@ -1,10 +1,10 @@
 <template>
   <SidebarProvider class="w-[calc(100vw+16rem)] md:w-auto">
     <Sidebar>
-      <SidebarHeader class="border-b h-16">
+      <SidebarHeader class="h-16 border-b">
         <SidebarMenu>
           <SidebarMenuItem>
-            <LogosThe1068fm class="h-full w-full px-8 cursor-pointer" @click="navigateTo('/')" />
+            <LogosThe1068fm class="size-full cursor-pointer px-8" @click="navigateTo('/')" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -110,8 +110,8 @@
       </SidebarFooter>
     </Sidebar>
     <SidebarInset>
-      <header class="border-b flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4 w-full">
+      <header class="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <div class="flex w-full items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 h-4" />
           <Breadcrumb>

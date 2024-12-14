@@ -38,7 +38,7 @@
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
               title-position="left"
-              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
+              is-required is24hr class="rounded-lg border !bg-background shadow-sm"
               expanded
               :is-dark="isDark"
               @update:model-value="handleChange"
@@ -55,7 +55,7 @@
               borderless
               :model-value="value" mode="dateTime" color="gray" locale="zh" trim-weeks
               title-position="left"
-              is-required is24hr class="border rounded-lg shadow-sm !bg-background"
+              is-required is24hr class="rounded-lg border !bg-background shadow-sm"
               expanded
               :is-dark="isDark"
               @update:model-value="handleChange"

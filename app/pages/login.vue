@@ -1,5 +1,5 @@
 <template>
-  <div class="h-svh w-full flex justify-center lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+  <div class="flex h-svh w-full justify-center lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
     <div class="flex items-center justify-center py-12">
       <div class="mx-auto grid w-[350px] gap-6">
         <div class="grid gap-2 text-center">
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="hidden bg-muted lg:flex justify-center items-center">
+    <div class="hidden items-center justify-center bg-muted lg:flex">
       <LogosThe1068fm />
     </div>
   </div>

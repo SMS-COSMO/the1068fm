@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[calc(100svh-4rem)] p-4 flex flex-col gap-4">
+  <div class="flex h-[calc(100svh-4rem)] flex-col gap-4 p-4">
     <div class="flex w-full max-w-sm items-center gap-1.5">
       <Input v-model="newWord" placeholder="添加屏蔽词" />
       <Button
@@ -11,11 +11,11 @@
         添加
       </Button>
     </div>
-    <div class="h-[calc(100svh-9rem)] flex flex-wrap flex-col content-start gap-x-4 gap-y-2 overflow-x-scroll">
+    <div class="flex h-[calc(100svh-9rem)] flex-col flex-wrap content-start gap-x-4 gap-y-2 overflow-x-scroll">
       <Badge
         v-for="word in data"
         :key="word.word"
-        variant="outline" class="w-40 truncate relative py-1.5"
+        variant="outline" class="relative w-40 truncate py-1.5"
       >
         {{ word.word }}
         <Icon

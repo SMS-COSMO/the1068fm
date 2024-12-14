@@ -9,7 +9,7 @@
       </DialogTrigger>
       <DialogContent class="w-[92vw] rounded-md">
         <DialogHeader>
-          <DialogTitle class="text-xl font-bold text-start">
+          <DialogTitle class="text-start text-xl font-bold">
             开放投稿时间段
           </DialogTitle>
         </DialogHeader>

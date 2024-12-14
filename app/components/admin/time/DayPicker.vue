@@ -3,7 +3,7 @@
     <Button type="button" variant="outline" size="icon" @click="handleChange(value.setDate(value.getDate() - 1))">
       <Icon name="lucide:minus" />
     </Button>
-    <div class="text-2xl font-bold self-center">
+    <div class="self-center text-2xl font-bold">
       {{ `${dayString[value.getDay()]}` }}
     </div>
     <Button type="button" variant="outline" size="icon" @click="handleChange(value.setDate(value.getDate() + 1))">

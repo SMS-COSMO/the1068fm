@@ -11,7 +11,7 @@
           </CardDescription>
         </div>
         <div class="flex-grow" />
-        <span v-if="song.createdAt" class="text-muted-foreground text-xs">
+        <span v-if="song.createdAt" class="text-xs text-muted-foreground">
           {{ useTimeAgo(song.createdAt) }}
         </span>
       </div>
@@ -25,23 +25,23 @@
       <UseTemplate>
         <ul class="grid gap-3">
           <li class="flex justify-between">
-            <span class="text-muted-foreground text-sm min-w-20">审核状态</span>
+            <span class="min-w-20 text-sm text-muted-foreground">审核状态</span>
             <SongState :song hide-reason />
           </li>
           <li v-if="song.rejectMessage" class="flex justify-between">
-            <span class="text-muted-foreground text-sm min-w-20">拒绝理由</span>
+            <span class="min-w-20 text-sm text-muted-foreground">拒绝理由</span>
             <span>{{ song.rejectMessage }}</span>
           </li>
           <li v-if="song.arrangementDate" class="flex justify-between">
-            <span class="text-muted-foreground text-sm min-w-20">播放时间</span>
+            <span class="min-w-20 text-sm text-muted-foreground">播放时间</span>
             <span class="font-mono">{{ song.arrangementDate }}</span>
           </li>
           <li v-if="song.message" class="flex justify-between">
-            <span class="text-muted-foreground text-sm min-w-20">留言</span>
+            <span class="min-w-20 text-sm text-muted-foreground">留言</span>
             <span>{{ song.message }}</span>
           </li>
           <li v-if="song.createdAt" class="flex justify-between">
-            <span class="text-muted-foreground text-sm min-w-20">投稿时间</span>
+            <span class="min-w-20 text-sm text-muted-foreground">投稿时间</span>
             <span class="font-mono">{{ song.createdAt?.toLocaleString('zh-CN') }}</span>
           </li>
         </ul>
@@ -81,7 +81,7 @@
   </Card>
   <div
     v-else-if="type === 'review'"
-    class="h-auto p-4 w-full border rounded-lg shadow-sm hover:bg-muted transition-colors cursor-pointer"
+    class="h-auto w-full cursor-pointer rounded-lg border p-4 shadow-sm transition-colors hover:bg-muted"
     :class="{ 'bg-muted': selected }"
   >
     <CardTitle>
