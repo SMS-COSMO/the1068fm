@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import 'v-calendar/style.css';
+import '@ztl-uwu/v-calendar/style.css';
 
 useHeadSafe({
   titleTemplate: (title?: string) => !title ? 'the1068fm 点歌系统' : `${title} | the1068fm 点歌系统`,
