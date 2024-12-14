@@ -1,5 +1,6 @@
 import type { TCredentials, TDirectCredentials, TSeiueAuthResponse, TSeiueGeneratedPhoneCode, TSeiueUser } from '~~/types';
 import { env } from '~~/server/env';
+import { consola } from 'consola';
 /**
  * @credits https://github.com/linolabs/candlelit
  */
@@ -53,7 +54,8 @@ export class Seiue {
         activeReflectionId: authorizeRes.active_reflection_id,
         cookies,
       };
-    } catch {
+    } catch (err) {
+      consola.error(err);
       return null;
     }
   }
