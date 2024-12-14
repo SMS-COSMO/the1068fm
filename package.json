@@ -1,6 +1,7 @@
 {
-  "name": "nuxt-app",
+  "name": "the1068fm",
   "type": "module",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
