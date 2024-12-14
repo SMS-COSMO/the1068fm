@@ -79,7 +79,7 @@
       </div>
     </section>
 
-    <section class="lg:overflow-scroll lg:px-4">
+    <section class="lg:overflow-auto lg:px-4">
       <Tabs v-model="selectedTab" default-value="list">
         <div class="sticky top-0 z-50 -mx-5 bg-background px-5 pt-4 lg:m-0 lg:p-0">
           <TabsList class="grid grid-cols-3">
