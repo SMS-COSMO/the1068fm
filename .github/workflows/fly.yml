@@ -1,8 +1,7 @@
 name: Fly Deploy
-on:
-  push:
-    branches:
-      - main
+
+on: push
+
 jobs:
   deploy:
     name: Deploy app
