@@ -36,13 +36,21 @@
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <Button variant="outline">
-          <Icon name="lucide:circle-help" class="mr-2" />
-          <span>
-            规则介绍
-          </span>
-        </Button>
-        <HomeAboutUs />
+        <HomeRule>
+          <Button variant="outline">
+            <Icon name="lucide:circle-help" class="mr-2" />
+            <span>
+              规则介绍
+            </span>
+          </Button>
+        </HomeRule>
+
+        <HomeAboutUs>
+          <Button variant="outline" class="w-full">
+            <Icon name="lucide:info" class="mr-2" />
+            关于我们
+          </Button>
+        </HomeAboutUs>
       </div>
 
       <div class="mt-4 flex items-center gap-4">
