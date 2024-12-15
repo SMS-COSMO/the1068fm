@@ -84,7 +84,7 @@
         <div class="sticky top-0 z-50 -mx-5 bg-background px-5 pt-4 lg:m-0 lg:p-0">
           <TabsList class="grid grid-cols-3">
             <TabsTrigger value="list">
-              已收集投稿
+              本周已收集投稿
             </TabsTrigger>
             <TabsTrigger value="arrangement">
               歌单
