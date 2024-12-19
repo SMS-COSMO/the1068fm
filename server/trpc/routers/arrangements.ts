@@ -80,14 +80,14 @@ export const arrangementsRouter = router({
       if (!(await reviewAll()))
         throw new TRPCError({ code: 'FORBIDDEN', message: '请审核全部歌曲' });
 
-      if (!(await fitsInTime(new Date())))
+      if (await fitsInTime(new Date()))
         throw new TRPCError({ code: 'FORBIDDEN', message: '请在投稿截止后排歌' });
 
       const start = parseDate(input.start);
       const end = parseDate(input.end);
 
       await db.transaction(async (tx) => {
-        // Get unused songs
+        // get unused songs
         const approvedSongs = await tx.query.songs.findMany({
           where: eq(songs.state, 'approved'),
           orderBy: sql`RANDOM()`,
@@ -96,7 +96,21 @@ export const arrangementsRouter = router({
           },
         });
 
+        // get dropped songs
+        let droppedSongs: typeof approvedSongs = [];
+        // (only when insufficient unused songs is present)
+        if ((end.compare(start) + 1) * input.songCount > approvedSongs.length) {
+          droppedSongs = await tx.query.songs.findMany({
+            where: eq(songs.state, 'dropped'),
+            orderBy: sql`RANDOM()`,
+            columns: {
+              id: true,
+            },
+          });
+        }
+
         let songIndex = 0;
+        let droppedSongIndex = 0;
         for (let date = start; date.compare(end) <= 0; date = date.add({ days: 1 })) {
           const dateString = date.toString();
           await tx.insert(arrangements).values({ date: dateString });
@@ -110,9 +124,19 @@ export const arrangementsRouter = router({
                   state: 'used',
                 })
                 .where(eq(songs.id, approvedSongs[songIndex]!.id));
-            }
 
-            songIndex++;
+              songIndex++;
+            } else if (droppedSongIndex < droppedSongs.length) { // recover dropped songs
+              await tx
+                .update(songs)
+                .set({
+                  arrangementDate: dateString,
+                  state: 'used',
+                })
+                .where(eq(songs.id, droppedSongs[droppedSongIndex]!.id));
+
+              droppedSongIndex++;
+            }
           }
         }
 
