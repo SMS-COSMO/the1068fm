@@ -151,7 +151,7 @@ const requirementList = computed<{
     },
     {
       label: '投稿截止',
-      value: timeCurrently.value ?? true,
+      value: !(timeCurrently.value ?? false),
     },
   ];
 });
