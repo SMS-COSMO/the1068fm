@@ -5,6 +5,7 @@ import { arrangements, songs } from '~~/server/db/schema';
 import { desc, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
+import { fitsInTime } from './time';
 
 async function reviewAll() {
   return (await db.query.songs.findMany({
@@ -78,6 +79,9 @@ export const arrangementsRouter = router({
     .mutation(async ({ input }) => {
       if (!(await reviewAll()))
         throw new TRPCError({ code: 'FORBIDDEN', message: '请审核全部歌曲' });
+
+      if (!(await fitsInTime(new Date())))
+        throw new TRPCError({ code: 'FORBIDDEN', message: '请在投稿截止后排歌' });
 
       const start = parseDate(input.start);
       const end = parseDate(input.end);

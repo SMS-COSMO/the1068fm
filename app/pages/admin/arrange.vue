@@ -100,6 +100,12 @@ const { data: reviewAll, suspense: reviewAllSuspense } = useQuery({
 });
 await reviewAllSuspense();
 
+const { data: timeCurrently, suspense: timeSuspense } = useQuery({
+  queryFn: () => $trpc.time.currently.query(),
+  queryKey: ['time.currently'],
+});
+await timeSuspense();
+
 const { copy: useCopy } = useClipboard({ legacy: true });
 async function copySongInfo(day: RouterOutput['arrangements']['list'][0]) {
   if (!day.songs.length) {
@@ -142,6 +148,10 @@ const requirementList = computed<{
     {
       label: '审核全部歌曲',
       value: reviewAll.value ?? true,
+    },
+    {
+      label: '投稿截止',
+      value: timeCurrently.value ?? true,
     },
   ];
 });
