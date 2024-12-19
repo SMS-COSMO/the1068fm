@@ -35,7 +35,7 @@
         </ClientOnly>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-3 gap-3">
         <HomeRule>
           <Button variant="outline">
             <Icon name="lucide:circle-help" class="mr-2" />
@@ -51,6 +51,11 @@
             关于我们
           </Button>
         </HomeAboutUs>
+
+        <Button variant="outline" class="w-full" @click="navigateTo('/stats')">
+          <Icon name="lucide:star" class="mr-2" />
+          数据回顾
+        </Button>
       </div>
 
       <div class="mt-4 flex items-center gap-4">
@@ -84,7 +89,7 @@
         <div class="sticky top-0 z-50 -mx-5 bg-background px-5 pt-4 lg:m-0 lg:p-0">
           <TabsList class="grid grid-cols-3">
             <TabsTrigger value="list">
-              本周已收集投稿
+              本周投稿
             </TabsTrigger>
             <TabsTrigger value="arrangement">
               歌单
