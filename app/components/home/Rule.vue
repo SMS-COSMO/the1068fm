@@ -14,7 +14,7 @@
             规则介绍
           </DialogTitle>
         </DialogHeader>
-        <ScrollArea class="h-[60vh] pr-2 sm:h-auto" type="auto">
+        <ScrollArea class="max-h-[60vh] pr-2 sm:h-auto" type="auto">
           <div class="prose">
             <ol>
               <li>歌曲内容务必积极向上，充满正能量，适合在校园内播放，风华子衿广播站有权对歌曲进行筛选</li>

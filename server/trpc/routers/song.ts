@@ -19,8 +19,8 @@ async function checkCanSubmit(userId: string) {
   if (!latestSubmission)
     return true;
 
-  // more than one day
-  if (Date.now() - latestSubmission.createdAt.getTime() >= 24 * 60 * 60 * 1000)
+  // more than three days
+  if (Date.now() - latestSubmission.createdAt.getTime() >= 3 * 24 * 60 * 60 * 1000)
     return true;
   return false;
 }
@@ -38,16 +38,16 @@ export const songRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       if (!(await checkCanSubmit(ctx.user.id)))
-        throw new TRPCError({ code: 'BAD_REQUEST', message: '一天只能提交一首歌曲' });
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '一周只能提交一首歌曲' });
 
       const chinese = `${input.name} ${input.creator} ${input.message}`.match(/[\u4E00-\u9FA5]+/g);
       const english = `${input.name} ${input.creator} ${input.message}`.match(/[\da-zA-Z]+/g);
 
       const blockWords = await db.query.blockWords.findMany();
       if (chinese?.some(x => blockWords.some(y => x.includes(y.word))))
-        throw new TRPCError({ code: 'BAD_REQUEST', message: '触发关键词 😠' });
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '投稿失败' });
       if (english?.some(x => blockWords.some(y => x === y.word)))
-        throw new TRPCError({ code: 'BAD_REQUEST', message: '触发关键词 😠' });
+        throw new TRPCError({ code: 'BAD_REQUEST', message: '投稿失败' });
 
       await db.insert(songs).values({
         ...input,
