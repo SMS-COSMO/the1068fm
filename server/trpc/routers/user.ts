@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server';
-import { db } from '~~/server/db';
-import { users } from '~~/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { db } from '~~/server/db';
+import { users } from '~~/server/db/schema';
 import { adminProcedure, protectedProcedure, publicProcedure, requirePermission, router } from '../trpc';
 
 export const userRouter = router({

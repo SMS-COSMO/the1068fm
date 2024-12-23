@@ -17,4 +17,5 @@ export const breadCrumb: Record<string, string> = {
   arrange: '排歌列表',
   time: '开放时间',
   words: '屏蔽词',
+  songs: '全部歌曲',
 };

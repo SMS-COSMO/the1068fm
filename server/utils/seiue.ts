@@ -1,10 +1,10 @@
 import type { TCredentials, TDirectCredentials, TSeiueAuthResponse, TSeiueGeneratedPhoneCode, TSeiueUser } from '~~/types';
-import { env } from '~~/server/env';
 import { consola } from 'consola';
 /**
  * @credits https://github.com/linolabs/candlelit
  */
 import { ofetch } from 'ofetch';
+import { env } from '~~/server/env';
 
 export function cookiesParser(cookies: string[]) {
   const parsedCookies: Record<string, string> = {};

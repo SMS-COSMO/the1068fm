@@ -28,6 +28,14 @@
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </NuxtLink>
+            <NuxtLink v-if="userStore.permissions.includes('review')" to="/admin/songs">
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <Icon name="lucide:list-music" />
+                  <span>全部歌曲</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </NuxtLink>
             <NuxtLink v-if="userStore.permissions.includes('arrange')" to="/admin/arrange">
               <SidebarMenuItem>
                 <SidebarMenuButton>

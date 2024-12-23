@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server';
-import { db } from '~~/server/db';
-import { songs } from '~~/server/db/schema';
 import { desc, eq, gt } from 'drizzle-orm';
 import { z } from 'zod';
+import { db } from '~~/server/db';
+import { songs } from '~~/server/db/schema';
 import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
 import { fitsInTime } from './time';
 
@@ -56,6 +56,7 @@ export const songRouter = router({
     }),
 
   list: adminProcedure
+    .use(requirePermission(['review']))
     .query(async () => {
       return await db.query.songs.findMany({
         orderBy: desc(songs.createdAt),
@@ -72,6 +73,7 @@ export const songRouter = router({
     }),
 
   listReview: adminProcedure
+    .use(requirePermission(['review']))
     .query(async () => {
       return await db.query.songs.findMany({
         where: eq(songs.state, 'pending'),

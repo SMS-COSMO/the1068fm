@@ -78,8 +78,8 @@
 </template>
 
 <script setup lang="ts">
-import type { RouterOutput } from '~~/types';
 import type { DateRange } from 'radix-vue';
+import type { RouterOutput } from '~~/types';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 import { type DateValue, getLocalTimeZone, startOfWeek, today } from '@internationalized/date';
 

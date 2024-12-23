@@ -1,7 +1,7 @@
 import type { TSongState } from '~~/types';
+import { count } from 'drizzle-orm';
 import { db } from '~~/server/db';
 import { users } from '~~/server/db/schema';
-import { count } from 'drizzle-orm';
 import { adminProcedure, router } from '../trpc';
 
 export const statsRouter = router({

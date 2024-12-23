@@ -1,7 +1,7 @@
-import { db } from '~~/server/db';
-import { blockWords } from '~~/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { db } from '~~/server/db';
+import { blockWords } from '~~/server/db/schema';
 import { adminProcedure, requirePermission, router } from '../trpc';
 
 export const blockWordsRouter = router({

@@ -1,9 +1,9 @@
 import { parseDate } from '@internationalized/date';
 import { TRPCError } from '@trpc/server';
-import { db } from '~~/server/db';
-import { arrangements, songs } from '~~/server/db/schema';
 import { desc, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
+import { db } from '~~/server/db';
+import { arrangements, songs } from '~~/server/db/schema';
 import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
 import { fitsInTime } from './time';
 

@@ -1,7 +1,7 @@
-import { db } from '~~/server/db';
-import { times } from '~~/server/db/schema';
 import { asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { db } from '~~/server/db';
+import { times } from '~~/server/db/schema';
 import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
 
 export async function fitsInTime(t: Date) {

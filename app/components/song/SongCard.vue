@@ -91,6 +91,54 @@
       {{ song.creator }}
     </CardDescription>
   </div>
+  <Card
+    v-else-if="type === 'songs'"
+  >
+    <CardHeader>
+      <div class="flex flex-row">
+        <div>
+          <CardTitle>
+            {{ song.name }}
+          </CardTitle>
+          <CardDescription>
+            {{ song.creator }}
+          </CardDescription>
+        </div>
+        <div class="flex-grow" />
+        <span v-if="song.createdAt" class="text-xs text-muted-foreground">
+          {{ useTimeAgo(song.createdAt) }}
+        </span>
+      </div>
+      <p v-if="song.message" class="text-xs text-muted-foreground">
+        留言: {{ song.message }}
+      </p>
+
+      <div v-if="song.state !== 'used' && song.state !== 'dropped'" class="flex gap-1">
+        <Button
+          v-if="song.state !== 'approved' && song.id"
+          variant="outline"
+          :disable="approvePending"
+          size="xs"
+          @click="approve({ id: song.id })"
+        >
+          <Icon v-if="approvePending" name="lucide:loader-circle" class="mr-2 animate-spin" />
+          <Icon name="lucide:check" />
+        </Button>
+        <template v-if="song.state !== 'rejected' && song.id">
+          <Button
+            variant="outline"
+            :disable="rejectPending"
+            size="xs"
+            @click="reject({ id: song.id, rejectMessage: rejectMessage.trim() })"
+          >
+            <Icon v-if="rejectPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
+            <Icon name="lucide:x" />
+          </Button>
+          <Input v-model="rejectMessage" placeholder="拒绝理由" class="h-7 rounded-sm text-xs" />
+        </template>
+      </div>
+    </CardHeader>
+  </Card>
 </template>
 
 <script setup lang="ts">
@@ -102,7 +150,7 @@ const {
   selected = false,
   isArrangement = false,
 } = defineProps<{
-  type?: 'public' | 'review';
+  type?: 'public' | 'review' | 'songs';
   selected?: boolean;
   song: Partial<RouterOutput['song']['listMine'][0]>;
   isArrangement?: boolean;
@@ -112,4 +160,25 @@ const isOpen = ref(false);
 
 const isDesktop = useMediaQuery('(min-width: 768px)');
 const [UseTemplate, SongDrawer] = createReusableTemplate();
+
+const { $trpc } = useNuxtApp();
+
+const queryClient = useQueryClient();
+const { mutate: approve, isPending: approvePending } = useMutation({
+  mutationFn: $trpc.song.review.approve.mutate,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['song.list'] });
+  },
+  onError: err => useErrorHandler(err),
+});
+
+const { mutate: reject, isPending: rejectPending } = useMutation({
+  mutationFn: $trpc.song.review.reject.mutate,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['song.list'] });
+  },
+  onError: err => useErrorHandler(err),
+});
+
+const rejectMessage = ref('');
 </script>
