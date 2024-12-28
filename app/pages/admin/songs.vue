@@ -3,7 +3,7 @@
     <template v-for="(panel, index) in panels" :key="panel">
       <ResizablePanel :id="`songs-resizable-resize-${index}`" :default-size="25">
         <ScrollArea class="h-[calc(100svh-4rem)]">
-          <div class="sticky top-0 z-50 flex h-16 items-center border-b px-4" :class="panel.className">
+          <div class="sticky top-0 z-50 flex h-16 items-center border-b bg-background px-4" :class="panel.className">
             <Icon :name="panel.icon" size="17" class="mr-2" />
             <span class="text-sm font-semibold">{{ panel.label }}</span>
           </div>
