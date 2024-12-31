@@ -19,8 +19,8 @@ async function checkCanSubmit(userId: string) {
   if (!latestSubmission)
     return true;
 
-  // more than three days
-  if (Date.now() - latestSubmission.createdAt.getTime() >= 3 * 24 * 60 * 60 * 1000)
+  // more than two days
+  if (Date.now() - latestSubmission.createdAt.getTime() >= 2 * 24 * 60 * 60 * 1000)
     return true;
   return false;
 }
