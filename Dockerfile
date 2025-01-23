@@ -22,7 +22,7 @@ FROM base as build
 COPY . ./
 
 # Install node modules
-COPY --link package.json bun.lockb ./
+COPY --link package.json bun.lock ./
 
 RUN bun i --frozen-lockfile
 
