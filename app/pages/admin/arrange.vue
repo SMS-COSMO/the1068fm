@@ -78,10 +78,11 @@
 </template>
 
 <script setup lang="ts">
+import type { DateValue } from '@internationalized/date';
 import type { DateRange } from 'radix-vue';
 import type { RouterOutput } from '~~/types';
 import { RangeCalendar } from '@/components/ui/range-calendar';
-import { type DateValue, getLocalTimeZone, startOfWeek, today } from '@internationalized/date';
+import { getLocalTimeZone, startOfWeek, today } from '@internationalized/date';
 
 definePageMeta({
   layout: 'admin',

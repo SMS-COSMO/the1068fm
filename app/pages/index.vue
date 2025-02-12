@@ -136,8 +136,9 @@
 </template>
 
 <script setup lang="ts">
+import type { UseFuseOptions } from '@vueuse/integrations/useFuse';
 import type { RouterOutput } from '~~/types';
-import { useFuse, type UseFuseOptions } from '@vueuse/integrations/useFuse';
+import { useFuse } from '@vueuse/integrations/useFuse';
 import { DatePicker } from '@ztl-uwu/v-calendar';
 
 const userStore = useUserStore();
