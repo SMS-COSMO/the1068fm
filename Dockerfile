@@ -14,7 +14,7 @@ WORKDIR /app
 ENV NODE_ENV="production"
 # ENV NITRO_PRESET="bun"
 
-RUN npm install -g bun@1.2.0
+RUN npm install -g bun@latest
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
