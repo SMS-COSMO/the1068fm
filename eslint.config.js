@@ -10,7 +10,7 @@ export default antfu({
     quotes: 'single',
     semi: true,
   },
-  ignores: ['public/**', 'app/components/ui/**'],
+  // ignores: ['public/**', 'app/components/ui/**'],
   regexp: false,
 }, {
   plugins: {
