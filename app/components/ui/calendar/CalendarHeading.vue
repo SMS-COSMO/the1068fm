@@ -1,11 +1,11 @@
 <template>
   <CalendarHeading
-    v-slot="slotProps: HeadingSlotProps"
+    v-slot="{ headingValue }"
     :class="cn('text-sm font-medium', props.class)"
     v-bind="forwardedProps"
   >
-    <slot :heading-value="slotProps.headingValue">
-      {{ slotProps.headingValue }}
+    <slot :heading-value>
+      {{ headingValue }}
     </slot>
   </CalendarHeading>
 </template>
@@ -19,6 +19,10 @@ import { computed } from 'vue';
 
 const props = defineProps<CalendarHeadingProps & { class?: HTMLAttributes['class'] }>();
 
+defineSlots<{
+  default: (props: { headingValue: string }) => any;
+}>();
+
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
 
@@ -26,8 +30,4 @@ const delegatedProps = computed(() => {
 });
 
 const forwardedProps = useForwardProps(delegatedProps);
-
-interface HeadingSlotProps {
-  headingValue: string;
-}
 </script>
