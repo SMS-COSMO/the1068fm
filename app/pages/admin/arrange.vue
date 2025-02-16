@@ -162,7 +162,7 @@ const canArrange = computed(() => requirementList.value.every(x => x.value));
 const songCount = ref(10);
 
 function isDateUnavailable(date: DateValue) {
-  return arrangementList.value?.some(x => x.date === date.toString());
+  return arrangementList.value?.some(x => x.date === date.toString()) ?? false;
 }
 
 const queryClient = useQueryClient();
