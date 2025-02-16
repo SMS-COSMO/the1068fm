@@ -25,6 +25,10 @@ export default defineNuxtConfig({
     storage: 'cookie',
   },
 
+  routeRules: {
+    '/stats': { prerender: true },
+  },
+
   icon: {
     clientBundle: {
       scan: true,
