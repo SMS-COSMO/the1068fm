@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import { cn } from '@/lib/utils'
+import { ChevronDown } from 'lucide-vue-next'
+import { SelectIcon, SelectTrigger, type SelectTriggerProps, useForwardProps } from 'reka-ui'
+import { computed, type HTMLAttributes } from 'vue'
+
+const props = defineProps<SelectTriggerProps & { class?: HTMLAttributes['class'] }>()
+
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props
+
+  return delegated
+})
+
+const forwardedProps = useForwardProps(delegatedProps)
+</script>
+
 <template>
   <SelectTrigger
     v-bind="forwardedProps"
@@ -8,24 +25,7 @@
   >
     <slot />
     <SelectIcon as-child>
-      <CaretSortIcon class="w-4 h-4 opacity-50 shrink-0" />
+      <ChevronDown class="w-4 h-4 opacity-50 shrink-0" />
     </SelectIcon>
   </SelectTrigger>
 </template>
-
-<script setup lang="ts">
-import { cn } from '@/lib/utils';
-import { CaretSortIcon } from '@radix-icons/vue';
-import { SelectIcon, SelectTrigger, type SelectTriggerProps, useForwardProps } from 'radix-vue';
-import { computed, type HTMLAttributes } from 'vue';
-
-const props = defineProps<SelectTriggerProps & { class?: HTMLAttributes['class'] }>();
-
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props;
-
-  return delegated;
-});
-
-const forwardedProps = useForwardProps(delegatedProps);
-</script>

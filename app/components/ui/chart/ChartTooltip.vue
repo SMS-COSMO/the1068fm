@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+defineProps<{
+  title?: string
+  data: {
+    name: string
+    color: string
+    value: any
+  }[]
+}>()
+</script>
+
 <template>
   <Card class="text-sm">
     <CardHeader v-if="title" class="p-3 border-b">
@@ -25,16 +38,3 @@
     </CardContent>
   </Card>
 </template>
-
-<script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-defineProps<{
-  title?: string;
-  data: {
-    name: string;
-    color: string;
-    value: any;
-  }[];
-}>();
-</script>

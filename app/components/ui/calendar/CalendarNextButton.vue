@@ -1,3 +1,21 @@
+<script lang="ts" setup>
+import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
+import { ChevronRight } from 'lucide-vue-next'
+import { CalendarNext, type CalendarNextProps, useForwardProps } from 'reka-ui'
+import { computed, type HTMLAttributes } from 'vue'
+
+const props = defineProps<CalendarNextProps & { class?: HTMLAttributes['class'] }>()
+
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props
+
+  return delegated
+})
+
+const forwardedProps = useForwardProps(delegatedProps)
+</script>
+
 <template>
   <CalendarNext
     :class="cn(
@@ -8,25 +26,7 @@
     v-bind="forwardedProps"
   >
     <slot>
-      <ChevronRightIcon class="h-4 w-4" />
+      <ChevronRight class="h-4 w-4" />
     </slot>
   </CalendarNext>
 </template>
-
-<script lang="ts" setup>
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { ChevronRightIcon } from '@radix-icons/vue';
-import { CalendarNext, type CalendarNextProps, useForwardProps } from 'radix-vue';
-import { computed, type HTMLAttributes } from 'vue';
-
-const props = defineProps<CalendarNextProps & { class?: HTMLAttributes['class'] }>();
-
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props;
-
-  return delegated;
-});
-
-const forwardedProps = useForwardProps(delegatedProps);
-</script>

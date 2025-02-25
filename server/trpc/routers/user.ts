@@ -55,6 +55,63 @@ export const userRouter = router({
       };
     }),
 
+  generatePhoneCode: publicProcedure
+    .input(z.object({
+      phone: z.string().min(1).max(30),
+    }))
+    .mutation(async ({ input }) => {
+      return await Seiue.generatePhoneCode(input.phone);
+    }),
+
+  phoneLogin: publicProcedure
+    .input(z.object({
+      phone: z.string().min(1).max(30),
+      otp: z.array(z.string().length(1)),
+      reminderId: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const seiue = await Seiue.phoneLogin(input.phone, input.otp.join(''), input.reminderId);
+      if (!seiue)
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: '验证码错误' });
+
+      const me = await seiue.me();
+
+      if (!me.usin)
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: '登录失败' });
+
+      let user = await db.query.users.findFirst({
+        where: eq(users.id, me.usin),
+      });
+
+      // auto register
+      if (!user) {
+        user = (
+          await db
+            .insert(users)
+            .values({
+              id: me.usin,
+              name: me.name,
+              permissions: ['login'],
+            })
+            .returning()
+        )[0];
+      }
+
+      // make sure registration is successful
+      if (!user)
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: '登录失败' });
+
+      // banned
+      if (!user.permissions.includes('login'))
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: '无法登录' });
+
+      const accessToken = await produceAccessToken(user.id);
+      return {
+        ...user,
+        accessToken,
+      };
+    }),
+
   tokenValidity: protectedProcedure
     .query(() => { }), // protectedProcedure will check if user is logged in
 

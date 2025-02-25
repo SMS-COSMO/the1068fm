@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { cn } from '@/lib/utils'
+import { Circle } from 'lucide-vue-next'
+import {
+  DropdownMenuItemIndicator,
+  DropdownMenuRadioItem,
+  type DropdownMenuRadioItemEmits,
+  type DropdownMenuRadioItemProps,
+  useForwardPropsEmits,
+} from 'reka-ui'
+import { computed, type HTMLAttributes } from 'vue'
+
+const props = defineProps<DropdownMenuRadioItemProps & { class?: HTMLAttributes['class'] }>()
+
+const emits = defineEmits<DropdownMenuRadioItemEmits>()
+
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props
+
+  return delegated
+})
+
+const forwarded = useForwardPropsEmits(delegatedProps, emits)
+</script>
+
 <template>
   <DropdownMenuRadioItem
     v-bind="forwarded"
@@ -8,34 +33,9 @@
   >
     <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuItemIndicator>
-        <DotFilledIcon class="h-4 w-4 fill-current" />
+        <Circle class="h-4 w-4 fill-current" />
       </DropdownMenuItemIndicator>
     </span>
     <slot />
   </DropdownMenuRadioItem>
 </template>
-
-<script setup lang="ts">
-import { cn } from '@/lib/utils';
-import { DotFilledIcon } from '@radix-icons/vue';
-import {
-  DropdownMenuItemIndicator,
-  DropdownMenuRadioItem,
-  type DropdownMenuRadioItemEmits,
-  type DropdownMenuRadioItemProps,
-  useForwardPropsEmits,
-} from 'radix-vue';
-import { computed, type HTMLAttributes } from 'vue';
-
-const props = defineProps<DropdownMenuRadioItemProps & { class?: HTMLAttributes['class'] }>();
-
-const emits = defineEmits<DropdownMenuRadioItemEmits>();
-
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props;
-
-  return delegated;
-});
-
-const forwarded = useForwardPropsEmits(delegatedProps, emits);
-</script>

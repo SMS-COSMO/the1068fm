@@ -118,7 +118,7 @@ export class Seiue {
 
   static async phoneLogin(
     phone: string,
-    code: string,
+    otp: string,
     reminderId: string,
   ) {
     try {
@@ -130,7 +130,7 @@ export class Seiue {
         redirect: 'manual',
         body: new URLSearchParams({
           phone,
-          code,
+          code: otp,
           reminder_id: reminderId,
           school_id: env.SEIUE_SCHOOL_ID.toString(),
           submit: '提交',
@@ -139,11 +139,10 @@ export class Seiue {
 
       const cookies = cookiesParser(loginRes.headers.getSetCookie());
       const authorizeRes = await this.retrieveToken(cookies);
-      return {
+      return new Seiue({
         accessToken: authorizeRes.access_token,
         activeReflectionId: authorizeRes.active_reflection_id,
-        cookies,
-      };
+      });
     } catch {
       return null;
     }

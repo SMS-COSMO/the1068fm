@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import type { DialogRootEmits, DialogRootProps } from 'reka-ui'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { useForwardPropsEmits } from 'reka-ui'
+import Command from './Command.vue'
+
+const props = defineProps<DialogRootProps>()
+const emits = defineEmits<DialogRootEmits>()
+
+const forwarded = useForwardPropsEmits(props, emits)
+</script>
+
 <template>
   <Dialog v-bind="forwarded">
     <DialogContent class="overflow-hidden p-0 shadow-lg">
@@ -7,15 +19,3 @@
     </DialogContent>
   </Dialog>
 </template>
-
-<script setup lang="ts">
-import type { DialogRootEmits, DialogRootProps } from 'radix-vue';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { useForwardPropsEmits } from 'radix-vue';
-import Command from './Command.vue';
-
-const props = defineProps<DialogRootProps>();
-const emits = defineEmits<DialogRootEmits>();
-
-const forwarded = useForwardPropsEmits(props, emits);
-</script>

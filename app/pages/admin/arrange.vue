@@ -79,7 +79,7 @@
 
 <script setup lang="ts">
 import type { DateValue } from '@internationalized/date';
-import type { DateRange } from 'radix-vue';
+import type { DateRange } from 'reka-ui';
 import type { RouterOutput } from '~~/types';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 import { getLocalTimeZone, startOfWeek, today } from '@internationalized/date';

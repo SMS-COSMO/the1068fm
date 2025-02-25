@@ -1,3 +1,22 @@
+<script setup lang="ts">
+import type { SidebarProps } from '.'
+import { cn } from '@/lib/utils'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { SIDEBAR_WIDTH_MOBILE, useSidebar } from './utils'
+
+defineOptions({
+  inheritAttrs: false,
+})
+
+const props = withDefaults(defineProps<SidebarProps>(), {
+  side: 'left',
+  variant: 'sidebar',
+  collapsible: 'offcanvas',
+})
+
+const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+</script>
+
 <template>
   <div
     v-if="collapsible === 'none'"
@@ -11,6 +30,7 @@
     <SheetContent
       data-sidebar="sidebar"
       data-mobile="true"
+      :side="side"
       class="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
       :style="{
         '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
@@ -23,8 +43,7 @@
   </Sheet>
 
   <div
-    v-else class="group peer md:block"
-    :class="[state === 'collapsed' && 'hidden']"
+    v-else class="group peer hidden md:block"
     :data-state="state"
     :data-collapsible="state === 'collapsed' ? collapsible : ''"
     :data-variant="variant"
@@ -43,7 +62,7 @@
     />
     <div
       :class="cn(
-        'duration-200 fixed inset-y-0 z-10 h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex',
+        'duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex',
         side === 'left'
           ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
           : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -57,33 +76,10 @@
     >
       <div
         data-sidebar="sidebar"
-        class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+        class="flex h-full w-full flex-col text-sidebar-foreground bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
       >
         <slot />
       </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-import { cn } from '@/lib/utils';
-import { SIDEBAR_WIDTH_MOBILE, useSidebar } from './utils';
-
-defineOptions({
-  inheritAttrs: false,
-});
-
-const props = withDefaults(defineProps<{
-  side?: 'left' | 'right';
-  variant?: 'sidebar' | 'floating' | 'inset';
-  collapsible?: 'offcanvas' | 'icon' | 'none';
-  class?: HTMLAttributes['class'];
-}>(), {
-  side: 'left',
-  variant: 'sidebar',
-  collapsible: 'offcanvas',
-});
-
-const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
-</script>

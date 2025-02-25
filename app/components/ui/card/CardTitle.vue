@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue'
+import { cn } from '@/lib/utils'
+
+const props = defineProps<{
+  class?: HTMLAttributes['class']
+}>()
+</script>
+
 <template>
   <h3
     :class="
@@ -7,12 +16,3 @@
     <slot />
   </h3>
 </template>
-
-<script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-import { cn } from '@/lib/utils';
-
-const props = defineProps<{
-  class?: HTMLAttributes['class'];
-}>();
-</script>
