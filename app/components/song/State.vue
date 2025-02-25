@@ -1,11 +1,11 @@
 <template>
-  <div class="flex gap-1">
+  <div class="flex flex-wrap gap-1">
     <Badge v-if="state" class="flex items-center" :class="state.className" variant="outline">
       <Icon :name="state.icon" class="mr-1" />
       <span class="text-xs">{{ state.label }}</span>
     </Badge>
     <Badge v-if="song.state === 'rejected' && song.rejectMessage && !hideReason" variant="secondary">
-      <span class="truncate font-normal">&nbsp;{{ song.rejectMessage }}</span>
+      <span class="truncate font-normal">{{ song.rejectMessage }}</span>
     </Badge>
   </div>
 </template>

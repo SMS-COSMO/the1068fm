@@ -22,13 +22,13 @@
         <ClientOnly>
           <template #fallback>
             <Button class="size-full text-xl font-bold" :disabled="!canSubmit">
-              <Icon name="lucide:music-4" size="26" class="mr-2" />
+              <Icon name="lucide:music-4" size="26" />
               投稿
             </Button>
           </template>
           <SongSubmitDialog>
             <Button class="size-full text-xl font-bold" :disabled="!canSubmit">
-              <Icon name="lucide:music-4" size="26" class="mr-2" />
+              <Icon name="lucide:music-4" size="26" />
               投稿
             </Button>
           </SongSubmitDialog>
@@ -38,7 +38,7 @@
       <div class="grid grid-cols-3 gap-3">
         <HomeRule>
           <Button variant="outline">
-            <Icon name="lucide:circle-help" class="mr-2" />
+            <Icon name="lucide:circle-help" />
             <span>
               规则介绍
             </span>
@@ -47,13 +47,13 @@
 
         <HomeAboutUs>
           <Button variant="outline" class="w-full">
-            <Icon name="lucide:info" class="mr-2" />
+            <Icon name="lucide:info" />
             关于我们
           </Button>
         </HomeAboutUs>
 
         <Button variant="outline" class="w-full" @click="navigateTo('/stats')">
-          <Icon name="lucide:star" class="mr-2" />
+          <Icon name="lucide:star" />
           数据回顾
         </Button>
       </div>
@@ -72,12 +72,12 @@
 
         <div class="ml-auto flex gap-2">
           <DarkModeToggle />
-          <Button v-if="userStore.permissions.includes('admin')" variant="outline" size="sm" @click="navigateTo('/admin')">
-            <Icon name="lucide:user-cog" class="mr-1" />
+          <Button v-if="userStore.permissions.includes('admin')" variant="outline" size="sm" class="gap-1" @click="navigateTo('/admin')">
+            <Icon name="lucide:user-cog" />
             管理
           </Button>
-          <Button variant="outline" size="sm" @click="logout">
-            <Icon name="lucide:log-out" class="mr-1" />
+          <Button variant="outline" size="sm" class="gap-1" @click="logout">
+            <Icon name="lucide:log-out" />
             登出
           </Button>
         </div>
