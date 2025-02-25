@@ -21,12 +21,15 @@
       <ScrollArea class="h-[calc(100svh-4rem)]">
         <div class="sticky top-0 flex h-16 items-center border-b bg-background px-4">
           <Tabs v-model="selectedTab" class="w-full" default-value="used">
-            <TabsList class="grid grid-cols-2">
+            <TabsList class="grid grid-cols-3">
               <TabsTrigger value="used">
                 入选
               </TabsTrigger>
               <TabsTrigger value="dropped">
                 落选
+              </TabsTrigger>
+              <TabsTrigger value="ghost">
+                幽灵
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -39,6 +42,11 @@
         </TransitionGroup>
         <TransitionGroup v-if="selectedTab === 'dropped'" name="list" tag="ul" class="flex flex-col gap-3 p-4">
           <li v-for="song in songList?.filter((x) => x.state === 'dropped')" :key="song.id">
+            <SongCard :song type="songs" />
+          </li>
+        </TransitionGroup>
+        <TransitionGroup v-if="selectedTab === 'ghost'" name="list" tag="ul" class="flex flex-col gap-3 p-4">
+          <li v-for="song in songList?.filter((x) => x.state === 'ghost')" :key="song.id">
             <SongCard :song type="songs" />
           </li>
         </TransitionGroup>
@@ -81,5 +89,5 @@ const panels = ref([
   },
 ]);
 
-const selectedTab = ref<'used' | 'dropped'>('used');
+const selectedTab = ref<'used' | 'dropped' | 'ghost'>('used');
 </script>

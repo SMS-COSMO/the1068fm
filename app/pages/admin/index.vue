@@ -52,7 +52,7 @@
           v-if="data?.chart"
           index="date"
           :data="data.chart"
-          :categories="['approved', 'dropped', 'pending', 'rejected', 'used']"
+          :categories="['approved', 'dropped', 'pending', 'rejected', 'used', 'ghost']"
           :rounded-corners="4"
         />
       </CardContent>

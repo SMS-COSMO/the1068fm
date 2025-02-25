@@ -113,7 +113,7 @@
         留言: {{ song.message }}
       </p>
 
-      <div v-if="song.state !== 'used' && song.state !== 'dropped'" class="flex gap-1">
+      <div v-if="song.state !== 'used' && song.state !== 'dropped' && song.state !== 'ghost'" class="flex gap-1">
         <Button
           v-if="song.state !== 'approved' && song.id"
           variant="outline"
