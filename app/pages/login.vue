@@ -54,7 +54,7 @@
                   <TabsContent value="phone">
                     <div class="grid gap-6">
                       <div class="grid gap-2">
-                        <Label for="phone">手机号</Label>
+                        <Label for="phone">手机号<span class="text-xs leading-none text-muted-foreground">（希悦绑定）</span></Label>
                         <Input
                           id="phone"
                           v-model="infoPhone.phone"
@@ -77,7 +77,7 @@
                               v-for="(id, index) in 4"
                               :key="id"
                               :index="index"
-                              class="w-12"
+                              class="lg:w-12"
                             />
                           </PinInputGroup>
                           <Button :disabled="isActive" variant="outline" class="w-full" @click="generatePhoneCode">
@@ -97,7 +97,7 @@
                 </div>
               </div>
             </div>
-            <div class="hidden items-center justify-center bg-muted lg:flex">
+            <div class="hidden items-center justify-center bg-muted md:flex">
               <LogosThe1068fm class="w-[250px]" />
             </div>
           </CardContent>
