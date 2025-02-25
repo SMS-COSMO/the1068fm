@@ -13,7 +13,7 @@ export type TPermission =
   'blockWords' | // manage block words
   'manageUser'; // manage users (listing, banning, ...)
 
-export type TSongState = 'pending' | 'approved' | 'rejected' | 'used' | 'dropped';
+export type TSongState = 'pending' | 'approved' | 'rejected' | 'used' | 'dropped' | 'ghost';
 
 // Seiue
 export interface TCredentials { schoolId: string; password: string };

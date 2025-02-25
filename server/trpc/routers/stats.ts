@@ -19,7 +19,7 @@ export const statsRouter = router({
       const map = new Map<string, { [key in TSongState]: number }>();
       for (const song of songs) {
         const date = song.createdAt.toLocaleDateString('zh-CN');
-        const val = map.get(date) ?? { approved: 0, dropped: 0, pending: 0, rejected: 0, used: 0 };
+        const val = map.get(date) ?? { approved: 0, dropped: 0, pending: 0, rejected: 0, used: 0, ghost: 0 };
         val[song.state]++;
         map.set(date, val);
       };

@@ -51,6 +51,11 @@ const states: Record<
     icon: 'lucide:x',
     className: 'bg-amber-50 dark:bg-amber-200/50 border-amber-100 dark:border-amber-200 text-amber-700 dark:text-amber-200',
   },
+  ghost: {
+    label: '审核通过',
+    icon: 'lucide:thumbs-up',
+    className: 'bg-green-50 dark:bg-green-200/50 border-green-100 dark:border-green-200 text-green-700 dark:text-green-200',
+  },
 };
 
 const state = computed(() => song.state ? states[song.state] : undefined);
