@@ -145,9 +145,18 @@ const { isActive, pause, resume } = useTimeoutPoll(() => {
 async function generatePhoneCode() {
   resume();
   try {
+    if (infoPhone.phone.length !== 11 || infoPhone.phone.match(/[^0-9]/g)) {
+      toast.error('请输入正确的手机号');
+      pause();
+      reset();
+      return;
+    }
+
     const res = await $trpc.user.generatePhoneCode.mutate({ phone: infoPhone.phone });
     if (!res.ok) {
       toast.error('获取验证码失败');
+      pause();
+      reset();
       return;
     }
     infoPhone.reminderId = res.reminder_id;

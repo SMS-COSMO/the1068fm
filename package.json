@@ -1,7 +1,7 @@
 {
   "name": "the1068fm",
   "type": "module",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -40,7 +40,7 @@
     "drizzle-orm": "^0.39.3",
     "drizzle-seed": "^0.3.1",
     "fuse.js": "^7.1.0",
-    "jose": "^6.0.6",
+    "jose": "^6.0.8",
     "lucide-vue-next": "^0.476.0",
     "nuxt": "^3.15.4",
     "pg": "^8.13.3",
@@ -59,7 +59,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
     "@electric-sql/pglite": "^0.2.17",
-    "@iconify-json/lucide": "^1.2.26",
+    "@iconify-json/lucide": "^1.2.27",
     "@tailwindcss/typography": "^0.5.16",
     "@types/pg": "^8.11.11",
     "@unocss/eslint-plugin": "^66.0.0",
@@ -67,7 +67,7 @@
     "@vueuse/nuxt": "^12.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "drizzle-kit": "^0.30.4",
+    "drizzle-kit": "^0.30.5",
     "eslint": "^9.21.0",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-tailwindcss": "^3.18.0",
