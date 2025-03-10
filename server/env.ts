@@ -12,7 +12,7 @@ const envSchema = z.object({
   SEIUE_PASSPORT_URL: z.string().default('https://passport.seiue.com'),
   SEIUE_SCHOOL_ID: z.coerce.number().default(282),
 
-  TOKEN_EXPIRATION_TIME: z.string().optional().default('24h'),
+  TOKEN_EXPIRATION_TIME: z.string().optional().default('30d'),
   SIGN_PUBLIC_KEY: z.string(),
   SIGN_PRIVATE_KEY: z.string(),
   ENC_PUBLIC_KEY: z.string(),

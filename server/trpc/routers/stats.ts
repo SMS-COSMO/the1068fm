@@ -1,7 +1,7 @@
 import type { TSongState } from '~~/types';
 import { count } from 'drizzle-orm';
 import { db } from '~~/server/db';
-import { users } from '~~/server/db/schema';
+import { songs, users } from '~~/server/db/schema';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 async function getSongMap() {
@@ -34,6 +34,17 @@ export const statsRouter = router({
         songCount: songs.length,
         userCount,
         chart: Array.from(map, ([date, count]) => ({ date, ...count })),
+      };
+    }),
+
+  count: protectedProcedure
+    .query(async () => {
+      const userCount = (await db.select({ count: count() }).from(users))[0]?.count;
+      const songCount = (await db.select({ count: count() }).from(songs))[0]?.count;
+
+      return {
+        userCount,
+        songCount,
       };
     }),
 

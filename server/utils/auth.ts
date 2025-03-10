@@ -61,3 +61,38 @@ export async function getUserFromHeader(authorization: string | undefined) {
     return result.err;
   return result.user;
 }
+
+// Converts env.TOKEN_EXPIRATION_TIME to milliseconds
+export function parseDuration(duration: string): number {
+  // Regex to match a number followed by a unit:
+  // s = seconds, m = minutes, h = hours, d = days.
+  const regex = /^(\d+)([smhd])$/;
+  const match = duration.match(regex);
+  if (!match) {
+    // Defaults to 24h
+    return 24 * 60 * 60 * 1000;
+  }
+
+  const value = Number.parseInt(match[1], 10);
+  const unit = match[2];
+
+  let multiplier: number;
+  switch (unit) {
+    case 's':
+      multiplier = 1000;
+      break;
+    case 'm':
+      multiplier = 60 * 1000;
+      break;
+    case 'h':
+      multiplier = 60 * 60 * 1000;
+      break;
+    case 'd':
+      multiplier = 24 * 60 * 60 * 1000;
+      break;
+    default:
+      multiplier = 60 * 60 * 1000; // Defaults to 'h'
+  }
+
+  return value * multiplier;
+}

@@ -1,13 +1,20 @@
 <template>
   <div class="container max-w-screen-lg select-none divide-y px-0 md:border-x">
-    <div class="p-5">
-      <h1 class="flex items-center gap-2 font-bold">
-        <LogosThe1068fm class="inline h-7 w-min" />
-        <span>数据统计</span>
-        <Button size="icon" variant="outline" class="ml-auto" @click="navigateTo('/')">
-          <Icon name="lucide:chevron-left" />
-        </Button>
-      </h1>
+    <div class="flex items-center gap-2 pl-5 font-bold">
+      <Button size="icon" variant="outline" @click="navigateTo('/')">
+        <Icon name="lucide:chevron-left" />
+      </Button>
+      <span class="md:text-xl">数据统计</span>
+      <div class="ml-auto flex">
+        <div class="flex flex-1 flex-col justify-center gap-1 border-l px-6 py-4 text-left sm:px-8 sm:py-6">
+          <span class="text-xs text-muted-foreground">累计投稿</span>
+          <span class="text-lg font-bold leading-none sm:text-3xl">{{ countData?.songCount }}</span>
+        </div>
+        <div class="flex flex-1 flex-col justify-center gap-1 border-l px-6 py-4 text-left sm:px-8 sm:py-6">
+          <span class="text-xs text-muted-foreground">用户数目</span>
+          <span class="text-lg font-bold leading-none sm:text-3xl">{{ countData?.userCount }}</span>
+        </div>
+      </div>
     </div>
     <div>
       <CardHeader>
@@ -18,7 +25,7 @@
       <CardContent>
         <div class="flex gap-2 overflow-x-auto">
           <div v-for="(week, i) of weekData" :key="week.date" class="flex flex-col gap-2">
-            <div class="relative flex h-[500px] w-8 flex-col justify-end md:h-[600px] md:w-20">
+            <div class="relative flex h-[500px] w-8 flex-col justify-end md:h-[600px] md:w-16">
               <div
                 v-if="week.count"
                 :style="{ height: `${(week.count ?? 0) / weekMax * 100}%` }"
@@ -42,11 +49,6 @@
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div class="mb-6 flex justify-end gap-2">
-          <div class="rounded bg-blue-600 px-2 py-1 text-sm text-white">
-            投稿
-          </div>
-        </div>
         <ScrollArea class="h-[500px]" type="always">
           <div class="flex flex-col gap-2">
             <div v-for="(singer, i) of singerData" :key="singer.singerName" class="items-center gap-3 md:flex">
@@ -94,4 +96,11 @@ const { data: singerData, suspense: singerDataSuspense } = useQuery({
 });
 await singerDataSuspense();
 const singerMax = Math.max(...singerData.value?.map(singer => singer.count) ?? []);
+
+const { data: countData, suspense: countDataSuspense } = useQuery({
+  queryFn: () => $trpc.stats.count.query(),
+  queryKey: ['stats.count'],
+  refetchIntervalInBackground: false,
+});
+await countDataSuspense();
 </script>

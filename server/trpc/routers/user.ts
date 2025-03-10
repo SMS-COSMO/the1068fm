@@ -3,6 +3,8 @@ import { desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '~~/server/db';
 import { users } from '~~/server/db/schema';
+import { env } from '~~/server/env';
+import { parseDuration } from '~~/server/utils/auth';
 import { adminProcedure, protectedProcedure, publicProcedure, requirePermission, router } from '../trpc';
 
 export const userRouter = router({
@@ -49,9 +51,11 @@ export const userRouter = router({
         throw new TRPCError({ code: 'UNAUTHORIZED', message: '无法登录' });
 
       const accessToken = await produceAccessToken(user.id);
+      const expiresAt = new Date(Date.now() + parseDuration(env.TOKEN_EXPIRATION_TIME));
       return {
         ...user,
         accessToken,
+        expiresAt: expiresAt.toString(),
       };
     }),
 
