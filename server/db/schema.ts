@@ -24,6 +24,8 @@ export const songs = pgTable('songs', {
   rejectMessage: text(),
   message: text(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  singerId: text(),
+  singerName: text(),
 });
 
 export const times = pgTable('times', {

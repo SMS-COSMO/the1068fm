@@ -53,9 +53,13 @@
         </HomeAboutUs>
 
         <Button variant="outline" class="w-full" @click="navigateTo('/stats')">
-          <Icon name="lucide:star" />
-          数据回顾
+          <Icon name="lucide:chart-column" />
+          数据统计
         </Button>
+      </div>
+      <div class="ml-auto inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium">
+        <span>数据统计现在实时更新</span>
+        <Icon name="lucide:arrow-up" class="ml-1 size-4" />
       </div>
 
       <div class="mt-4 flex items-center gap-4">

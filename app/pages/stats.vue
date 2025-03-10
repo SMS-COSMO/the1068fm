@@ -2,8 +2,8 @@
   <div class="container max-w-screen-lg select-none divide-y px-0 md:border-x">
     <div class="p-5">
       <h1 class="flex items-center gap-2 font-bold">
-        <LogosThe1068fm class="inline h-6 w-min" />
-        <span>数据回顾（九月 & 十月）</span>
+        <LogosThe1068fm class="inline h-7 w-min" />
+        <span>数据统计</span>
         <Button size="icon" variant="outline" class="ml-auto" @click="navigateTo('/')">
           <Icon name="lucide:chevron-left" />
         </Button>
@@ -16,46 +16,16 @@
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div class="mb-6 flex justify-end gap-2">
-          <div class="rounded bg-green-900 px-2 py-1 text-sm text-white">
-            真名投稿 <code>571</code>
-          </div>
-          <div class="rounded bg-green-500 px-2 py-1 text-sm text-white">
-            化名投稿 <code>79</code>
-          </div>
-          <div class="flex items-center rounded px-2 py-1 text-sm">
-            <div class="mb-1 mr-1 size-2 rounded-full border-2 border-rose-400" />
-            <span>
-              比例
-            </span>
-          </div>
-        </div>
-        <div class="grid grid-cols-9 gap-2">
-          <div v-for="week of weekData" :key="week.date" class="flex flex-col gap-2">
-            <div class="relative flex h-[500px] flex-col justify-end md:h-[600px]">
-              <div class="absolute flex w-full flex-col items-center" :style="{ bottom: `${getRatio(week.count[1], week.count[0])}%` }">
-                <div class="size-2 rounded-full border-2 border-rose-400" />
-                <div
-                  class="font-mono text-[10px]"
-                  :class="[getRatio(week.count[1], week.count[0]) > ((week.count[0] ?? 0) + (week.count[1] ?? 0)) / 2 ? 'text-primary' : 'text-white']"
-                >
-                  {{ `${getRatio(week.count[1], week.count[0]).toFixed(0)}%` }}
-                </div>
-              </div>
+        <div class="flex gap-2 overflow-x-auto">
+          <div v-for="(week, i) of weekData" :key="week.date" class="flex flex-col gap-2">
+            <div class="relative flex h-[500px] w-8 flex-col justify-end md:h-[600px] md:w-20">
               <div
-                v-if="week.count[1]"
-                :style="{ height: `${(week.count[1] ?? 0) / 200 * 100}%` }"
-                class="flex justify-center rounded-t bg-green-500 text-xs text-white"
+                v-if="week.count"
+                :style="{ height: `${(week.count ?? 0) / weekMax * 100}%` }"
+                class="flex justify-center rounded text-xs text-white"
+                :class="[i % 2 === 0 ? 'bg-green-800' : 'bg-green-700']"
               >
-                <span class="py-0.5 font-mono md:py-2">{{ week.count[1] }}</span>
-              </div>
-              <div
-                v-if="week.count[0]"
-                :style="{ height: `${(week.count[0] ?? 0) / 200 * 100}%` }"
-                :class="{ 'rounded-t': (week.count[1] ?? 0) === 0 }"
-                class="flex justify-center rounded-b bg-green-900 text-xs text-white"
-              >
-                <span class="py-0.5 font-mono md:py-2">{{ week.count[0] }}</span>
+                <span class="py-0.5 font-mono md:py-2">{{ week.count }}</span>
               </div>
             </div>
             <div class="self-center font-mono text-xs text-muted-foreground [writing-mode:vertical-lr] md:[writing-mode:lr]">
@@ -74,34 +44,26 @@
       <CardContent>
         <div class="mb-6 flex justify-end gap-2">
           <div class="rounded bg-blue-600 px-2 py-1 text-sm text-white">
-            真名投稿 <code>571</code>
-          </div>
-          <div class="rounded bg-blue-400 px-2 py-1 text-sm text-white">
-            化名投稿 <code>79</code>
+            投稿
           </div>
         </div>
         <ScrollArea class="h-[500px]" type="always">
           <div class="flex flex-col gap-2">
-            <div v-for="singer of singerData" :key="singer.label" class="items-center gap-3 md:flex">
+            <div v-for="(singer, i) of singerData" :key="singer.singerName" class="items-center gap-3 md:flex">
               <div class="truncate text-xs text-muted-foreground md:w-40 md:text-right">
-                {{ singer.label }}
+                {{ singer.singerName }}
               </div>
               <div class="flex w-full">
                 <div
-                  v-if="singer.data[0]"
-                  :style="{ width: `${(singer.data[0] ?? 0) / 32 * 100}%` }"
-                  class="flex h-6 items-center rounded-l bg-blue-600 text-xs text-white"
-                  :class="{ 'rounded-r': (singer.data[1] ?? 0) === 0 }"
+                  v-if="singer.count"
+                  :style="{ width: `${(singer.count ?? 0) / singerMax * 100}%` }"
+                  class="flex h-6 items-center rounded text-xs text-white"
+                  :class="[
+                    (singer.count ?? 0) === 0 && 'rounded-r',
+                    i % 2 === 0 ? 'bg-blue-600' : 'bg-blue-500',
+                  ]"
                 >
-                  <span class="px-0.5 font-mono md:px-2">{{ singer.data[0] }}</span>
-                </div>
-                <div
-                  v-if="singer.data[1]"
-                  :style="{ width: `${(singer.data[1] ?? 0) / 32 * 100}%` }"
-                  class="flex h-6 items-center rounded-r bg-blue-400 text-xs text-white"
-                  :class="{ 'rounded-l': (singer.data[0] ?? 0) === 0 }"
-                >
-                  <span class="px-0.5 font-mono md:px-2">{{ singer.data[1] }}</span>
+                  <span class="px-0.5 font-mono md:px-2">{{ singer.count }}</span>
                 </div>
               </div>
             </div>
@@ -116,10 +78,20 @@
 </template>
 
 <script setup lang="ts">
-import singerData from '~~/public/singerRank.json';
-import weekData from '~~/public/week.json';
+const { $trpc } = useNuxtApp();
+const { data: weekData, suspense: weekDataSuspense } = useQuery({
+  queryFn: () => $trpc.stats.song.query(),
+  queryKey: ['stats.song'],
+  refetchIntervalInBackground: false,
+});
+await weekDataSuspense();
+const weekMax = Math.max(...weekData.value?.map(week => week.count) ?? []);
 
-function getRatio(a?: number, b?: number) {
-  return (a ?? 0) / ((a ?? 0) + (b ?? 0)) * 100;
-}
+const { data: singerData, suspense: singerDataSuspense } = useQuery({
+  queryFn: () => $trpc.stats.singer.query(),
+  queryKey: ['stats.singer'],
+  refetchIntervalInBackground: false,
+});
+await singerDataSuspense();
+const singerMax = Math.max(...singerData.value?.map(singer => singer.count) ?? []);
 </script>

@@ -6,6 +6,44 @@ import { songs } from '~~/server/db/schema';
 import { adminProcedure, protectedProcedure, requirePermission, router } from '../trpc';
 import { fitsInTime } from './time';
 
+async function searchQQMusic(key: string) {
+  const searchBaseURL = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp';
+
+  interface TSearchDataItem {
+    albummid: string;
+    singer: { name: string; id: number }[];
+    songmid: string;
+    songname: string;
+  }
+
+  interface TSearchResponse {
+    code: number;
+    data: {
+      song: {
+        list: TSearchDataItem[];
+      };
+    };
+  }
+
+  const res = await $fetch<TSearchResponse>(searchBaseURL, {
+    method: 'GET',
+    params: {
+      w: key,
+      n: 5,
+      format: 'json',
+    },
+    parseResponse(responseText) {
+      try {
+        return JSON.parse(responseText);
+      } catch {
+        return responseText;
+      }
+    },
+  });
+
+  return res;
+}
+
 async function checkCanSubmit(userId: string) {
   if (!(await fitsInTime(new Date())))
     return false;
@@ -49,9 +87,20 @@ export const songRouter = router({
       if (english?.some(x => blockWords.some(y => x === y.word)))
         throw new TRPCError({ code: 'BAD_REQUEST', message: '投稿失败' });
 
+      let singerId;
+      let singerName;
+      try {
+        const res = await searchQQMusic(`${input.name} ${input.creator}`);
+        const item = res.data.song.list[0];
+        singerId = item.singer[0].id;
+        singerName = item.singer[0].name;
+      } catch {}
+
       await db.insert(songs).values({
         ...input,
         ownerId: ctx.user.id,
+        singerId: singerId?.toString(),
+        singerName,
       });
     }),
 
@@ -156,40 +205,7 @@ export const songRouter = router({
     }))
     .use(requirePermission(['review']))
     .query(async ({ input }) => {
-      const searchBaseURL = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp';
-
-      interface TSearchDataItem {
-        albummid: string;
-        singer: { name: string }[];
-        songmid: string;
-        songname: string;
-      }
-
-      interface TSearchResponse {
-        code: number;
-        data: {
-          song: {
-            list: TSearchDataItem[];
-          };
-        };
-      }
-
-      const res = await $fetch<TSearchResponse>(searchBaseURL, {
-        method: 'GET',
-        params: {
-          w: input.key,
-          n: 5,
-          format: 'json',
-        },
-        parseResponse(responseText) {
-          try {
-            return JSON.parse(responseText);
-          } catch {
-            return responseText;
-          }
-        },
-      });
-
+      const res = await searchQQMusic(input.key);
       const songList = res.data.song.list.map(item => ({
         mid: item.songmid,
         name: item.songname,
@@ -198,4 +214,34 @@ export const songRouter = router({
       }));
       return songList;
     }),
+
+  // getSingerMeta: adminProcedure
+  //   .input(z.object({
+  //     id: z.number(),
+  //   }))
+  //   .mutation(async ({ input }) => {
+  //     const song = await db.query.songs.findFirst({
+  //       columns: {
+  //         name: true,
+  //         creator: true,
+  //       },
+  //       where: eq(songs.id, input.id),
+  //     });
+
+  //     if (!song)
+  //       return;
+
+  //     const res = await searchQQMusic(`${song.name} ${song.creator}`);
+  //     const item = res.data.song.list[0];
+  //     const singerId = item.singer[0].id;
+  //     const singerName = item.singer[0].name;
+
+  //     await db
+  //       .update(songs)
+  //       .set({
+  //         singerId: singerId?.toString(),
+  //         singerName,
+  //       })
+  //       .where(eq(songs.id, input.id));
+  //   }),
 });
