@@ -64,35 +64,67 @@ export async function getUserFromHeader(authorization: string | undefined) {
 
 // Converts env.TOKEN_EXPIRATION_TIME to milliseconds
 export function parseDuration(duration: string): number {
-  // Regex to match a number followed by a unit:
-  // s = seconds, m = minutes, h = hours, d = days.
-  const regex = /^(\d+)([smhd])$/;
-  const match = duration.match(regex);
-  if (!match) {
-    // Defaults to 24h
-    return 24 * 60 * 60 * 1000;
+  const minute = 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const week = day * 7;
+  const year = day * 365.25;
+
+  const REGEX
+    = /^(\+|-)? ?(\d+|\d+\.\d+) ?(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)(?: (ago|from now))?$/i;
+
+  const matched = REGEX.exec(duration);
+
+  if (!matched || (matched[4] && matched[1]) || !matched[2] || !matched[3]) {
+    return week; // Defaults to one week
   }
 
-  const value = Number.parseInt(match[1], 10);
-  const unit = match[2];
+  const value = Number.parseFloat(matched[2]);
+  const unit = matched[3].toLowerCase();
 
-  let multiplier: number;
+  let numericDate: number;
+
   switch (unit) {
+    case 'sec':
+    case 'secs':
+    case 'second':
+    case 'seconds':
     case 's':
-      multiplier = 1000;
+      numericDate = Math.round(value);
       break;
+    case 'minute':
+    case 'minutes':
+    case 'min':
+    case 'mins':
     case 'm':
-      multiplier = 60 * 1000;
+      numericDate = Math.round(value * minute);
       break;
+    case 'hour':
+    case 'hours':
+    case 'hr':
+    case 'hrs':
     case 'h':
-      multiplier = 60 * 60 * 1000;
+      numericDate = Math.round(value * hour);
       break;
+    case 'day':
+    case 'days':
     case 'd':
-      multiplier = 24 * 60 * 60 * 1000;
+      numericDate = Math.round(value * day);
       break;
+    case 'week':
+    case 'weeks':
+    case 'w':
+      numericDate = Math.round(value * week);
+      break;
+      // years matched
     default:
-      multiplier = 60 * 60 * 1000; // Defaults to 'h'
+      numericDate = Math.round(value * year);
+      break;
   }
 
-  return value * multiplier;
+  if (matched[1] === '-' || matched[4] === 'ago') {
+    return -numericDate;
+  }
+
+  return numericDate;
 }

@@ -92,8 +92,8 @@ export const songRouter = router({
       try {
         const res = await searchQQMusic(`${input.name} ${input.creator}`);
         const item = res.data.song.list[0];
-        singerId = item.singer[0].id;
-        singerName = item.singer[0].name;
+        singerId = item?.singer[0]?.id;
+        singerName = item?.singer[0]?.name;
       } catch {}
 
       await db.insert(songs).values({

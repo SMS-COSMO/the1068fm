@@ -110,9 +110,12 @@ export const userRouter = router({
         throw new TRPCError({ code: 'UNAUTHORIZED', message: '无法登录' });
 
       const accessToken = await produceAccessToken(user.id);
+      const expiresAt = new Date(Date.now() + parseDuration(env.TOKEN_EXPIRATION_TIME));
+
       return {
         ...user,
         accessToken,
+        expiresAt: expiresAt.toString(),
       };
     }),
 

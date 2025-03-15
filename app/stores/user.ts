@@ -28,6 +28,18 @@ export const useUserStore = defineStore('user', () => {
     expiresAt.value = undefined;
   };
 
+  const isTokenExpired = (expiresAtISO: string) => {
+    const expirationDate = new Date(expiresAtISO);
+    return Date.now() >= expirationDate.getTime();
+  };
+
+  const isLoggedIn = () => {
+    return loggedIn.value
+      && accessToken.value
+      && expiresAt.value
+      && !isTokenExpired(expiresAt.value);
+  };
+
   return {
     loggedIn,
     accessToken,
@@ -37,6 +49,7 @@ export const useUserStore = defineStore('user', () => {
     expiresAt,
     login,
     logout,
+    isLoggedIn,
   };
 }, {
   persist: {
