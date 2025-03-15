@@ -57,7 +57,7 @@ export const statsRouter = router({
           date,
           count: count.approved + count.used + count.ghost + count.dropped + count.pending + count.rejected,
         }),
-      );
+      ).toSorted((a, b) => (new Date(a.date)).getTime() - (new Date(b.date)).getTime());
     }),
 
   singer: protectedProcedure
