@@ -33,7 +33,7 @@ export const statsRouter = router({
       return {
         songCount: songs.length,
         userCount,
-        chart: Array.from(map, ([date, count]) => ({ date, ...count })),
+        chart: Array.from(map, ([date, count]) => ({ date, ...count })).toSorted((a, b) => (new Date(a.date)).getTime() - (new Date(b.date)).getTime()),
       };
     }),
 
