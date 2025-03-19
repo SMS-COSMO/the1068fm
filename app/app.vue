@@ -9,9 +9,12 @@
 <script setup lang="ts">
 import '@ztl-uwu/v-calendar/style.css';
 
-useHeadSafe({
-  titleTemplate: (title?: string) => !title ? 'the1068fm 点歌系统' : `${title} | the1068fm 点歌系统`,
-  meta: [{ name: 'description', content: 'the1068fm 点歌系统 Made by COSMO.' }],
+useSeoMeta({
+  title: 'the1068fm 点歌系统',
+  description: 'the1068fm 点歌系统 Made by COSMO.',
+  ogTitle: 'the1068fm 点歌系统',
+  ogDescription: 'the1068fm 点歌系统 Made by COSMO.',
+  ogImage: '/og-image.png',
 });
 </script>
 
