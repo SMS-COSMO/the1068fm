@@ -76,7 +76,7 @@ export function parseDuration(duration: string): number {
   const matched = REGEX.exec(duration);
 
   if (!matched || (matched[4] && matched[1]) || !matched[2] || !matched[3]) {
-    return week; // Defaults to one week
+    return week * 1000; // Defaults to one week
   }
 
   const value = Number.parseFloat(matched[2]);
@@ -123,8 +123,8 @@ export function parseDuration(duration: string): number {
   }
 
   if (matched[1] === '-' || matched[4] === 'ago') {
-    return -numericDate;
+    return -numericDate * 1000;
   }
 
-  return numericDate;
+  return numericDate * 1000;
 }
