@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { desc, eq, gt } from 'drizzle-orm';
+import { desc, eq, gt, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '~~/server/db';
 import { songs } from '~~/server/db/schema';
@@ -213,6 +213,15 @@ export const songRouter = router({
         pic: `https://y.qq.com/music/photo_new/T002R300x300M000${item.albummid}.jpg`,
       }));
       return songList;
+    }),
+
+  ghostAll: adminProcedure
+    .use(requirePermission(['review']))
+    .mutation(async () => {
+      await db
+        .update(songs)
+        .set({ state: 'ghost' })
+        .where(inArray(songs.state, ['approved', 'pending']));
     }),
 
   // getSingerMeta: adminProcedure

@@ -53,6 +53,11 @@
       </ScrollArea>
     </ResizablePanel>
   </ResizablePanelGroup>
+
+  <Button variant="destructive" class="fixed bottom-4 right-4" :disabled="isPending" @click="ghostAllMutation()">
+    <Icon v-if="isPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
+    全部幽灵
+  </Button>
 </template>
 
 <script setup lang="ts">
@@ -90,4 +95,13 @@ const panels = ref([
 ]);
 
 const selectedTab = ref<'used' | 'dropped' | 'ghost'>('used');
+
+const queryClient = useQueryClient();
+const { mutate: ghostAllMutation, isPending } = useMutation({
+  mutationFn: () => $trpc.song.ghostAll.mutate(),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['song.list'] });
+  },
+  onError: err => useErrorHandler(err),
+});
 </script>
