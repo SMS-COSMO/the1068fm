@@ -14,9 +14,9 @@ export default defineNuxtPlugin(() => {
             Authorization: userStore.accessToken,
           };
         },
+        transformer: superjson,
       }),
     ],
-    transformer: superjson,
   });
 
   return {

@@ -54,10 +54,33 @@
     </ResizablePanel>
   </ResizablePanelGroup>
 
-  <Button variant="destructive" class="fixed bottom-4 right-4" :disabled="isPending" @click="ghostAllMutation()">
-    <Icon v-if="isPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
-    全部幽灵
-  </Button>
+  <Dialog>
+    <DialogTrigger>
+      <Button variant="destructive" class="fixed bottom-4 right-4">
+        全部幽灵
+      </Button>
+    </DialogTrigger>
+    <DialogContent class="w-[400px]">
+      <DialogHeader>
+        <DialogTitle>注意</DialogTitle>
+        <DialogDescription>
+          <p class="mt-2">
+            确认要将全部歌曲设为幽灵状态吗？<span class="font-bold">该操作无法撤销！</span>
+          </p>
+          <p class="mt-2">
+            该操作用于将未通过自动排歌的歌曲状态设为“幽灵”，防止这些歌曲在未来被自动排歌使用。
+          </p>
+        </DialogDescription>
+      </DialogHeader>
+
+      <DialogFooter>
+        <Button variant="destructive" :disabled="isPending" @click="ghostAllMutation()">
+          <Icon v-if="isPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
+          确认
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
