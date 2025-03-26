@@ -1,4 +1,3 @@
-import type { inferAsyncReturnType } from '@trpc/server';
 import type { H3Event } from 'h3';
 import { getUserFromHeader } from '../utils/auth';
 
@@ -11,4 +10,4 @@ export async function createContext(event: H3Event) {
   };
 }
 
-export type Context = inferAsyncReturnType<typeof createContext>;
+export type Context = Awaited<ReturnType<typeof createContext>>;
