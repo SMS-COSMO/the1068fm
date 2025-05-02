@@ -22,7 +22,7 @@
             每周重复
           </FormLabel>
           <FormControl>
-            <Switch :checked="value" @update:checked="handleChange" />
+            <Switch :model-value="value" @update:model-value="handleChange" />
           </FormControl>
           <FormMessage />
         </FormItem>

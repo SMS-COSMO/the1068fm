@@ -7,7 +7,7 @@
       <Badge variant="secondary">
         {{ time.name }}
       </Badge>
-      <Switch :checked="time.isActive" @update:checked="mutate({ id: time.id, isActive: !time.isActive })" />
+      <Switch v-model="isActive" @update:model-value="mutate({ id: time.id, isActive: !time.isActive })" />
     </div>
     <div class="mb-6 mt-4 flex flex-row">
       <span class="px-5 pt-2 lg:px-10">
@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import type { RouterOutput } from '~~/types';
 
-const { selected = false } = defineProps<{
+const { time, selected = false } = defineProps<{
   selected?: boolean;
   time: RouterOutput['time']['list'][0];
 }>();
@@ -50,6 +50,7 @@ const { selected = false } = defineProps<{
 const { $trpc } = useNuxtApp();
 
 const dayString = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+const isActive = ref(time.isActive);
 
 const queryClient = useQueryClient();
 const { mutate } = useMutation({
