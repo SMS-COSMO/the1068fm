@@ -59,6 +59,26 @@ export function requirePermission(permissions: TPermission[]) {
 export const router = t.router;
 export const middleware = t.middleware;
 
+function maskPasswords(obj: any): any {
+  if (typeof obj !== 'object' || obj === null)
+    return obj;
+  if (Array.isArray(obj))
+    return obj.map(maskPasswords);
+
+  const result: any = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (typeof value === 'string' && key.toLowerCase().includes('password')) {
+        result[key] = '***';
+      } else {
+        result[key] = maskPasswords(value);
+      }
+    }
+  }
+  return result;
+}
+
 export const loggedProcedure = t.procedure.use(async (opts) => {
   const start = new Date();
   const result = await opts.next();
@@ -66,26 +86,36 @@ export const loggedProcedure = t.procedure.use(async (opts) => {
 
   try {
     const user = opts.ctx.user === 'ERR_JWT_EXPIRED' ? undefined : opts.ctx.user;
-    let input = JSON.stringify(opts.getRawInput());
-    if (input?.includes('password') || input?.includes('Password'))
-      input = '***';
-
-    consola.log(
-      start.toLocaleString('zh-CN'),
-      '|',
-      `[${result.ok ? 'OK' : result.error.code}]`,
-      `[${opts.type}]`,
-      `[${durationMs}ms]`,
-      opts.path,
-      '->',
-      input,
-      '|',
-      user?.permissions,
-      user?.id,
-    );
-
-    if (!result.ok && result.error.code === 'INTERNAL_SERVER_ERROR') {
-      consola.error(result.error);
+    let input = await opts.getRawInput();
+    // mask password fields for logging
+    input = maskPasswords(input) ?? {};
+    if (result.ok) {
+      consola.log(
+        start.toLocaleString('zh-CN'),
+        '|',
+        `[OK]`,
+        `[${opts.type}]`,
+        `[${durationMs}ms]`,
+        opts.path,
+        '->',
+        input,
+        '|',
+        user?.permissions,
+        user?.id,
+      );
+    } else {
+      consola.log(
+        start.toLocaleString('zh-CN'),
+        '|',
+        `[ERR_${result.error.code}]`,
+        `[${opts.type}]`,
+        `[${durationMs}ms]`,
+        opts.path,
+        '->',
+        input,
+        '|',
+        result.error.message,
+      );
     }
   } catch {}
 
