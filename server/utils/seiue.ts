@@ -34,10 +34,10 @@ export class Seiue {
     return cookies.PHPSESSID;
   }
 
-  static async init(credentials: TCredentials): Promise<Seiue> {
+  static async init(credentials: TCredentials): Promise<Seiue | null> {
     const loginRes = await this.login(credentials);
     if (!loginRes)
-      throw new Error('登录失败');
+      return null;
     return new Seiue({
       accessToken: loginRes.accessToken,
       activeReflectionId: loginRes.activeReflectionId,
@@ -62,8 +62,7 @@ export class Seiue {
         activeReflectionId: authorizeRes.active_reflection_id,
         cookies,
       };
-    } catch (err) {
-      consola.error(err);
+    } catch {
       return null;
     }
   }

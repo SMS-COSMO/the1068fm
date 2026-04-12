@@ -74,7 +74,10 @@ export interface TSeiueClassMember {
 
 export type TSeiueClassMemberList = TSeiueClassMember[];
 
-export interface TSeiueGeneratedPhoneCode {
-  ok: boolean;
+export type TSeiueGeneratedPhoneCode = {
+  ok: true;
   reminder_id: string;
+} | {
+  ok: false;
+  info: string;
 };

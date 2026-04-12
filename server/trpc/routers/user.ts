@@ -64,7 +64,10 @@ export const userRouter = router({
       phone: z.string().min(1).max(30),
     }))
     .mutation(async ({ input }) => {
-      return await Seiue.generatePhoneCode(input.phone);
+      const res = await Seiue.generatePhoneCode(input.phone);
+      if (!res.ok)
+        throw new TRPCError({ code: 'BAD_REQUEST', message: res.info });
+      return res;
     }),
 
   phoneLogin: publicProcedure

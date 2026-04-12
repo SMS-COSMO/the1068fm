@@ -153,12 +153,6 @@ async function generatePhoneCode() {
     }
 
     const res = await $trpc.user.generatePhoneCode.mutate({ phone: infoPhone.phone });
-    if (!res.ok) {
-      toast.error('获取验证码失败');
-      pause();
-      reset();
-      return;
-    }
     infoPhone.reminderId = res.reminder_id;
   } catch (err) {
     pause();
