@@ -26,6 +26,14 @@ export class Seiue {
     this.activeReflectionId = activeReflectionId;
   }
 
+  static async newSessionId() {
+    const res = await ofetch.raw(`${env.SEIUE_PASSPORT_URL}/login?school_id=${env.SEIUE_SCHOOL_ID}`, {
+      method: 'HEAD',
+    });
+    const cookies = cookiesParser(res.headers.getSetCookie());
+    return cookies.PHPSESSID;
+  }
+
   static async init(credentials: TCredentials): Promise<Seiue> {
     const loginRes = await this.login(credentials);
     if (!loginRes)
@@ -108,10 +116,14 @@ export class Seiue {
   }
 
   static async generatePhoneCode(phone: string) {
+    const sessionId = await this.newSessionId();
     return await ofetch<TSeiueGeneratedPhoneCode>(`${env.SEIUE_PASSPORT_URL}/login/generate-code`, {
       method: 'POST',
       body: {
         identity: phone,
+      },
+      headers: {
+        cookie: `PHPSESSID=${sessionId}`,
       },
     });
   }
