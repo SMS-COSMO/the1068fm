@@ -1,8 +1,8 @@
 import { exportPKCS8, exportSPKI, generateKeyPair } from 'jose';
 
 // generate keys for encryption and signing
-const { publicKey: encPublic, privateKey: encPrivate } = await generateKeyPair('RSA-OAEP-256');
-const { publicKey: signPublic, privateKey: signPrivate } = await generateKeyPair('RS512');
+const { publicKey: encPublic, privateKey: encPrivate } = await generateKeyPair('RSA-OAEP-256', { extractable: true });
+const { publicKey: signPublic, privateKey: signPrivate } = await generateKeyPair('RS512', { extractable: true });
 
 // generate a unique key Id
 const encKeyId = `enc-${new Date().toISOString()}`;
