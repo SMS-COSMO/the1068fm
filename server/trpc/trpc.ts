@@ -88,7 +88,7 @@ export const loggedProcedure = t.procedure.use(async (opts) => {
     const user = opts.ctx.user === 'ERR_JWT_EXPIRED' ? undefined : opts.ctx.user;
     let input = await opts.getRawInput();
     // mask password fields for logging
-    input = maskPasswords(input).toString() ?? {};
+    input = JSON.stringify(maskPasswords(input)) ?? {};
     if (result.ok) {
       consola.log(
         start.toLocaleString('zh-CN'),
