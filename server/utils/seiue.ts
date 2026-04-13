@@ -1,5 +1,4 @@
 import type { TCredentials, TDirectCredentials, TSeiueAuthResponse, TSeiueGeneratedPhoneCode, TSeiueUser } from '~~/types';
-import { consola } from 'consola';
 /**
  * @credits https://github.com/linolabs/candlelit
  */
