@@ -1,7 +1,6 @@
 import { parseDate } from '@internationalized/date';
 import { TRPCError } from '@trpc/server';
 import { desc, eq, gt, sql } from 'drizzle-orm';
-import { date } from 'drizzle-orm/mysql-core';
 import { z } from 'zod';
 import { db } from '~~/server/db';
 import { arrangements, songs } from '~~/server/db/schema';
