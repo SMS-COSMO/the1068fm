@@ -57,10 +57,6 @@
           数据统计
         </Button>
       </div>
-      <div class="ml-auto inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium">
-        <span>数据统计现在实时更新</span>
-        <Icon name="lucide:arrow-up" class="ml-1 size-4" />
-      </div>
 
       <div class="mt-4 flex items-center gap-4">
         <Avatar>

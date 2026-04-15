@@ -47,7 +47,7 @@
         </ul>
       </UseTemplate>
 
-      <Dialog v-if="isDesktop" v-model:open="isOpen">
+      <Dialog v-if="isDesktop && !isArrangement" v-model:open="isOpen">
         <DialogTrigger as-child>
           <slot />
         </DialogTrigger>
@@ -62,7 +62,7 @@
         </DialogContent>
       </Dialog>
 
-      <Drawer v-else v-model:open="isOpen">
+      <Drawer v-else-if="!isArrangement" v-model:open="isOpen">
         <DrawerTrigger as-child>
           <slot />
         </DrawerTrigger>

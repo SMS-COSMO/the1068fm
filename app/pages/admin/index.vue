@@ -57,6 +57,11 @@
         />
       </CardContent>
     </Card>
+
+    <!-- <Button class="mt-8" variant="outline" @click="getMissingSingerMetaMutation">
+      <Icon v-if="isPending" name="lucide:loader-circle" class="mr-2 animate-spin" />
+      获取缺失的歌手元数据
+    </Button> -->
   </div>
 </template>
 
@@ -77,4 +82,15 @@ const { data, suspense } = useQuery({
 });
 
 await suspense();
+
+// const { mutate: getMissingSingerMetaMutation, isPending } = useMutation({
+//   mutationFn: () => $trpc.song.getMissingSingerMeta.mutate(),
+//   onSuccess: () => {
+//     toast.success({
+//       title: '成功',
+//       description: '已成功获取缺失的歌手元数据',
+//     });
+//   },
+//   onError: err => useErrorHandler(err),
+// });
 </script>

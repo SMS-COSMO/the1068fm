@@ -1,6 +1,7 @@
 import { parseDate } from '@internationalized/date';
 import { TRPCError } from '@trpc/server';
-import { desc, eq, sql } from 'drizzle-orm';
+import { desc, eq, gt, sql } from 'drizzle-orm';
+import { date } from 'drizzle-orm/mysql-core';
 import { z } from 'zod';
 import { db } from '~~/server/db';
 import { arrangements, songs } from '~~/server/db/schema';
@@ -43,6 +44,8 @@ export const arrangementsRouter = router({
   listSafe: protectedProcedure
     .query(async () => {
       return await db.query.arrangements.findMany({
+        // Only get recent arrangements (with songs arranged within the last 30 days)
+        where: gt(arrangements.createdAt, new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)),
         orderBy: desc(arrangements.date),
         columns: {
           date: true,
@@ -54,9 +57,6 @@ export const arrangementsRouter = router({
               id: true,
               creator: true,
               name: true,
-              rejectMessage: true,
-              state: true,
-              createdAt: true,
             },
           },
         },

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { desc, eq, gt, inArray } from 'drizzle-orm';
+import { desc, eq, gt, inArray, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '~~/server/db';
 import { songs } from '~~/server/db/schema';
@@ -7,7 +7,7 @@ import { adminProcedure, protectedProcedure, requirePermission, router } from '.
 import { fitsInTime } from './time';
 
 async function searchQQMusic(key: string) {
-  const searchBaseURL = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp';
+  const searchBaseURL = 'https://c.y.qq.com/soso/fcgi-bin/search_cp';
 
   interface TSearchDataItem {
     albummid: string;
@@ -224,33 +224,27 @@ export const songRouter = router({
         .where(inArray(songs.state, ['approved', 'pending']));
     }),
 
-  // getSingerMeta: adminProcedure
-  //   .input(z.object({
-  //     id: z.number(),
-  //   }))
-  //   .mutation(async ({ input }) => {
-  //     const song = await db.query.songs.findFirst({
-  //       columns: {
-  //         name: true,
-  //         creator: true,
-  //       },
-  //       where: eq(songs.id, input.id),
-  //     });
+  getMissingSingerMeta: adminProcedure
+    .mutation(async () => {
+      const missingSingerSongs = await db.query.songs.findMany({
+        where: isNull(songs.singerId),
+      });
 
-  //     if (!song)
-  //       return;
+      for (const song of missingSingerSongs) {
+        try {
+          const res = await searchQQMusic(`${song.name} ${song.creator}`);
+          const item = res.data.song.list[0];
+          const singerId = item?.singer[0]?.id;
+          const singerName = item?.singer[0]?.name;
 
-  //     const res = await searchQQMusic(`${song.name} ${song.creator}`);
-  //     const item = res.data.song.list[0];
-  //     const singerId = item.singer[0].id;
-  //     const singerName = item.singer[0].name;
-
-  //     await db
-  //       .update(songs)
-  //       .set({
-  //         singerId: singerId?.toString(),
-  //         singerName,
-  //       })
-  //       .where(eq(songs.id, input.id));
-  //   }),
+          await db
+            .update(songs)
+            .set({
+              singerId: singerId?.toString(),
+              singerName,
+            })
+            .where(eq(songs.id, song.id));
+        } catch {}
+      }
+    }),
 });
