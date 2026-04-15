@@ -29,7 +29,7 @@ async function searchQQMusic(key: string) {
     method: 'GET',
     params: {
       w: key,
-      n: 5,
+      n: 8,
       format: 'json',
     },
     parseResponse(responseText) {
